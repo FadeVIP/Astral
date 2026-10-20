@@ -1,5 +1,5 @@
 // This is a local cosmetic reward, not an account entitlement.
-const starThemeKey='astral.secret-star.theme.v1';
+const starThemeKey='astral.secret-star.theme.round-20261020-2';
 let starThemeUnlocked=false,starThemeEnabled=false;
 try{const saved=localStorage.getItem(starThemeKey);starThemeUnlocked=saved==='rose'||saved==='original';starThemeEnabled=saved==='rose';}catch{}
 function applyStarTheme(enabled){starThemeEnabled=enabled;document.documentElement.classList.toggle('secret-rose',enabled);document.dispatchEvent(new Event('astral-star-theme'));if(starThemeUnlocked)try{localStorage.setItem(starThemeKey,enabled?'rose':'original');}catch{}}
