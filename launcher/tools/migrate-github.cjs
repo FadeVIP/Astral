@@ -21,9 +21,9 @@ async function main(){
  function git(args,cwd=root){const r=spawnSync('git',args,{cwd,encoding:'utf8',env:{...process.env,GCM_INTERACTIVE:'never',GIT_TERMINAL_PROMPT:'0'},timeout:300000,maxBuffer:1024*1024});if(r.status!==0)throw Error('Git migration failed: '+r.stderr.slice(0,1000));return r.stdout;}
  if(!fs.existsSync(checkout))git(['clone','https://FadeVIP@github.com/FadeVIP/Astral.git',checkout]);
  if(git(['remote','get-url','origin'],checkout).trim()!=='https://FadeVIP@github.com/FadeVIP/Astral.git')throw Error('Unexpected staging repository');
- for(const e of entries){const dest=path.join(checkout,e.path);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,e.data);}
+ for(const e of entries){const dest=path.join(checkout,e.path);fs.mkdirSync(path.dirname(dest),{recursive:true});if(!fs.existsSync(dest)||!fs.readFileSync(dest).equals(e.data))fs.writeFileSync(dest,e.data);}
  git(['config','user.name','FadeVIP'],checkout);git(['config','user.email','FadeVIP@users.noreply.github.com'],checkout);
- git(['add','--all'],checkout);if(git(['diff','--cached','--name-only'],checkout).trim())git(['commit','-m','Migrate Astral website, launcher and bot to FadeVIP'],checkout);
+ git(['add','--all'],checkout);if(git(['diff','--cached','--name-only'],checkout).trim())git(['commit','--quiet','-m','Migrate Astral website, launcher and bot to FadeVIP'],checkout);
  console.log('UPLOADING_REVIEWED_SOURCE');git(['push','origin','HEAD:main'],checkout);console.log('SOURCE_READY',git(['rev-parse','HEAD'],checkout).trim());
  let downloads=await api('/repos/FadeVIP/astral-launcher-downloads');if(!downloads)downloads=await api('/user/repos','POST',{name:'astral-launcher-downloads',description:'Official signed Astral Launcher releases',private:false,auto_init:true});if(downloads.owner.login!=='FadeVIP')throw Error('Wrong release owner');console.log('DOWNLOAD_REPOSITORY_READY');
 }
