@@ -162,6 +162,7 @@ const client = new Client({
   partials: [Partials.Channel, Partials.Message]
 });
 
+client.on('debug',message=>{for(const label of ['Connecting to','Waiting for event','Waiting for identify throttle','Identifying','Session Limit Information','Heartbeat acknowledged','Failed to connect','Invalid session'])if(message.includes(label)){connectionStage(label);break;}});
 client.rest.on('rateLimited',info=>{discordConnection.rateLimitMs=info.timeToReset||info.retryAfter||0;connectionStage('REST rate limited');});
 client.on('shardReady',()=>connectionStage('gateway ready'));
 client.on('shardReconnecting',()=>connectionStage('gateway reconnecting'));
