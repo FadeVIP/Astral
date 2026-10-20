@@ -48,6 +48,8 @@ const http = require('http');
 const https = require('https');
 const { Client, GatewayIntentBits, EmbedBuilder, Partials, ActivityType } = require('discord.js');
 const admin = require('firebase-admin');
+const discordConnection={stage:'starting',lastEventAt:Date.now(),rateLimitMs:0};
+const connectionStage=stage=>{discordConnection.stage=stage;discordConnection.lastEventAt=Date.now();console.log('[Discord Connection]',stage);};
 
 // Автозагрузка переменных из .env (если файл существует)
 try {
@@ -126,6 +128,8 @@ const httpServer = http.createServer((req, res) => {
       publicData,
       discordPing: (client && client.ws) ? client.ws.ping : -1,
       botUser: (client && client.user) ? client.user.tag : 'connecting',
+      discordConnection,
+      discordReady: client.isReady(),
       timestamp: Date.now()
     }));
   } else {
@@ -158,6 +162,12 @@ const client = new Client({
   partials: [Partials.Channel, Partials.Message]
 });
 
+client.rest.on('rateLimited',info=>{discordConnection.rateLimitMs=info.timeToReset||info.retryAfter||0;connectionStage('REST rate limited');});
+client.on('shardReady',()=>connectionStage('gateway ready'));
+client.on('shardReconnecting',()=>connectionStage('gateway reconnecting'));
+client.on('shardDisconnect',event=>connectionStage('gateway disconnected '+event.code));
+client.on('shardError',error=>connectionStage('gateway error '+(error.code||error.name)));
+client.rest.on('response',request=>{if(request.path==='/gateway/bot')connectionStage('gateway configuration received');});
 const packOnline=require('./pack-online.cjs').start(db,client);
 const packReports=require('./pack-reports.cjs').start(db,client);
 client.on('error', (err) => {
@@ -268,7 +278,8 @@ function startKeepAliveSystem() {
   }, INTERVAL_MS);
 }
 
-client.once('ready', async () => {
+client.once('clientReady', async () => {
+  connectionStage('ready');
   console.log(`=======================================================`);
   console.log(`✦ [Discord] Бот успешно авторизован: ${client.user.tag}`);
   console.log(`✦ [Discord] Канал чата: ${DISCORD_CHANNEL_ID}`);
@@ -869,7 +880,9 @@ client.on('messageCreate', async (message) => {
 
 // 4. Запуск бота
 if (DISCORD_BOT_TOKEN && DISCORD_BOT_TOKEN !== 'ВСТАВЬТЕ_ТОКЕН_БОТА_DISCORD') {
-  client.login(DISCORD_BOT_TOKEN).catch(err => {
+  connectionStage('logging in');
+  client.login(DISCORD_BOT_TOKEN.trim()).catch(err => {
+    connectionStage('login failed '+(err.code||err.name));
     console.error('❌ [Discord Error] Ошибка входа бота:', err.message);
     console.error('   Проверьте правильность токена DISCORD_BOT_TOKEN в файле или переменных окружения.');
   });
