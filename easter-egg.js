@@ -1,30 +1,16 @@
 const hero=document.querySelector('#top');
 if(hero){
  const star=document.createElement('button');star.className='astral-secret-star';star.type='button';star.setAttribute('aria-label','Исследовать далёкую звезду');star.textContent='✦';hero.append(star);
- const dialog=document.createElement('dialog');dialog.className='astral-secret-dialog';dialog.innerHTML='<button type="button" class="secret-close" aria-label="Закрыть">×</button><span class="secret-symbol">✦</span><h2>Звезда ответила.</h2><p>Ты нашёл тайный сигнал Astral. Первый, кто подтвердит находку, станет победителем. Награду выдаст организатор вручную.</p><form><label>Игровой ник<input name="nickname" minlength="3" maxlength="16" pattern="[A-Za-z0-9_]{3,16}" autocomplete="off" required placeholder="Твой ник в Minecraft"></label><label>Discord или Telegram — необязательно<input name="contact" maxlength="80" autocomplete="off" placeholder="Как с тобой связаться"></label><p>Ник и контакт увидит организатор. Вход в аккаунт не нужен.</p><button class="secret-submit" type="submit">Подтвердить находку</button></form><p class="secret-status" role="status" aria-live="polite"></p>';document.body.append(dialog);
-
- const status=dialog.querySelector('.secret-status'),form=dialog.querySelector('form');let api,loading,busy=false,won=false;
+ const dialog=document.createElement('dialog');dialog.className='astral-secret-dialog';dialog.setAttribute('aria-labelledby','secret-title');
+ dialog.innerHTML=`<button type="button" class="secret-close" aria-label="Закрыть">×</button><div class="secret-reveal"><div class="secret-orbit" aria-hidden="true"><span>✦</span><i></i><i></i></div><span class="secret-eyebrow">СЕКРЕТНЫЙ СИГНАЛ · ASTRAL</span><h2 id="secret-title">Ты не просто смотришь на звёзды.<br>Ты находишь свои.</h2><p>Среди тысяч огней ты заметил тот самый. Вселенная любит любопытных — и теперь знает, что ты здесь.</p><blockquote>«Не жди знака. Стань звездой.»</blockquote><button class="secret-claim" type="button">Оставить свой след ✦</button></div><form hidden><span class="secret-symbol" aria-hidden="true">✦</span><h2>Впиши себя в созвездие</h2><p>Здесь хватит места каждому исследователю. Оставь ник — организатор увидит твою находку.</p><label>Игровой ник<input name="nickname" minlength="3" maxlength="16" pattern="[A-Za-z0-9_]{3,16}" autocomplete="off" required placeholder="Твой ник в Minecraft"></label><label>Discord или Telegram — необязательно<input name="contact" maxlength="80" autocomplete="off" placeholder="Как с тобой связаться"></label><p>Ник и контакт видит только организатор. Вход в аккаунт не нужен. Награды выдаются вручную.</p><button class="secret-submit" type="submit">Зажечь свою звезду</button></form><p class="secret-status" role="status" aria-live="polite"></p><button class="secret-again secret-claim" type="button" hidden>Добавить ещё ник</button>`;document.body.append(dialog);
+ const form=dialog.querySelector('form'),intro=dialog.querySelector('.secret-reveal'),again=dialog.querySelector('.secret-again'),status=dialog.querySelector('.secret-status');let api,loading,busy=false;
  const message=t=>status.textContent=t;
- function locked(value){busy=value;for(const el of dialog.querySelectorAll('input,button:not(.secret-close)'))el.disabled=value;}
- async function init(){
-  if(api)return api;if(loading)return loading;
-  loading=(async()=>{
-   const [a,b,c]=await Promise.all([import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js'),import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js'),import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-lite.js')]);
-   const app=a.getApps().find(x=>x.name==='astral-secret-guest')||a.initializeApp(window.__FROSTBORNE_FIREBASE_CONFIG__,'astral-secret-guest');const auth=b.getAuth(app),db=c.getFirestore(app);api={...b,...c,auth,db};return api;
-  })();try{return await loading;}finally{loading=null;}
- }
- async function show(){const a=await init(),state=await a.getDoc(a.doc(a.db,'siteSecrets','first-star'));if(state.exists()){won=true;form.hidden=true;message('Этот сигнал уже найден. Победитель записан — спасибо за исследование!');}else{message('Укажи ник и подтверди находку. Победителя определяет время приёма заявки сервером.');}}
- star.onclick=async()=>{dialog.showModal();message('Расшифровываем сигнал…');locked(true);try{await show();}catch{message('Сигнал пока недоступен. Проверь интернет и открой звезду ещё раз.');}finally{locked(false);}};
- dialog.querySelector('.secret-close').onclick=()=>dialog.close();
- form.onsubmit=async e=>{
-  e.preventDefault();if(busy||won)return;
-  const nickname=form.elements.nickname.value.trim(),contact=form.elements.contact.value.trim();if(!/^[A-Za-z0-9_]{3,16}$/.test(nickname)){message('Ник: 3–16 латинских букв, цифр или подчёркиваний.');return;}if(/[\x00-\x1f]/.test(contact)){message('Контакт должен быть одной строкой.');return;}
-  locked(true);message('Подтверждаем находку…');
-  try{
-   const a=await init();await a.auth.authStateReady();const user=a.auth.currentUser||(await a.signInAnonymously(a.auth)).user;
-   const batch=a.writeBatch(a.db);batch.set(a.doc(a.db,'siteSecretWinners','first-star'),{uid:user.uid,nickname,contact,foundAt:a.serverTimestamp()});batch.set(a.doc(a.db,'siteSecrets','first-star'),{found:true,foundAt:a.serverTimestamp()});
-   try{await batch.commit();}catch(e){const own=await a.getDoc(a.doc(a.db,'siteSecretWinners','first-star')).catch(()=>null);if(!own?.exists()||own.data().uid!==user.uid){const state=await a.getDoc(a.doc(a.db,'siteSecrets','first-star'));if(state.exists()){await show();return;}throw e;}}
-   won=true;form.hidden=true;message('Ты первый! Ник '+nickname+' записан. Организатор увидит заявку в админке и выдаст награду вручную.');
-  }catch{message('Не удалось подтвердить находку. Проверь интернет и повтори — успешная заявка не потеряется.');}finally{locked(false);}
- };
+ function locked(value){busy=value;for(const el of form.elements)el.disabled=value;}
+ async function init(){if(api)return api;if(loading)return loading;loading=(async()=>{const[a,b,c]=await Promise.all([import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js'),import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js'),import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-lite.js')]);const app=a.getApps().find(x=>x.name==='astral-secret-guest')||a.initializeApp(window.__FROSTBORNE_FIREBASE_CONFIG__,'astral-secret-guest');return api={...b,...c,auth:b.getAuth(app),db:c.getFirestore(app)};})();try{return await loading;}finally{loading=null;}}
+ function showForm(){intro.hidden=true;again.hidden=true;form.hidden=false;message('');form.elements.nickname.focus();}
+ star.onclick=()=>{if(!busy){intro.hidden=false;form.hidden=true;again.hidden=true;message('');}dialog.showModal();};
+ dialog.querySelector('.secret-close').onclick=()=>dialog.close();dialog.querySelector('.secret-reveal .secret-claim').onclick=showForm;
+ again.onclick=()=>{form.reset();showForm();};
+ form.onsubmit=async e=>{e.preventDefault();if(busy||form.hidden)return;const nickname=form.elements.nickname.value.trim(),contact=form.elements.contact.value.trim();if(!/^[A-Za-z0-9_]{3,16}$/.test(nickname)){message('Ник: 3–16 латинских букв, цифр или подчёркиваний.');return;}if(/[\x00-\x1f]/.test(contact)){message('Контакт должен быть одной строкой.');return;}
+ locked(true);message('Зажигаем твою звезду…');try{const a=await init();await a.auth.authStateReady();const user=a.auth.currentUser||(await a.signInAnonymously(a.auth)).user;const ref=a.doc(a.db,'siteStarFinders',user.uid+'_'+nickname.toLowerCase());const previous=await a.getDoc(ref);if(!previous.exists()){try{await a.setDoc(ref,{uid:user.uid,nickname,contact,foundAt:a.serverTimestamp()});}catch(error){if(!(await a.getDoc(ref)).exists())throw error;}}form.hidden=true;again.hidden=false;message('✦ '+nickname+', твоя звезда в созвездии! Находка записана. Организатор увидит её в админке.');again.focus();}catch{message('Не удалось записать находку. Проверь интернет и повтори — успешная заявка не потеряется.');}finally{locked(false);}};
 }
