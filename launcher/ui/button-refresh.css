@@ -1,0 +1,17 @@
+/* Astral controls: strong primary action, quieter secondary actions. */
+button{transition:background .16s,border-color .16s,box-shadow .16s,transform .16s}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+button:disabled{transform:none!important;box-shadow:none!important;cursor:not-allowed}
+.primary{border-radius:14px;border:1px solid #ffffff33;background:linear-gradient(125deg,#c7a3ff,#a77bec);color:#191126;box-shadow:0 4px 18px #a777df24;font-weight:750;letter-spacing:.2px}
+.primary:hover:not(:disabled){background:linear-gradient(125deg,#ddc3ff,#c198ff);box-shadow:0 6px 24px #b27cff42;transform:translateY(-1px)}
+.primary:active:not(:disabled){transform:translateY(1px)}
+.secondary,.text-button{border-radius:12px;border:1px solid var(--edge);background:var(--surface);color:var(--text)}
+.secondary:hover:not(:disabled),.text-button:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft);box-shadow:0 3px 12px #00000012}
+.nav-item{border-radius:12px}.nav-item.selected{box-shadow:inset 0 -2px 0 var(--accent);background:#b896ed14}
+#primaryButton{border-radius:16px;min-width:200px;position:relative;overflow:hidden}
+#primaryButton::before{content:'';position:absolute;width:60px;height:160%;left:-80px;top:-30%;transform:rotate(22deg);background:linear-gradient(90deg,transparent,#ffffff35,transparent);transition:left .6s}
+#primaryButton:hover::before{left:115%}
+.sidebar-bottom .wardrobe-button{width:auto;margin:0;padding:11px 13px;color:#eee4ff;white-space:nowrap}.wardrobe-button span{display:none}
+.wardrobe{background:var(--surface);color:var(--text)}.wardrobe p{color:var(--subtle)}.wardrobe select{background:var(--field);color:var(--text)}
+body[data-theme=light] .skin-stage{background:radial-gradient(ellipse,#e0ceff,#f5f1fc)}body[data-theme=light] .acoin-badge{color:#72500e;background:#fff6d9}
+@media(prefers-reduced-motion:reduce){button,#primaryButton::before{transition:none!important}}

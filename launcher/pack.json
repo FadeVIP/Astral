@@ -1,0 +1,37 @@
+{
+  "name": "Astral RPG",
+  "version": "1.1 Client Optimized",
+  "minecraft": "1.20.1",
+  "forge": "47.4.20",
+  "modCount": 193,
+  "driveFileId": "1U6Gd1t-4-zENAcQmPO2J6TfpU9sj1309",
+  "archiveBytes": 1133123513,
+  "sha256": "697d4cf8053bf3c05b413e95798f57d57127192a2751bdf869e556a72424797e",
+  "website": "https://astral-delta-gules.vercel.app/",
+  "firebase": {
+    "projectId": "astral-524a1",
+    "apiKey": "AIzaSyCmI7epHT8ZnK-AlGzRPbLSy3b73bdt1-Y",
+    "publicData": true
+  },
+  "java": {
+    "version": "17.0.20.1+1",
+    "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jre_x64_windows_hotspot_17.0.20.1_1.zip",
+    "sha256": "bc21a93923103cdaac93ee337b0ae4365e739fde36df823dd456bc67c8a9d352",
+    "expectedBytes": 43780109,
+    "folder": "jdk-17.0.20.1+1-jre"
+  },
+  "forgeInstaller": {
+    "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.20/forge-1.20.1-47.4.20-installer.jar",
+    "sha256": "0ebcf198609f925e0018842a79473ef74fda78534f86d82f2c0fdb26449c1fa4",
+    "expectedBytes": 8835110
+  },
+  "server": {
+    "host": "91.240.175.14",
+    "port": 25565,
+    "localPort": 25564,
+    "fingerprint": "604632ac67eb064574329a28704902772ce595ac03ffdf6cbd94cde1ada99d65",
+    "localHosts": [
+      "192.168.32.3"
+    ]
+  }
+}

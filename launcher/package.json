@@ -1,0 +1,48 @@
+{
+  "name": "astral-launcher",
+  "version": "0.5.12",
+  "private": true,
+  "description": "Astral RPG launcher with Google Drive installation",
+  "author": "Astral RPG",
+  "main": "src/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "test:electron": "node tools/check-electron.cjs",
+    "test:packaged": "node tools/check-electron.cjs --packaged",
+    "prebuild": "node tools/build-update-helper.cjs && npm test && npm run test:electron",
+    "postbuild": "npm run test:packaged",
+    "build": "electron-builder --win portable --x64"
+  },
+  "dependencies": {
+    "minecraft-launcher-core": "^3.18.2",
+    "yauzl": "3.4.0"
+  },
+  "devDependencies": {
+    "electron": "44.3.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "app.astral.launcher",
+    "productName": "Astral Launcher",
+    "artifactName": "Astral-Launcher-${version}-${arch}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "ui/**/*",
+      "assets/**/*",
+      "pack.json",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "assets/logo.png",
+      "signExecutable": false
+    },
+    "portable": {
+      "requestExecutionLevel": "user"
+    }
+  }
+}

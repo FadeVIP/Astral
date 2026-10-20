@@ -1,0 +1,75 @@
+    function cosmeticPurchase(uid, d) {
+      let item = get(/databases/$(database)/documents/cosmeticCatalog/$(d.purchase)).data;
+      let before = exists(/databases/$(database)/documents/accountWallets/$(uid)) ? get(/databases/$(database)/documents/accountWallets/$(uid)).data.balance : 0;
+      return owner(uid) && d.keys().hasOnly(['balance','purchase'])
+        && d.purchase is string && item.enabled == true && item.price is int && item.price >= 0
+        && d.balance is int && d.balance >= 0 && d.balance == before - item.price
+        && !exists(/databases/$(database)/documents/cosmeticOwners/$(uid)/items/$(d.purchase))
+        && getAfter(/databases/$(database)/documents/cosmeticOwners/$(uid)/items/$(d.purchase)).data.item == d.purchase;
+    }
+    match /accountWallets/{uid} {
+      allow create, update: if cosmeticPurchase(uid, request.resource.data);
+    }
+    match /cosmeticCatalog/{id} {
+      allow get, list: if true;
+      allow create, update: if launcherAdmin()
+        && request.resource.data.keys().hasOnly(['kind','name','price','enabled','design','color','rarity'])
+        && request.resource.data.kind in ['cape','wings','hat','halo','aura']
+        && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
+        && request.resource.data.price is int && request.resource.data.price >= 0 && request.resource.data.price <= 1000000
+        && request.resource.data.enabled is bool
+        && request.resource.data.design is int && request.resource.data.design >= 0 && request.resource.data.design <= 3
+        && request.resource.data.color.matches('^#[0-9a-fA-F]{6}$')
+        && request.resource.data.rarity in ['common','rare','epic','legendary'];
+      allow delete: if false;
+    }
+    match /cosmeticOwners/{uid}/items/{id} {
+      allow get, list: if owner(uid) || launcherAdmin();
+      allow create: if request.resource.data.keys().hasOnly(['item']) && request.resource.data.item == id
+        && (launcherAdmin() || (owner(uid)
+          && getAfter(/databases/$(database)/documents/accountWallets/$(uid)).data.purchase == id
+          && cosmeticPurchase(uid,getAfter(/databases/$(database)/documents/accountWallets/$(uid)).data)));
+      allow update: if false;
+      allow delete: if launcherAdmin();
+    }
+    function cosmeticSlot(uid, d, kind) {
+      let id = d.get(kind, '');
+      return (resource != null && d.get(kind, '') == resource.data.get(kind, '')) || id == '' || (exists(/databases/$(database)/documents/cosmeticOwners/$(uid)/items/$(id))
+        && get(/databases/$(database)/documents/cosmeticCatalog/$(id)).data.kind == kind);
+    }
+    match /accountCosmetics/{nickname} {
+      allow get: if true;
+      allow list, delete: if false;
+      allow create, update: if owner(request.auth.uid)
+        && get(/databases/$(database)/documents/members/$(request.auth.uid)).data.nickname.lower() == nickname
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['uid','cape','wings','hat','halo','aura'])
+        && cosmeticSlot(request.auth.uid,request.resource.data,'cape')
+        && cosmeticSlot(request.auth.uid,request.resource.data,'wings')
+        && cosmeticSlot(request.auth.uid,request.resource.data,'hat')
+        && cosmeticSlot(request.auth.uid,request.resource.data,'halo')
+        && cosmeticSlot(request.auth.uid,request.resource.data,'aura');
+    }
+    match /supportTickets/{ticket} {
+      allow get, list: if launcherAdmin() || owner(resource.data.uid);
+      allow create: if owner(request.resource.data.uid)
+        && request.resource.data.keys().hasOnly(['uid','nickname','subject','status'])
+        && request.resource.data.nickname == get(/databases/$(database)/documents/members/$(request.auth.uid)).data.nickname
+        && request.resource.data.subject is string && request.resource.data.subject.size() > 0 && request.resource.data.subject.size() <= 100
+        && request.resource.data.status == 'open';
+      allow update: if launcherAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['open','closed'];
+      allow delete: if false;
+      match /messages/{message} {
+        allow get, list: if launcherAdmin() || owner(get(/databases/$(database)/documents/supportTickets/$(ticket)).data.uid);
+        allow create: if request.resource.data.keys().hasOnly(['uid','admin','text','createdAt'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 3000
+          && ((launcherAdmin() && request.resource.data.admin == true)
+            || (owner(get(/databases/$(database)/documents/supportTickets/$(ticket)).data.uid)
+              && get(/databases/$(database)/documents/supportTickets/$(ticket)).data.status == 'open'
+              && request.resource.data.admin == false));
+        allow update, delete: if false;
+      }
+    }

@@ -1,0 +1,5 @@
+const test=require('node:test'),assert=require('node:assert/strict'),{serverConnection}=require('../src/server-connection.cjs');
+const config={host:'public.example',port:25565,fingerprint:'expected',localHosts:['192.168.32.3']};
+test('Status and game select the same verified LAN endpoint when public address fails',async()=>{const calls=[];const c=serverConnection(config,async p=>{calls.push(p);return {state:p.host===config.host?'unreachable':'online',online:0,max:20}});assert.equal((await c.status()).state,'online');assert.equal((await c.endpoint()).host,'192.168.32.3');assert.equal(calls.length,2);assert.equal(calls[1].fingerprint,'expected')});
+test('Certificate mismatch cannot silently fall back or start the game',async()=>{let calls=0;const c=serverConnection(config,async()=>{calls++;return {state:'untrusted'}});await assert.rejects(c.endpoint(),/Сертификат/);assert.equal(calls,1)});
+test('An unreachable server prevents game startup',async()=>{const c=serverConnection(config,async()=>({state:'unreachable'}));await assert.rejects(c.endpoint(),/недоступен/)});

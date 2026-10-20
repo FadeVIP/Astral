@@ -1,0 +1,7 @@
+const test=require('node:test'),assert=require('node:assert/strict'),{EventEmitter}=require('node:events'),crypto=require('node:crypto');
+const {queryStatus}=require('../src/server-status.cjs');
+const cert=Buffer.from('test certificate'),config={host:'test.invalid',port:1,fingerprint:crypto.createHash('sha256').update(cert).digest('hex')};
+function connection(value){let written=false;const socket=new EventEmitter();socket.getPeerCertificate=()=>({raw:cert});socket.destroy=()=>{};socket.write=()=>{written=true;const b=Buffer.from(JSON.stringify(value)),n=Buffer.alloc(4);n.writeUInt32BE(b.length);queueMicrotask(()=>{socket.emit('data',n.subarray(0,2));socket.emit('data',Buffer.concat([n.subarray(2),b]));})};return {socket,connect:()=>{queueMicrotask(()=>socket.emit('secureConnect'));return socket},written:()=>written};}
+test('Server count supports fragmented responses and zero players',async()=>{const c=connection({state:'online',online:0,max:20,checkedAt:1});const result=await queryStatus(config,c.connect);assert.equal(result.state,'online');assert.equal(result.online,0);assert.equal(result.max,20)});
+test('Malformed counts are never shown as valid online data',async()=>{const c=connection({state:'online',online:-1,max:20,checkedAt:1});assert.equal((await queryStatus(config,c.connect)).state,'unreachable')});
+test('Untrusted certificate blocks requests',async()=>{const c=connection({});assert.equal((await queryStatus({...config,fingerprint:'wrong'},c.connect)).state,'untrusted');assert.equal(c.written(),false)});

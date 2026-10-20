@@ -1,0 +1,1 @@
+const path=require('path'),{spawnSync}=require('child_process');const env={...process.env};delete env.ELECTRON_RUN_AS_NODE;const r=spawnSync(path.join(__dirname,'../node_modules/electron/dist/electron.exe'),[path.resolve(process.argv[2])],{env,stdio:'inherit'});process.exit(r.status||0);

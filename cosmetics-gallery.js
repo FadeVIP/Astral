@@ -1,0 +1,3 @@
+import {apiFor,listCatalog} from '/account-api.js';
+const root=document.getElementById('gallery'),status=document.getElementById('gallery-status');
+try{const items=(await listCatalog(apiFor({currentUser:null}))).filter(x=>x.enabled);status.textContent=items.length+' украшений в каталоге';for(const item of items){const a=document.createElement('a');a.href='/account';a.className='cosmetic-card';const canvas=document.createElement('canvas');canvas.width=180;canvas.height=160;CosmeticArt.draw(canvas,[item],.5);const name=document.createElement('strong');name.textContent=item.name;const price=document.createElement('small');price.textContent=item.price?item.price+' Acoin':'Бесплатно';a.append(canvas,name,price);root.append(a);}}catch(e){status.textContent=e.message;}

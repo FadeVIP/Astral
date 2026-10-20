@@ -1,0 +1,1205 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "cape-0-nebula",
+      "kind": "cape",
+      "design": 0,
+      "color": "#ba8dff",
+      "name": "Созвездие · Туманность",
+      "price": 0,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "cape-0-solar",
+      "kind": "cape",
+      "design": 0,
+      "color": "#ffca69",
+      "name": "Созвездие · Солнце",
+      "price": 125,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "cape-0-ice",
+      "kind": "cape",
+      "design": 0,
+      "color": "#81e8ff",
+      "name": "Созвездие · Лёд",
+      "price": 150,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "cape-0-rose",
+      "kind": "cape",
+      "design": 0,
+      "color": "#ff8fbc",
+      "name": "Созвездие · Роза",
+      "price": 175,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "cape-0-jade",
+      "kind": "cape",
+      "design": 0,
+      "color": "#77edb2",
+      "name": "Созвездие · Нефрит",
+      "price": 200,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "cape-0-ember",
+      "kind": "cape",
+      "design": 0,
+      "color": "#ff805e",
+      "name": "Созвездие · Пламя",
+      "price": 225,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "cape-1-nebula",
+      "kind": "cape",
+      "design": 1,
+      "color": "#ba8dff",
+      "name": "Комета · Туманность",
+      "price": 250,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "cape-1-solar",
+      "kind": "cape",
+      "design": 1,
+      "color": "#ffca69",
+      "name": "Комета · Солнце",
+      "price": 275,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "cape-1-ice",
+      "kind": "cape",
+      "design": 1,
+      "color": "#81e8ff",
+      "name": "Комета · Лёд",
+      "price": 300,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "cape-1-rose",
+      "kind": "cape",
+      "design": 1,
+      "color": "#ff8fbc",
+      "name": "Комета · Роза",
+      "price": 325,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "cape-1-jade",
+      "kind": "cape",
+      "design": 1,
+      "color": "#77edb2",
+      "name": "Комета · Нефрит",
+      "price": 350,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "cape-1-ember",
+      "kind": "cape",
+      "design": 1,
+      "color": "#ff805e",
+      "name": "Комета · Пламя",
+      "price": 375,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "cape-2-nebula",
+      "kind": "cape",
+      "design": 2,
+      "color": "#ba8dff",
+      "name": "Затмение · Туманность",
+      "price": 400,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "cape-2-solar",
+      "kind": "cape",
+      "design": 2,
+      "color": "#ffca69",
+      "name": "Затмение · Солнце",
+      "price": 425,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "cape-2-ice",
+      "kind": "cape",
+      "design": 2,
+      "color": "#81e8ff",
+      "name": "Затмение · Лёд",
+      "price": 450,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "cape-2-rose",
+      "kind": "cape",
+      "design": 2,
+      "color": "#ff8fbc",
+      "name": "Затмение · Роза",
+      "price": 475,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "cape-2-jade",
+      "kind": "cape",
+      "design": 2,
+      "color": "#77edb2",
+      "name": "Затмение · Нефрит",
+      "price": 500,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "cape-2-ember",
+      "kind": "cape",
+      "design": 2,
+      "color": "#ff805e",
+      "name": "Затмение · Пламя",
+      "price": 525,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "cape-3-nebula",
+      "kind": "cape",
+      "design": 3,
+      "color": "#ba8dff",
+      "name": "Сверхновая · Туманность",
+      "price": 550,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "cape-3-solar",
+      "kind": "cape",
+      "design": 3,
+      "color": "#ffca69",
+      "name": "Сверхновая · Солнце",
+      "price": 575,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "cape-3-ice",
+      "kind": "cape",
+      "design": 3,
+      "color": "#81e8ff",
+      "name": "Сверхновая · Лёд",
+      "price": 600,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "cape-3-rose",
+      "kind": "cape",
+      "design": 3,
+      "color": "#ff8fbc",
+      "name": "Сверхновая · Роза",
+      "price": 625,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "cape-3-jade",
+      "kind": "cape",
+      "design": 3,
+      "color": "#77edb2",
+      "name": "Сверхновая · Нефрит",
+      "price": 650,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "cape-3-ember",
+      "kind": "cape",
+      "design": 3,
+      "color": "#ff805e",
+      "name": "Сверхновая · Пламя",
+      "price": 675,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "wings-0-nebula",
+      "kind": "wings",
+      "design": 0,
+      "color": "#ba8dff",
+      "name": "Серафим · Туманность",
+      "price": 0,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "wings-0-solar",
+      "kind": "wings",
+      "design": 0,
+      "color": "#ffca69",
+      "name": "Серафим · Солнце",
+      "price": 125,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "wings-0-ice",
+      "kind": "wings",
+      "design": 0,
+      "color": "#81e8ff",
+      "name": "Серафим · Лёд",
+      "price": 150,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "wings-0-rose",
+      "kind": "wings",
+      "design": 0,
+      "color": "#ff8fbc",
+      "name": "Серафим · Роза",
+      "price": 175,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "wings-0-jade",
+      "kind": "wings",
+      "design": 0,
+      "color": "#77edb2",
+      "name": "Серафим · Нефрит",
+      "price": 200,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "wings-0-ember",
+      "kind": "wings",
+      "design": 0,
+      "color": "#ff805e",
+      "name": "Серафим · Пламя",
+      "price": 225,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "wings-1-nebula",
+      "kind": "wings",
+      "design": 1,
+      "color": "#ba8dff",
+      "name": "Дракон · Туманность",
+      "price": 250,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "wings-1-solar",
+      "kind": "wings",
+      "design": 1,
+      "color": "#ffca69",
+      "name": "Дракон · Солнце",
+      "price": 275,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "wings-1-ice",
+      "kind": "wings",
+      "design": 1,
+      "color": "#81e8ff",
+      "name": "Дракон · Лёд",
+      "price": 300,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "wings-1-rose",
+      "kind": "wings",
+      "design": 1,
+      "color": "#ff8fbc",
+      "name": "Дракон · Роза",
+      "price": 325,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "wings-1-jade",
+      "kind": "wings",
+      "design": 1,
+      "color": "#77edb2",
+      "name": "Дракон · Нефрит",
+      "price": 350,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "wings-1-ember",
+      "kind": "wings",
+      "design": 1,
+      "color": "#ff805e",
+      "name": "Дракон · Пламя",
+      "price": 375,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "wings-2-nebula",
+      "kind": "wings",
+      "design": 2,
+      "color": "#ba8dff",
+      "name": "Бабочка · Туманность",
+      "price": 400,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "wings-2-solar",
+      "kind": "wings",
+      "design": 2,
+      "color": "#ffca69",
+      "name": "Бабочка · Солнце",
+      "price": 425,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "wings-2-ice",
+      "kind": "wings",
+      "design": 2,
+      "color": "#81e8ff",
+      "name": "Бабочка · Лёд",
+      "price": 450,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "wings-2-rose",
+      "kind": "wings",
+      "design": 2,
+      "color": "#ff8fbc",
+      "name": "Бабочка · Роза",
+      "price": 475,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "wings-2-jade",
+      "kind": "wings",
+      "design": 2,
+      "color": "#77edb2",
+      "name": "Бабочка · Нефрит",
+      "price": 500,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "wings-2-ember",
+      "kind": "wings",
+      "design": 2,
+      "color": "#ff805e",
+      "name": "Бабочка · Пламя",
+      "price": 525,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "wings-3-nebula",
+      "kind": "wings",
+      "design": 3,
+      "color": "#ba8dff",
+      "name": "Феникс · Туманность",
+      "price": 550,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "wings-3-solar",
+      "kind": "wings",
+      "design": 3,
+      "color": "#ffca69",
+      "name": "Феникс · Солнце",
+      "price": 575,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "wings-3-ice",
+      "kind": "wings",
+      "design": 3,
+      "color": "#81e8ff",
+      "name": "Феникс · Лёд",
+      "price": 600,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "wings-3-rose",
+      "kind": "wings",
+      "design": 3,
+      "color": "#ff8fbc",
+      "name": "Феникс · Роза",
+      "price": 625,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "wings-3-jade",
+      "kind": "wings",
+      "design": 3,
+      "color": "#77edb2",
+      "name": "Феникс · Нефрит",
+      "price": 650,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "wings-3-ember",
+      "kind": "wings",
+      "design": 3,
+      "color": "#ff805e",
+      "name": "Феникс · Пламя",
+      "price": 675,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "hat-0-nebula",
+      "kind": "hat",
+      "design": 0,
+      "color": "#ba8dff",
+      "name": "Корона · Туманность",
+      "price": 0,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "hat-0-solar",
+      "kind": "hat",
+      "design": 0,
+      "color": "#ffca69",
+      "name": "Корона · Солнце",
+      "price": 125,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "hat-0-ice",
+      "kind": "hat",
+      "design": 0,
+      "color": "#81e8ff",
+      "name": "Корона · Лёд",
+      "price": 150,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "hat-0-rose",
+      "kind": "hat",
+      "design": 0,
+      "color": "#ff8fbc",
+      "name": "Корона · Роза",
+      "price": 175,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "hat-0-jade",
+      "kind": "hat",
+      "design": 0,
+      "color": "#77edb2",
+      "name": "Корона · Нефрит",
+      "price": 200,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "hat-0-ember",
+      "kind": "hat",
+      "design": 0,
+      "color": "#ff805e",
+      "name": "Корона · Пламя",
+      "price": 225,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "hat-1-nebula",
+      "kind": "hat",
+      "design": 1,
+      "color": "#ba8dff",
+      "name": "Цилиндр · Туманность",
+      "price": 250,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "hat-1-solar",
+      "kind": "hat",
+      "design": 1,
+      "color": "#ffca69",
+      "name": "Цилиндр · Солнце",
+      "price": 275,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "hat-1-ice",
+      "kind": "hat",
+      "design": 1,
+      "color": "#81e8ff",
+      "name": "Цилиндр · Лёд",
+      "price": 300,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "hat-1-rose",
+      "kind": "hat",
+      "design": 1,
+      "color": "#ff8fbc",
+      "name": "Цилиндр · Роза",
+      "price": 325,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "hat-1-jade",
+      "kind": "hat",
+      "design": 1,
+      "color": "#77edb2",
+      "name": "Цилиндр · Нефрит",
+      "price": 350,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "hat-1-ember",
+      "kind": "hat",
+      "design": 1,
+      "color": "#ff805e",
+      "name": "Цилиндр · Пламя",
+      "price": 375,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "hat-2-nebula",
+      "kind": "hat",
+      "design": 2,
+      "color": "#ba8dff",
+      "name": "Волшебник · Туманность",
+      "price": 400,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "hat-2-solar",
+      "kind": "hat",
+      "design": 2,
+      "color": "#ffca69",
+      "name": "Волшебник · Солнце",
+      "price": 425,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "hat-2-ice",
+      "kind": "hat",
+      "design": 2,
+      "color": "#81e8ff",
+      "name": "Волшебник · Лёд",
+      "price": 450,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "hat-2-rose",
+      "kind": "hat",
+      "design": 2,
+      "color": "#ff8fbc",
+      "name": "Волшебник · Роза",
+      "price": 475,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "hat-2-jade",
+      "kind": "hat",
+      "design": 2,
+      "color": "#77edb2",
+      "name": "Волшебник · Нефрит",
+      "price": 500,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "hat-2-ember",
+      "kind": "hat",
+      "design": 2,
+      "color": "#ff805e",
+      "name": "Волшебник · Пламя",
+      "price": 525,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "hat-3-nebula",
+      "kind": "hat",
+      "design": 3,
+      "color": "#ba8dff",
+      "name": "Антенны · Туманность",
+      "price": 550,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "hat-3-solar",
+      "kind": "hat",
+      "design": 3,
+      "color": "#ffca69",
+      "name": "Антенны · Солнце",
+      "price": 575,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "hat-3-ice",
+      "kind": "hat",
+      "design": 3,
+      "color": "#81e8ff",
+      "name": "Антенны · Лёд",
+      "price": 600,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "hat-3-rose",
+      "kind": "hat",
+      "design": 3,
+      "color": "#ff8fbc",
+      "name": "Антенны · Роза",
+      "price": 625,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "hat-3-jade",
+      "kind": "hat",
+      "design": 3,
+      "color": "#77edb2",
+      "name": "Антенны · Нефрит",
+      "price": 650,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "hat-3-ember",
+      "kind": "hat",
+      "design": 3,
+      "color": "#ff805e",
+      "name": "Антенны · Пламя",
+      "price": 675,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "halo-0-nebula",
+      "kind": "halo",
+      "design": 0,
+      "color": "#ba8dff",
+      "name": "Орбита · Туманность",
+      "price": 0,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "halo-0-solar",
+      "kind": "halo",
+      "design": 0,
+      "color": "#ffca69",
+      "name": "Орбита · Солнце",
+      "price": 125,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "halo-0-ice",
+      "kind": "halo",
+      "design": 0,
+      "color": "#81e8ff",
+      "name": "Орбита · Лёд",
+      "price": 150,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "halo-0-rose",
+      "kind": "halo",
+      "design": 0,
+      "color": "#ff8fbc",
+      "name": "Орбита · Роза",
+      "price": 175,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "halo-0-jade",
+      "kind": "halo",
+      "design": 0,
+      "color": "#77edb2",
+      "name": "Орбита · Нефрит",
+      "price": 200,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "halo-0-ember",
+      "kind": "halo",
+      "design": 0,
+      "color": "#ff805e",
+      "name": "Орбита · Пламя",
+      "price": 225,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "halo-1-nebula",
+      "kind": "halo",
+      "design": 1,
+      "color": "#ba8dff",
+      "name": "Сатурн · Туманность",
+      "price": 250,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "halo-1-solar",
+      "kind": "halo",
+      "design": 1,
+      "color": "#ffca69",
+      "name": "Сатурн · Солнце",
+      "price": 275,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "halo-1-ice",
+      "kind": "halo",
+      "design": 1,
+      "color": "#81e8ff",
+      "name": "Сатурн · Лёд",
+      "price": 300,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "halo-1-rose",
+      "kind": "halo",
+      "design": 1,
+      "color": "#ff8fbc",
+      "name": "Сатурн · Роза",
+      "price": 325,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "halo-1-jade",
+      "kind": "halo",
+      "design": 1,
+      "color": "#77edb2",
+      "name": "Сатурн · Нефрит",
+      "price": 350,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "halo-1-ember",
+      "kind": "halo",
+      "design": 1,
+      "color": "#ff805e",
+      "name": "Сатурн · Пламя",
+      "price": 375,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "halo-2-nebula",
+      "kind": "halo",
+      "design": 2,
+      "color": "#ba8dff",
+      "name": "Звёздный венец · Туманность",
+      "price": 400,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "halo-2-solar",
+      "kind": "halo",
+      "design": 2,
+      "color": "#ffca69",
+      "name": "Звёздный венец · Солнце",
+      "price": 425,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "halo-2-ice",
+      "kind": "halo",
+      "design": 2,
+      "color": "#81e8ff",
+      "name": "Звёздный венец · Лёд",
+      "price": 450,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "halo-2-rose",
+      "kind": "halo",
+      "design": 2,
+      "color": "#ff8fbc",
+      "name": "Звёздный венец · Роза",
+      "price": 475,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "halo-2-jade",
+      "kind": "halo",
+      "design": 2,
+      "color": "#77edb2",
+      "name": "Звёздный венец · Нефрит",
+      "price": 500,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "halo-2-ember",
+      "kind": "halo",
+      "design": 2,
+      "color": "#ff805e",
+      "name": "Звёздный венец · Пламя",
+      "price": 525,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "halo-3-nebula",
+      "kind": "halo",
+      "design": 3,
+      "color": "#ba8dff",
+      "name": "Двойная орбита · Туманность",
+      "price": 550,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "halo-3-solar",
+      "kind": "halo",
+      "design": 3,
+      "color": "#ffca69",
+      "name": "Двойная орбита · Солнце",
+      "price": 575,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "halo-3-ice",
+      "kind": "halo",
+      "design": 3,
+      "color": "#81e8ff",
+      "name": "Двойная орбита · Лёд",
+      "price": 600,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "halo-3-rose",
+      "kind": "halo",
+      "design": 3,
+      "color": "#ff8fbc",
+      "name": "Двойная орбита · Роза",
+      "price": 625,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "halo-3-jade",
+      "kind": "halo",
+      "design": 3,
+      "color": "#77edb2",
+      "name": "Двойная орбита · Нефрит",
+      "price": 650,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "halo-3-ember",
+      "kind": "halo",
+      "design": 3,
+      "color": "#ff805e",
+      "name": "Двойная орбита · Пламя",
+      "price": 675,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "aura-0-nebula",
+      "kind": "aura",
+      "design": 0,
+      "color": "#ba8dff",
+      "name": "Звёздная пыль · Туманность",
+      "price": 0,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "aura-0-solar",
+      "kind": "aura",
+      "design": 0,
+      "color": "#ffca69",
+      "name": "Звёздная пыль · Солнце",
+      "price": 125,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "aura-0-ice",
+      "kind": "aura",
+      "design": 0,
+      "color": "#81e8ff",
+      "name": "Звёздная пыль · Лёд",
+      "price": 150,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "aura-0-rose",
+      "kind": "aura",
+      "design": 0,
+      "color": "#ff8fbc",
+      "name": "Звёздная пыль · Роза",
+      "price": 175,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "aura-0-jade",
+      "kind": "aura",
+      "design": 0,
+      "color": "#77edb2",
+      "name": "Звёздная пыль · Нефрит",
+      "price": 200,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "aura-0-ember",
+      "kind": "aura",
+      "design": 0,
+      "color": "#ff805e",
+      "name": "Звёздная пыль · Пламя",
+      "price": 225,
+      "enabled": true,
+      "rarity": "common"
+    },
+    {
+      "id": "aura-1-nebula",
+      "kind": "aura",
+      "design": 1,
+      "color": "#ba8dff",
+      "name": "Искры · Туманность",
+      "price": 250,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "aura-1-solar",
+      "kind": "aura",
+      "design": 1,
+      "color": "#ffca69",
+      "name": "Искры · Солнце",
+      "price": 275,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "aura-1-ice",
+      "kind": "aura",
+      "design": 1,
+      "color": "#81e8ff",
+      "name": "Искры · Лёд",
+      "price": 300,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "aura-1-rose",
+      "kind": "aura",
+      "design": 1,
+      "color": "#ff8fbc",
+      "name": "Искры · Роза",
+      "price": 325,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "aura-1-jade",
+      "kind": "aura",
+      "design": 1,
+      "color": "#77edb2",
+      "name": "Искры · Нефрит",
+      "price": 350,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "aura-1-ember",
+      "kind": "aura",
+      "design": 1,
+      "color": "#ff805e",
+      "name": "Искры · Пламя",
+      "price": 375,
+      "enabled": true,
+      "rarity": "rare"
+    },
+    {
+      "id": "aura-2-nebula",
+      "kind": "aura",
+      "design": 2,
+      "color": "#ba8dff",
+      "name": "Спираль · Туманность",
+      "price": 400,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "aura-2-solar",
+      "kind": "aura",
+      "design": 2,
+      "color": "#ffca69",
+      "name": "Спираль · Солнце",
+      "price": 425,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "aura-2-ice",
+      "kind": "aura",
+      "design": 2,
+      "color": "#81e8ff",
+      "name": "Спираль · Лёд",
+      "price": 450,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "aura-2-rose",
+      "kind": "aura",
+      "design": 2,
+      "color": "#ff8fbc",
+      "name": "Спираль · Роза",
+      "price": 475,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "aura-2-jade",
+      "kind": "aura",
+      "design": 2,
+      "color": "#77edb2",
+      "name": "Спираль · Нефрит",
+      "price": 500,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "aura-2-ember",
+      "kind": "aura",
+      "design": 2,
+      "color": "#ff805e",
+      "name": "Спираль · Пламя",
+      "price": 525,
+      "enabled": true,
+      "rarity": "epic"
+    },
+    {
+      "id": "aura-3-nebula",
+      "kind": "aura",
+      "design": 3,
+      "color": "#ba8dff",
+      "name": "Снежинки · Туманность",
+      "price": 550,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "aura-3-solar",
+      "kind": "aura",
+      "design": 3,
+      "color": "#ffca69",
+      "name": "Снежинки · Солнце",
+      "price": 575,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "aura-3-ice",
+      "kind": "aura",
+      "design": 3,
+      "color": "#81e8ff",
+      "name": "Снежинки · Лёд",
+      "price": 600,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "aura-3-rose",
+      "kind": "aura",
+      "design": 3,
+      "color": "#ff8fbc",
+      "name": "Снежинки · Роза",
+      "price": 625,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "aura-3-jade",
+      "kind": "aura",
+      "design": 3,
+      "color": "#77edb2",
+      "name": "Снежинки · Нефрит",
+      "price": 650,
+      "enabled": true,
+      "rarity": "legendary"
+    },
+    {
+      "id": "aura-3-ember",
+      "kind": "aura",
+      "design": 3,
+      "color": "#ff805e",
+      "name": "Снежинки · Пламя",
+      "price": 675,
+      "enabled": true,
+      "rarity": "legendary"
+    }
+  ]
+}

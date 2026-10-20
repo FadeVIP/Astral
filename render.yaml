@@ -1,0 +1,52 @@
+services:
+  - type: web
+    name: astral-mine-mirror
+    runtime: static
+    branch: main
+    buildCommand: node scripts/build-static.cjs
+    staticPublishPath: .render-site
+    autoDeployTrigger: commit
+    envVars:
+      - key: SKIP_INSTALL_DEPS
+        value: "true"
+    routes:
+      - type: rewrite
+        source: /account
+        destination: /account.html
+      - type: rewrite
+        source: /cosmetics
+        destination: /cosmetics.html
+      - type: rewrite
+        source: /admin
+        destination: /admin.html
+      - type: rewrite
+        source: /download
+        destination: /download.html
+      - type: rewrite
+        source: /guide
+        destination: /guide.html
+      - type: rewrite
+        source: /chat
+        destination: /chat.html
+      - type: rewrite
+        source: /bosses
+        destination: /bosses.html
+      - type: rewrite
+        source: /codex
+        destination: /codex.html
+      - type: rewrite
+        source: /grimoires
+        destination: /grimoires.html
+      - type: rewrite
+        source: /quests
+        destination: /quests.html
+      - type: rewrite
+        source: /starcatcher
+        destination: /starcatcher.html
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate

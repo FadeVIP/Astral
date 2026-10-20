@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "title": "A S T R A L",
+  "subtitle": "ТВОЯ ИСТОРИЯ НАЧИНАЕТСЯ ЗДЕСЬ",
+  "footer": "JAVA 1.20.1  /  ИССЛЕДУЙ. СОЗДАВАЙ. ОТКРЫВАЙ.",
+  "backgroundImage": "",
+  "overlay": 60,
+  "stars": true,
+  "titleColor": "#f3edff",
+  "textColor": "#b4accb",
+  "buttons": [
+    {"id":"play","action":"play","label":"Играть","url":"","visible":true,"icon":"","x":205,"y":89,"width":230,"height":24,"color":"#c4a3fa","textColor":"#19102b"},
+    {"id":"network","action":"network","label":"Сеть","url":"","visible":true,"icon":"","x":205,"y":119,"width":230,"height":24,"color":"#1c2134","textColor":"#f3edff"},
+    {"id":"settings","action":"settings","label":"Настройки","url":"","visible":true,"icon":"","x":205,"y":149,"width":112,"height":24,"color":"#1c2134","textColor":"#f3edff"},
+    {"id":"quit","action":"quit","label":"Выйти","url":"","visible":true,"icon":"","x":323,"y":149,"width":112,"height":24,"color":"#1c2134","textColor":"#f3edff"},
+    {"id":"website","action":"link","label":"Сайт Astral","url":"https://astral-mine-web.vercel.app/","visible":true,"icon":"","x":205,"y":181,"width":112,"height":26,"color":"#1d354c","textColor":"#ffffff"},
+    {"id":"discord","action":"link","label":"Discord","url":"https://discord.com/invite/Daa93fUsh3","visible":true,"icon":"discord","x":289,"y":213,"width":28,"height":26,"color":"#182033","textColor":"#f3edff"},
+    {"id":"telegram","action":"link","label":"Telegram","url":"https://t.me/FadeVIPcommunity","visible":true,"icon":"telegram","x":323,"y":213,"width":28,"height":26,"color":"#182033","textColor":"#f3edff"},
+    {"id":"donate","action":"link","label":"Пожертвовать","url":"https://pay.cloudtips.ru/p/e6302623","visible":true,"icon":"","x":323,"y":181,"width":112,"height":26,"color":"#452338","textColor":"#ffffff"}
+  ]
+}

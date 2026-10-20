@@ -1,0 +1,25 @@
+    match /directPlayRequests/{id} {
+      allow get, list: if request.auth != null && resource.data.host == playerNick();
+      allow get, list: if request.auth != null && resource.data.guest == playerNick();
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['host','guest','status','expires'])
+        && request.resource.data.guest == playerNick()
+        && request.resource.data.host.matches('^[a-z0-9_]{3,16}$')
+        && request.resource.data.host != playerNick()
+        && id == playerNick()+'~'+request.resource.data.host
+        && friendsWith(playerNick(),request.resource.data.host)
+        && request.resource.data.status == 'pending'
+        && request.resource.data.expires is int
+        && request.resource.data.expires > request.time.toMillis()
+        && request.resource.data.expires <= request.time.toMillis()+360000;
+      allow update: if request.auth != null && resource.data.host == playerNick()
+        && friendsWith(playerNick(),resource.data.guest)
+        && resource.data.status == 'pending' && resource.data.expires > request.time.toMillis()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','token','endpoints'])
+        && ((request.resource.data.status == 'declined' && request.resource.data.keys().hasOnly(['host','guest','status','expires']))
+          || (request.resource.data.status == 'approved'
+            && request.resource.data.keys().hasOnly(['host','guest','status','expires','token','endpoints'])
+            && request.resource.data.token.matches('^[a-f0-9]{64}$')
+            && request.resource.data.endpoints is string && request.resource.data.endpoints.size() <= 1024));
+      allow delete: if request.auth != null && (resource.data.host == playerNick() || resource.data.guest == playerNick());
+    }

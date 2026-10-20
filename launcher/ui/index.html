@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://cdn.modrinth.com; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Astral Launcher</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="atlas.css">
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="atmosphere-editor.css">
+  <link rel="stylesheet" href="account-extras.css">
+  <link rel="stylesheet" href="button-refresh.css">
+  <link rel="stylesheet" href="cosmetics.css">
+  <link rel="stylesheet" href="player-hub.css">
+  <link rel="stylesheet" href="collection.css">
+</head>
+<body data-theme="star">
+  <aside class="sidebar">
+    <div class="brand"><img class="brand-mark" src="../assets/logo.png" alt=""><div>ASTRAL<small>ТВОЯ ВСЕЛЕННАЯ</small></div></div>
+    <div class="nav-label">ПРОСТРАНСТВО</div>
+    <nav aria-label="Главная навигация">
+      <button class="nav-item selected" id="homeNav" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg> Библиотека</button>
+      <button class="nav-item" id="settingsNav"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="16" cy="17" r="3"/></svg> Настройки</button>
+      <button class="nav-item" id="adminNav" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/></svg> Студия сборок</button>
+      <button class="nav-item" id="siteButton"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5C8 2 4 3 3 4v15c3-2 6-1 9 1 3-2 6-3 9-1V4c-3-2-6-1-9 1v15"/></svg> Сайт и гайды <small>↗</small></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button id="wardrobeButton" class="wardrobe-button">✦ Гардероб <span>Скины и образ →</span></button>
+      <div class="account-card"><div class="avatar">◈</div><div><strong id="accountName">Аккаунт Astral</strong><p id="accountStatus">Войдите, чтобы играть</p></div></div>
+      <button id="acoinBadge" class="acoin-badge" title="Обновить баланс Acoin"><span>◈</span> <strong id="acoinBalance">—</strong> Acoin</button>
+      <button id="accountButton" class="account-button">Вход / Регистрация <span>↗</span></button>
+    </div>
+  </aside>
+  <main>
+    <header><div class="breadcrumb">ТВОЁ ПРОСТРАНСТВО <span>/</span> <strong id="breadcrumbPack">Astral RPG</strong></div><div class="platform">JAVA EDITION <span class="app-version">v<span id="appVersion">0.1.0</span></span></div></header>
+    <section id="homeView">
+      <div id="launcherUpdateBanner" class="launcher-update" hidden role="status"><div><strong>Обновление лаунчера</strong><p id="launcherUpdateMessage"></p></div><button id="installLauncherUpdate" class="secondary" hidden>Обновить и перезапустить</button></div>
+      <div class="library-heading"><div><span class="eyebrow">КОЛЛЕКЦИЯ ПРИКЛЮЧЕНИЙ</span><h2>Библиотека миров<span class="heading-dot">.</span></h2></div><button id="refreshCatalog" class="text-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg> Обновить каталог</button></div>
+      <div id="packCards" class="pack-cards" aria-label="Выбор сборки"></div>
+      <div class="hero" id="packHero" data-cover="citadel">
+        <img id="heroCustomCover" class="hero-custom-cover" alt="" hidden>
+        <div class="hero-overlay"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="hero-content">
+          <div class="eyebrow"><span></span> ЗА ПРЕДЕЛАМИ ОБЫЧНОГО</div>
+          <h1 id="heroTitle">Твоя история.<br><em>Твоя вселенная.</em></h1>
+          <p id="heroDescription">От первого костра до битвы с титанами.<br>Открой мир Astral — и найди в нём свой путь.</p>
+          <div class="hero-tags"><span>Сюжетное RPG</span><span>Исследование</span><span>Магия и механизмы</span></div>
+        </div>
+        <div class="hero-edition"><span>✦</span><small>CLIENT OPTIMIZED</small></div>
+      </div>
+      <div class="info-strip"><div><span>ВЕРСИЯ ИГРЫ</span><strong id="minecraft">1.20.1</strong></div><div><span>ЗАГРУЗЧИК</span><strong id="forge">Forge 47.4.20</strong></div><div><span>МОДИФИКАЦИИ</span><strong id="mods">190 модов</strong></div><div><span>ИСТОЧНИК СБОРКИ</span><button id="driveButton">Google Drive ↗</button></div></div>
+      <div class="cards without-server"><article class="memory-card"><div class="card-index">ПАМЯТЬ ДЛЯ ИГРЫ</div><div class="memory-line"><strong id="ramLabel">6 <small>ГБ</small></strong><button id="adjustMemory">Настроить ↗</button></div><p>Другие сборки и их миры остаются в своих папках.</p></article></div>
+    </section>
+    <section id="adminView" hidden>
+      <article class="atmo-studio">
+        <div class="atmo-heading"><div><span class="eyebrow">ASTRAL ATMOSPHERE · MINECRAFT 1.20.1</span><h2>Главное меню — по твоим правилам</h2><p>Меняй фон и кнопки. Игроки получат опубликованное оформление перед следующим запуском игры.</p></div><button id="atmoOpen" class="secondary" type="button">Оформление Minecraft</button></div>
+        <div id="atmoEditor" hidden>
+          <p id="atmoStatus" role="status"></p>
+          <div class="atmo-toolbar"><button id="atmoImage" type="button">Загрузить фон</button><button id="atmoRemoveImage" type="button">Стандартный фон</button><button id="atmoImport" type="button">Импорт</button><button id="atmoExport" type="button">Экспорт</button><button id="atmoReload" type="button">Опубликованный вариант</button></div>
+          <div class="atmo-workspace"><div><div id="atmoPreview" class="atmo-preview" aria-label="Предпросмотр главного меню"><img id="atmoBackground" alt=""><div id="atmoShade"></div><strong id="atmoPreviewTitle"></strong><span id="atmoPreviewSubtitle"></span><div id="atmoPreviewButtons"></div><span id="atmoPreviewFooter"></span></div><p class="field-help">Макет 640 × 360. Нажми кнопку на макете, чтобы настроить её. В игре используется шрифт Minecraft; проверка не разрешит пересечение кнопок.</p></div>
+          <div class="atmo-properties"><label>Кнопка<select id="atmoButtonSelect"></select></label><label>Название<input id="atmoLabel" maxlength="32"></label><label>Ссылка HTTPS<input id="atmoUrl" type="url" maxlength="500"></label><label>Значок<select id="atmoIcon"><option value="">Показывать текст</option><option value="globe">Сайт</option><option value="discord">Discord</option><option value="telegram">Telegram</option><option value="heart">Сердце</option></select></label><div class="atmo-grid"><label>X<input id="atmoX" type="number" min="0" max="620"></label><label>Y<input id="atmoY" type="number" min="72" max="320"></label><label>Ширина<input id="atmoWidth" type="number" min="24" max="600"></label><label>Высота<input id="atmoHeight" type="number" min="20" max="64"></label><label>Фон кнопки<input id="atmoColor" type="color"></label><label>Цвет текста<input id="atmoTextColor" type="color"></label></div><label class="atmo-check"><input id="atmoVisible" type="checkbox"> Показывать кнопку</label><div class="atmo-toolbar"><button id="atmoAdd" type="button">+ Кнопка-ссылка</button><button id="atmoDelete" type="button">Удалить кнопку</button></div></div></div>
+          <div class="atmo-grid atmo-general"><label>Заголовок<input id="atmoTitle" maxlength="32"></label><label>Подзаголовок<input id="atmoSubtitle" maxlength="80"></label><label>Нижняя подпись<input id="atmoFooter" maxlength="100"></label><label>Затемнение фона, %<input id="atmoOverlay" type="number" min="0" max="90"></label><label>Цвет заголовка<input id="atmoTitleColor" type="color"></label><label>Цвет подписей<input id="atmoCaptionColor" type="color"></label><label class="atmo-check"><input id="atmoStars" type="checkbox"> Мерцающие звёзды</label></div>
+          <p class="field-help">Настройки относятся к главному меню основной Astral. Ранний экран Forge и меню паузы остаются прежними. Фон автоматически уменьшается; отдельное хранилище подключать не нужно. «Играть» и «Выйти» должны оставаться видимыми.</p>
+          <div class="atmo-toolbar"><button id="atmoSave" class="secondary" type="button">Сохранить черновик</button><button id="atmoPublish" class="primary" type="button">Опубликовать игрокам</button></div>
+        </div>
+      </article>
+      <div class="library-heading"><div><span class="eyebrow">СТУДИЯ ASTRAL / АДМИНИСТРАТОР</span><h1>Управление сборками</h1><p>Опубликуй новый мир. Он появится у игроков без нового EXE.</p></div><button id="newPack" class="secondary">+ Новая сборка</button></div>
+      <div class="admin-layout"><div><div id="adminPackList" class="admin-pack-list"></div><p class="admin-hint">Выбери сборку слева. Основная Astral редактируется полностью: ZIP, Minecraft, Forge, оформление и файлы. Исходная рабочая версия сохранена отдельно.</p></div>
+      <form id="packForm" class="pack-form">
+        <div class="form-heading"><h2 id="editorTitle">Новая сборка</h2><span>GOOGLE DRIVE → КАТАЛОГ</span></div>
+        <div class="form-grid"><label>Название<input id="packName" required maxlength="64" placeholder="Например, Astral Tech"></label><label>Версия сборки<input id="packVersion" required maxlength="40" placeholder="1.0"></label></div>
+        <label>Описание<textarea id="packDescription" maxlength="600" rows="3" placeholder="Что ждёт игроков в этом мире?"></textarea></label>
+        <label>Ссылка на ZIP в Google Drive<input id="packDrive" type="url" required placeholder="https://drive.google.com/file/d/…/view"></label>
+        <p class="field-help">Открой доступ «Все, у кого есть ссылка». В ZIP должна быть папка mods с файлами модов. Поддерживается и папка .minecraft внутри архива.</p>
+        <div class="form-grid"><label>Minecraft<input id="packMinecraft" required maxlength="20" placeholder="1.20.1"></label><label>Forge<input id="packForge" maxlength="30" placeholder="Автоматически"></label></div>
+        <p class="field-help">Укажи точную версию Forge из своей сборки или оставь пустой для рекомендованной. Java будет подобрана автоматически.</p>
+        
+        <fieldset class="cover-choices" id="coverChoices"><legend>Фон сборки</legend><label><input name="packCover" type="radio" value="citadel" checked><img src="../assets/cinematic-citadel.png" alt="Парящая цитадель"><span>Космическая цитадель</span></label><label><input name="packCover" type="radio" value="forest"><img src="../assets/cinematic-forest.png" alt="Древний лесной портал"><span>Забытый мир</span></label></fieldset>
+        <div class="custom-cover-controls"><button id="choosePackCover" type="button" class="secondary">Выбрать своё изображение</button><button id="removePackCover" type="button" class="secondary" disabled>Убрать своё</button></div>
+        <p id="customCoverStatus" class="custom-cover-status">PNG, JPG или WebP до 10 МБ. Лучше всего подойдёт горизонтальное изображение.</p>
+        <img id="customCoverPreview" class="custom-cover-preview" alt="Предпросмотр своего фона" hidden>
+        <label class="publish-check"><input id="packPublished" type="checkbox" checked> Показывать игрокам</label>
+        <p id="analysisResult" class="analysis-result" role="status">Сначала проверь архив — лаунчер рассчитает размер, число модов и контрольную сумму.</p>
+        <div class="editor-actions"><button id="deletePack" type="button" class="secondary" hidden>Удалить из каталога</button><button id="analyzePack" type="button" class="secondary">1. Проверить архив</button><button id="publishPack" type="submit" class="primary" disabled>2. Опубликовать</button></div>
+      </form></div>
+      <article class="content-studio" id="contentStudio" hidden>
+        <div class="form-heading"><div><span class="eyebrow">ФАЙЛЫ И ОБНОВЛЕНИЯ</span><h2>Содержимое сборки</h2></div><button id="contentOpen" class="secondary" type="button">Управлять модами и файлами</button></div>
+        <p>1. Добавь файлы или отметь удаление → 2. Сохрани черновик → 3. Опубликуй обновление. Игроки получат изменения перед следующим запуском Minecraft.</p>
+        <div id="contentBody" hidden>
+          <p id="contentStatus" role="status"></p>
+          <button id="contentReset" class="secondary" type="button">Отменить черновик и загрузить опубликованную версию</button>
+          <label>Название версии обновления<input id="contentVersion" maxlength="40" placeholder="Например, 1.2.1"></label>
+          <nav class="content-categories" aria-label="Категории файлов"><button type="button" data-content-category="mods" aria-pressed="true">Моды</button><button type="button" data-content-category="resourcepacks">Ресурспаки</button><button type="button" data-content-category="shaderpacks">Шейдеры</button><button type="button" data-content-category="config">Конфиги</button><button type="button" data-content-category="">Все файлы</button></nav>
+          <div class="manager-toolbar"><input id="contentSearch" aria-label="Поиск файлов" placeholder="Найти по имени файла…"><select id="contentStateFilter" aria-label="Состояние файла"><option value="all">Все состояния</option><option value="active">Оставить в сборке</option><option value="removed">К удалению</option></select><button id="contentBrowse" class="secondary" type="button">Каталог Modrinth</button><button id="contentQuickAdd" class="secondary" type="button">+ Добавить файл</button></div>
+          <div class="manager-toolbar"><span id="contentSelectionCount">Выбрано: 0</span><button id="contentSelectVisible" type="button" class="secondary">Выбрать найденные</button><button id="contentClearSelection" type="button" class="secondary">Снять выбор</button><button id="contentRemoveSelected" type="button" class="secondary" disabled>Убрать выбранные</button><button id="contentRestoreSelected" type="button" class="secondary" disabled>Вернуть выбранные</button></div>
+          <div class="manager-toolbar"><button id="contentExport" type="button" class="secondary">Экспорт списка</button><button data-content-folder="mods" type="button" class="secondary">Папка модов ↗</button><button data-content-folder="config" type="button" class="secondary">Конфиги ↗</button><button data-content-folder="logs" type="button" class="secondary">Журналы ↗</button><small>Папки установленной копии на этом ПК</small></div>
+          <div class="manager-row manager-head"><span></span><span>Имя файла</span><span>Размер</span><span>В черновике</span><span>Действие</span></div><div class="content-files" id="contentFiles"></div>
+          <details class="content-import" id="contentAddPanel"><summary>Добавить или заменить файл через Drive</summary><p class="field-help">Для файла в корне Minecraft укажи <strong>options.txt</strong> без названия папки. Он заменит все настройки игры один раз при получении нового содержимого; прежний файл сохранится в резервной копии. Следующие личные изменения игрока сохраняются.</p><label>Ссылка на файл Google Drive<input id="contentFileUrl" placeholder="https://drive.google.com/file/d/…/view"></label><label>Путь в сборке<input id="contentFilePath" placeholder="mods/example-1.0.jar или options.txt"></label><button id="contentAdd" class="secondary" type="button">Проверить и добавить в черновик</button></details>
+          <details class="content-import"><summary>Импортировать папку Google Drive</summary><label>Публичная папка<input id="contentFolderUrl" placeholder="https://drive.google.com/drive/folders/…"></label><label>Куда добавить содержимое<select id="contentTarget"><option value="mods">Моды → mods</option><option value="config">Настройки → config</option><option value="resourcepacks">Ресурспаки → resourcepacks</option><option value="shaderpacks">Шейдеры → shaderpacks</option><option value="scripts">Рецепты и скрипты → scripts</option><option value="">Корень сборки: внутри уже есть mods, config…</option></select></label><button id="contentImportFolder" class="secondary" type="button">Проверить папку и добавить файлы</button><p class="field-help">Импорт добавляет и заменяет файлы. Для удаления отметь их в списке ниже. Файлы на Google Drive остаются на месте.</p>
+          <details><summary>Подключить Google Drive API — один раз на этом ПК</summary><ol><li>В Google Cloud Console выбери свой проект.</li><li>В «API и сервисы → Библиотека» включи Google Drive API.</li><li>В «Учётные данные» создай API-ключ и ограничь его API «Google Drive API». Ключ используется только для чтения публичных папок.</li><li>Открой папке и файлам доступ «Все, у кого есть ссылка» и вставь ключ ниже.</li></ol><label>API-ключ<input id="contentDriveKey" type="password" autocomplete="off" placeholder="AIza…"></label><button id="contentSaveDriveKey" class="secondary" type="button">Сохранить подключение</button><p class="field-help">Служебный JSON Firebase и пароль Google здесь не нужны. Импорт отдельного файла выше работает без API-ключа.</p></details></details>
+          <p class="field-help">Удаление и замена применяются только к отмеченным файлам. Миры и скриншоты не изменяются. Предыдущие версии изменённых файлов сохраняются в резервной копии. Совместимость модов проверяй в тестовой игре до публикации.</p>
+          <div class="form-actions"><button id="contentSave" class="secondary" type="button">Сохранить черновик</button><button id="contentPublish" class="primary" type="button">Опубликовать обновление игрокам</button></div>
+        </div>
+      </article>
+    </section>
+    <section id="settingsView" hidden>
+      <article class="setting-panel" id="lanPanel"><h2>Играть с друзьями</h2><label><input type="checkbox" id="lanLocalProfiles"> Разрешить локальные профили в моих LAN-мирах</label><p>Включено по умолчанию. Для игры через Astral открой «Друзья» в меню паузы, открой доступ к миру и прими запрос. Лаунчер сначала пробует прямое соединение, затем собственный VPS. Для обычной LAN можно открыть мир через меню Minecraft и передать адрес и порт. У хозяина тоже должна быть включена эта настройка; всем нужны разные ники и одинаковые моды. Изменения действуют после перезапуска игры.</p></article>
+      <article class="setting-panel theme-panel"><h2>Твоя атмосфера</h2><p>Выбери оформление лаунчера. Тема сохраняется на этом компьютере.</p><div class="theme-options" role="group" aria-label="Оформление лаунчера"><button type="button" data-theme-choice="light" aria-pressed="false"><span class="theme-sample light-sample">☀</span><strong>Светлая</strong><small>Воздух и чистые линии</small></button><button type="button" data-theme-choice="dark" aria-pressed="false"><span class="theme-sample dark-sample">◐</span><strong>Тёмная</strong><small>Спокойный графит</small></button><button type="button" data-theme-choice="star" aria-pressed="true"><span class="theme-sample star-sample">✦</span><strong>Звёздная</strong><small>Твоя маленькая вселенная</small></button></div></article>
+      <article class="setting-panel compact"><div><h2>Обновления лаунчера</h2><p id="launcherUpdateStatus">Проверяем новую версию при запуске.</p></div><button id="checkLauncherUpdate" class="secondary">Проверить</button></article>
+      <div class="settings-title"><span class="eyebrow">УДОБНО ИМЕННО ТЕБЕ</span><h1>Настройки</h1><p>Изменения сохраняются автоматически.</p></div>
+      <article class="setting-panel"><div><h2>Оперативная память</h2><p id="ramHelp">Для сборки рекомендуем 6–8 ГБ. Оставьте память для Windows.</p></div><output id="ramOutput" for="ramRange">6 ГБ</output><input id="ramRange" type="range" min="4" max="16" step="1" value="6" aria-label="Память для Minecraft в гигабайтах"><div class="range-labels"><span>4 ГБ</span><span id="ramMax">16 ГБ</span></div></article>
+      <article class="setting-panel"><h2>Папка установки</h2><p>В ней хранятся сборка, миры и компоненты запуска. Смена папки не переносит и не удаляет предыдущую установку.</p><div class="folder-row"><code id="folderPath">Загрузка…</code><button id="chooseFolder" class="secondary">Изменить</button></div></article>
+      <article class="setting-panel compact"><div><h2>Сборка и обновления</h2><p>Проверка модов и ресурсов, восстановление недостающих файлов. Миры и личные настройки сохраняются. Обновления проверяются и перед запуском.</p></div><div><button id="repairButton" class="secondary">Проверить и обновить</button><button id="uninstallPack" class="secondary">Удалить с компьютера</button></div></article>
+      <article class="setting-panel compact"><div><h2>Аккаунт Astral</h2><p>Твой профиль открывает доступ к сборкам. Для входа и проверки доступа нужен интернет.</p></div><button id="settingsAccount" class="secondary">Мой аккаунт ↗</button></article>
+    </section>
+    <footer class="launch-panel">
+      <div class="launch-top"><div class="status-icon" id="statusIcon">↓</div><div class="status-copy"><strong id="statusTitle">Этот мир ждёт тебя</strong><p id="statusMessage" aria-live="polite">Подготавливаем библиотеку…</p></div><button id="folderButton" class="folder-button" title="Открыть папку сборки" aria-label="Открыть папку сборки"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a1 1 0 0 1 1-1h5l3 3h8a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7Z"/><path d="M3 9h18"/></svg></button><button id="cancelButton" class="secondary" hidden>Отмена</button><button id="primaryButton" class="primary" disabled><span id="primaryText">Загрузка…</span><span id="primaryIcon" aria-hidden="true">↓</span></button></div>
+      <progress id="progress" max="100" value="0" aria-label="Прогресс установки" hidden></progress>
+      <div class="launch-bottom"><span id="releaseLabel">ASTRAL · CLIENT OPTIMIZED</span><span id="progressDetails">Для первого запуска нужен интернет</span></div>
+    </footer>
+    <div id="notice" class="notice" role="status" hidden></div>
+  </main>
+  <dialog id="authDialog" class="auth-dialog" aria-labelledby="authTitle">
+    <button id="authClose" class="auth-close" type="button" aria-label="Закрыть">×</button>
+    <span class="eyebrow">ТВОЙ ПРОПУСК В ASTRAL</span>
+    <h2 id="authTitle">С возвращением</h2>
+    <p class="auth-description">Войди в аккаунт Astral, чтобы установить сборку и играть.</p>
+    <div class="auth-tabs"><button id="loginTab" type="button" class="active">Вход</button><button id="registerTab" type="button">Регистрация</button></div>
+    <form id="authForm">
+      <label id="nicknameField" hidden>Ник Minecraft <small id="nicknameHint">3–16 символов: A–Z, 0–9, _</small><input id="nicknameInput" name="nickname" type="text" autocomplete="nickname" minlength="3" maxlength="16" pattern="[A-Za-z0-9_]{3,16}" placeholder="StarWalker" spellcheck="false" disabled></label>
+      <label>Email<input id="emailInput" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com"></label>
+      <label>Пароль<input id="passwordInput" name="password" type="password" autocomplete="current-password" maxlength="128" required placeholder="Ваш пароль"></label>
+      <label class="remember"><input id="rememberInput" type="checkbox" checked> Запомнить вход на этом компьютере</label>
+      <p id="authError" class="auth-error" role="alert" hidden></p>
+      <button id="authSubmit" class="primary" type="submit">Войти в Astral <span>→</span></button>
+      <button id="resetPassword" class="reset-password" type="button">Забыли пароль?</button>
+    </form>
+    <div id="signedInPanel" hidden><p id="signedInDetails"></p><button id="logoutButton" class="secondary">Выйти из аккаунта</button></div>
+    <p class="auth-footnote">Пароль хранится в защищённом виде.<br>Ник закрепляется за аккаунтом и используется в игре.</p>
+  </dialog>
+  <dialog id="wardrobe" class="wardrobe"><div class="wardrobe-heading"><span class="eyebrow">ТВОЙ ОБРАЗ · ASTRAL</span><button id="wardrobeClose" class="secondary" aria-label="Закрыть гардероб">×</button></div><h2>Начни с себя.</h2><div class="wardrobe-layout"><div class="skin-stage"><canvas id="skinPreview" width="64" height="112" aria-label="Предпросмотр скина спереди"></canvas></div><div class="wardrobe-controls"><p>Твой скин хранится в аккаунте Astral. Игроки с обновлённым модом Astral видят его в одиночном мире и LAN.</p><button id="skinChoose" class="secondary">Выбрать PNG 64×64</button><label>Модель <select id="skinModel"><option value="classic">Classic · обычные руки</option><option value="slim">Slim · узкие руки</option></select></label><button id="skinSave" class="primary">Сохранить скин →</button></div></div><p id="wardrobeStatus" class="wardrobe-status" role="status"></p></dialog>
+  <script src="renderer.js"></script>
+  <script src="account-extras.js"></script>
+  <script src="atmosphere-editor.js"></script>
+<script src="cosmetic-assets/art.js"></script><script src="cosmetics.js"></script>
+  <script src="social.js"></script>
+  <script src="player-hub.js"></script><script src="mod-catalog.js"></script>
+  <script src="collection.js"></script>
+</body>
+</html>
+

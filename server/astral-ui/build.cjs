@@ -1,0 +1,16 @@
+const fs=require('fs'),path=require('path'),{spawnSync}=require('child_process');
+const root=path.resolve(__dirname,'../..'),java=path.join(root,'local-packs/ASTRA-TechnoMagic-1.7.10/runtime/bin'),libs='C:/Users/korol/Games/Astral/minecraft-runtimes/1.20.1-47.4.20/libraries',classes=path.join(__dirname,'.build-cache/classes');
+function walk(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);}
+const jars=walk(libs).filter(x=>x.endsWith('.jar')&&!/-(slim|extra|unpacked)\.jar$/.test(x));jars.sort((a,b)=>Number(!a.endsWith('-client.jar'))-Number(!b.endsWith('-client.jar')));
+fs.mkdirSync(classes,{recursive:true});const args=path.join(__dirname,'.build-cache/javac.args');
+fs.writeFileSync(args,['-proc:none','-encoding','UTF-8','--release','17','-cp',jars.join(';'),'-d',classes,path.join(__dirname,'AccountCosmetics.java'),path.join(__dirname,'AccountSkins.java'),path.join(__dirname,'AstralAtmosphere.java'),path.join(__dirname,'Appearance.java'),path.join(__dirname,'FriendsMenu.java'),path.join(__dirname,'PackPresence.java')].map(s=>'"'+s.replaceAll('\\','/')+'"').join('\n'));
+function run(exe,args){const r=spawnSync(path.join(java,exe+'.exe'),args,{stdio:'inherit'});if(r.status!==0)process.exit(r.status||1);}
+run('javac',['@'+args]);
+const stage=path.join(__dirname,'.build-cache/package');fs.mkdirSync(path.join(stage,'META-INF'),{recursive:true});fs.cpSync(path.join(classes,'astral'),path.join(stage,'astral'),{recursive:true});fs.mkdirSync(path.join(stage,'assets/astralatmosphere/textures'),{recursive:true});fs.copyFileSync(path.join(root,'launcher/assets/cinematic-citadel.png'),path.join(stage,'assets/astralatmosphere/textures/citadel.png'));
+fs.copyFileSync(path.join(root,'launcher/assets/atmosphere-default.json'),path.join(stage,'atmosphere-default.json'));
+fs.writeFileSync(path.join(stage,'META-INF/mods.toml'),'modLoader="javafml"\nloaderVersion="[47,)"\nlicense="All Rights Reserved"\n[[mods]]\nmodId="astralatmosphere"\nversion="0.1.0"\ndisplayName="Astral Atmosphere"\ndisplayTest="IGNORE_ALL_VERSION"\ndescription="Astral loading screen, main menu and pause menu"\n[[dependencies.astralatmosphere]]\nmodId="minecraft"\nmandatory=true\nversionRange="[1.20.1]"\nordering="NONE"\nside="CLIENT"\n');fs.writeFileSync(path.join(stage,'pack.mcmeta'),JSON.stringify({pack:{pack_format:15,description:'Astral Atmosphere'}}));
+fs.copyFileSync(path.join(root,'assets/cosmetics/models.json'),path.join(stage,'cosmetic-models.json'));
+fs.copyFileSync(path.join(root,'assets/cosmetics/white.png'),path.join(stage,'assets/astralatmosphere/textures/cosmetic-white.png'));
+fs.copyFileSync(path.join(root,'assets/cosmetics/default-skin.png'),path.join(stage,'assets/astralatmosphere/textures/default-skin.png'));
+const early=spawnSync(process.execPath,[path.join(__dirname,'build-early.cjs')],{stdio:'inherit'});if(early.status!==0)process.exit(1);
+fs.mkdirSync(path.join(__dirname,'dist'),{recursive:true});run('jar',['--create','--manifest',path.join(__dirname,'.build-cache/agent.mf'),'--file',path.join(__dirname,'dist/astral-atmosphere-0.1.0.jar'),'-C',stage,'.']);console.log('ASTRAL_ATMOSPHERE_BUILT');

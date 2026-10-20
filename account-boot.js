@@ -1,0 +1,1 @@
+setTimeout(()=>{const button=document.getElementById('account-login-button');if(button?.disabled&&document.getElementById('account-status').textContent==='Загружаем вход…')document.getElementById('account-status').textContent='Не удалось загрузить службу входа. Проверь соединение и обнови страницу.';},18000);

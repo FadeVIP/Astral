@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Путеводитель Ловца Звёзд — Рыбалка Starcatcher | ASTRAL RPG</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="guide.css">
+  <script src="starcatcher_data.js"></script>
+</head>
+
+<body>
+  <!-- Canvas для падающих звёзд и астральных искр Void Embers -->
+  <canvas id="snow-canvas"></canvas>
+
+  <!-- Шапка сайта -->
+  <header id="header">
+    <div class="wrap nav">
+      <a href="index.html" class="brand" aria-label="ASTRAL RPG Главная">
+        <div class="brand-mark">✨</div>
+        <div class="brand-title">ASTRAL RPG</div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Главная</a></li>
+        <li><a href="guide.html" class="nav-link active">📖 Квестбук & Кодекс</a></li>
+        <li><a href="download.html" class="nav-link">Скачать</a></li>
+        <li><a href="chat.html" class="nav-link" style="color:var(--ice-bright);font-weight:800">💬 Чат</a></li>
+        <li><a href="chat.html#faq" class="nav-link" style="color:#fde68a;font-weight:700">❓ FAQ</a></li>
+      </ul>
+      <a href="download.html" class="nav-cta">
+        <span>Скачать сборку</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Hero раздел -->
+    <section class="questbook-hero">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>FTB Quests & Valoria Codex · Astral RPG 1.20.1</span>
+      </div>
+      <h1 class="hero-title">Кодекс & <span class="glow">Квестбук</span></h1>
+      <p class="hero-sub">Единый интерактивный архив вселенной: сюжетные ветки квестов, древний Кодекс Valoria, священные гримуары (Хомячьи Советы, Ловец Звёзд) и тактики битв с титанами.</p>
+
+      <!-- Главные переключатели разделов -->
+      <!-- Главные переключатели разделов: разделение на Квесты и Гайды -->
+      
+
+      <!-- Главные переключатели разделов: разделение на Квесты и Гайды -->
+      <div class="view-tabs-master">
+        <div class="vtab-clusters">
+          <!-- КЛАСТЕР 1: КВЕСТЫ -->
+          <div class="vtab-cluster cluster-quests">
+            <span class="vtab-cluster-label">🎯 Квесты:</span>
+            <a href="quests.html" class="vtab-btn ">📜 Сюжетный Квестбук (13 глав)</a>
+            <a href="codex.html" class="vtab-btn ">📖 Кодекс Valoria (84 квеста)</a>
+          </div>
+
+          <!-- КЛАСТЕР 2: ГАЙДЫ & ПУТЕВОДИТЕЛИ -->
+          <div class="vtab-cluster cluster-guides">
+            <span class="vtab-cluster-label">📚 Гайды:</span>
+            <a href="starcatcher.html" class="vtab-btn active">🎣 Путеводитель Ловца Звёзд</a>
+            <a href="grimoires.html" class="vtab-btn ">🐹 Гримуары & Советы</a>
+            <a href="bosses.html" class="vtab-btn ">⚔️ Боссы & Тактики</a>
+          </div>
+
+          <!-- КЛАСТЕР 3: КРАФТЫ & ВЕРСТАК -->
+          <div class="vtab-cluster cluster-crafts">
+            <span class="vtab-cluster-label">🔨 Крафты:</span>
+            <a href="quests.html#crafts" class="vtab-btn">🛠️ Интерактивный Верстак & Рецепты</a>
+          </div>
+        </div>
+      </div>
+  
+
+      <!-- Шкала общего прогресса -->
+      <div class="stats-bar">
+        <div class="stat-progress-box">
+          <div class="spb-text">
+            <span>Общий прогресс прохождения</span>
+            <span id="total-progress-stat">0 / 43 квестов (0%)</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-fill" id="total-progress-fill"></div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <small>Текущий раздел</small>
+          <strong id="active-section-name">Ловец Звёзд</strong>
+        </div>
+        <div class="stat-pill">
+          <small>Ранг исследователя</small>
+          <strong id="user-rank-text" style="color:var(--cyan)">Странник</strong>
+        </div>
+        <button class="btn-reset-stat" id="btnResetAll">Сбросить прогресс</button>
+      </div>
+    </section>
+  
+<!-- 3. РАЗДЕЛ: ПУТЕВОДИТЕЛЬ ЛОВЦА ЗВЁЗД (STARCATCHER INTERACTIVE GUIDEBOOK) -->
+    <section class="view-content active" id="view-starcatcher">
+      <div class="sc-book-container">
+
+        <!-- Верхняя панель управления путеводителем -->
+        <div class="sc-action-bar">
+          <div class="sc-bar-title">
+            <img src="assets/starcatcher/starcatcher_guide.png" alt="Starcatcher Guidebook" />
+            <div>
+              <h3>Путеводитель Ловца Звёзд · Starcatcher</h3>
+              <p>Атлас 130 видов рыб, снастей, наживок и тайных механик рыбалки</p>
+            </div>
+          </div>
+
+          <div class="sc-bar-controls">
+            <!-- Поиск -->
+            <div class="sc-search-box">
+              <span>🔍</span>
+              <input type="text" id="scSearchInput" placeholder="Поиск рыбы, снасти или биома..." />
+            </div>
+
+            <!-- Переключатель видов (Книга / Каталог) -->
+            <div class="sc-view-modes">
+              <button class="sc-mode-btn active" id="btnModeBook" title="Режим раскрытой книги">📖 Книга</button>
+              <button class="sc-mode-btn" id="btnModeGrid" title="Режим полной энциклопедии">🗂️ Сетка</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. ИНТЕРАКТИВНАЯ КНИГА РЫБОЛОВА (BOOK VIEW) -->
+        <div class="sc-book-outer" id="scBookView">
+
+          <!-- Закладки-ленты сверху книги -->
+          <div class="sc-ribbons">
+            <button class="sc-ribbon tab-fish active" data-sctab="fish">🐟 Атлас рыб (130)</button>
+            <button class="sc-ribbon tab-mech" data-sctab="mechanics">⚙️ Правила & Механики (8)</button>
+            <button class="sc-ribbon tab-rods" data-sctab="rods">🦯 Удочки & Снасти (15)</button>
+            <button class="sc-ribbon tab-hooks" data-sctab="hooks">🪝 Крючки & Насадки (28)</button>
+            <button class="sc-ribbon tab-relics" data-sctab="relics">🍾 Послания & Трофеи (16)</button>
+          </div>
+
+          <!-- Кожаный переплёт -->
+          <div class="sc-book-leather">
+            <!-- Двухстраничный разворот из пергамента -->
+            <div class="sc-parchment-spread">
+
+              <!-- Левая страница -->
+              <div class="sc-book-page sc-page-left" id="scLeftPage">
+                <!-- Рендерится через JS: фильтры редкостей и инвентарная сетка слотов -->
+              </div>
+
+              <!-- Правая страница -->
+              <div class="sc-book-page sc-page-right" id="scRightPage">
+                <!-- Рендерится через JS: досье выбранной рыбы (polaroid) или описание механики -->
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. РЕЖИМ ПОЛНОЙ ЭНЦИКЛОПЕДИИ (GRID VIEW) -->
+        <div class="sc-fullgrid-view" id="scGridView">
+          <!-- Фильтры категорий для сетки -->
+          <div class="sc-filter-pills" id="scGridFilterPills">
+            <button class="sc-fpill active" data-gridcat="all">Все объекты</button>
+            <button class="sc-fpill fp-legendary" data-gridcat="legendary">⭐ Легендарные рыбы</button>
+            <button class="sc-fpill fp-epic" data-gridcat="epic">🟣 Эпические рыбы</button>
+            <button class="sc-fpill fp-rare" data-gridcat="rare">🔷 Редкие рыбы</button>
+            <button class="sc-fpill fp-uncommon" data-gridcat="uncommon">🟢 Необычные рыбы</button>
+            <button class="sc-fpill" data-gridcat="common">⚪ Обычные рыбы</button>
+            <button class="sc-fpill" data-gridcat="rods">🦯 Все удочки</button>
+            <button class="sc-fpill" data-gridcat="hooks">🪝 Крючки и наживки</button>
+            <button class="sc-fpill" data-gridcat="relics">🍾 Трофеи и реликвии</button>
+          </div>
+
+          <div class="sc-cards-grid" id="scCardsGridMount">
+            <!-- Рендерится через JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    
+<footer>
+    <div class="wrap">
+      <p style="margin-bottom: 8px;">Created by RikiMarci · <strong>Astral RPG © 2026</strong></p>
+      <p>Нужна помощь в прохождении? Обсуди с другими игроками в <a href="chat.html">💬 Онлайн-чате</a> или в <a href="https://discord.com/invite/Daa93fUsh3" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
+      <div style="margin-top: 14px;"><a href="https://pay.cloudtips.ru/p/e6302623" target="_blank" rel="noopener noreferrer" class="footer-donate">☕ Поддержать автора</a></div>
+    </div>
+  </footer>
+
+  
+
+  <script src="sfx.js"></script>
+  <script>
+    // Starfield & Astral Void Embers particle background
+    (function () {
+      const canvas = document.getElementById('snow-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = 0, h = 0, stars = [], embers = [];
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      for (let i = 0; i < 70; i++) {
+        stars.push({
+          x: Math.random() * w, y: Math.random() * h,
+          r: Math.random() * 1.5 + 0.5, v: Math.random() * 0.4 + 0.2, o: Math.random() * 0.6 + 0.2
+        });
+      }
+
+      for (let i = 0; i < 45; i++) {
+        embers.push({
+          x: Math.random() * w, y: Math.random() * h,
+          r: Math.random() * 2.2 + 0.8, vy: -(Math.random() * 0.6 + 0.25), vx: (Math.random() - 0.5) * 0.35,
+          phase: Math.random() * Math.PI * 2, life: Math.random() * 0.8 + 0.2,
+          hue: Math.random() > 0.4 ? '192, 132, 252' : '56, 189, 248'
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, w, h);
+        for (let s of stars) {
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(240, 230, 255, ${s.o})`;
+          ctx.fill();
+          s.y += s.v;
+          if (s.y > h) s.y = 0;
+        }
+        for (let e of embers) {
+          e.phase += 0.02;
+          const sway = Math.sin(e.phase) * 0.5;
+          ctx.beginPath();
+          ctx.arc(e.x + sway, e.y, e.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${e.hue}, ${e.life * 0.75})`;
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = `rgba(${e.hue}, 0.9)`;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          e.y += e.vy;
+          e.x += e.vx;
+          if (e.y < -10) {
+            e.y = h + 10;
+            e.x = Math.random() * w;
+          }
+        }
+        requestAnimationFrame(render);
+      }
+      render();
+    })();
+
+    // Header scroll
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      if (header) {
+        if (window.scrollY > 30) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+      }
+    });
+
+    // Sound effect helper
+    function playSfx(name) {
+      const sfx = window.AstralSFX || window.FrostSFX;
+      if (sfx && typeof sfx.play === 'function') {
+        try { sfx.play(name); } catch(e) {}
+      }
+    }
+
+    // Copy snippet helper
+    window.copySnippet = function(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        playSfx('tab');
+        alert('Скопировано в буфер обмена: ' + text);
+      });
+    };
+  </script>
+
+<script>
+  // Starcatcher JS Logic
+  let scState = {
+      tab: 'fish',           // 'fish', 'mechanics', 'rods', 'hooks', 'relics'
+      filter: 'all',         // 'all', 'legendary', 'epic', 'rare', 'uncommon', 'common', 'trash'
+      searchQuery: '',
+      selectedFishIndex: 0,
+      page: 1,
+      pageSize: 36,
+      viewMode: 'book',      // 'book' or 'grid'
+      gridCat: 'all'
+    };
+
+    const scSearchInput = document.getElementById('scSearchInput');
+    const btnModeBook = document.getElementById('btnModeBook');
+    const btnModeGrid = document.getElementById('btnModeGrid');
+    const scBookView = document.getElementById('scBookView');
+    const scGridView = document.getElementById('scGridView');
+    const scLeftPage = document.getElementById('scLeftPage');
+    const scRightPage = document.getElementById('scRightPage');
+    const scCardsGridMount = document.getElementById('scCardsGridMount');
+
+    function getFilteredFish() {
+      if (!window.STARCATCHER_FISH) return [];
+      return window.STARCATCHER_FISH.filter(f => {
+        const matchesFilter = (scState.filter === 'all') || (f.rarity === scState.filter);
+        const q = scState.searchQuery.toLowerCase().trim();
+        const matchesSearch = !q || f.name.toLowerCase().includes(q) || f.en_name.toLowerCase().includes(q) || f.habitat.toLowerCase().includes(q) || f.lore.toLowerCase().includes(q);
+        return matchesFilter && matchesSearch;
+      });
+    }
+
+    function renderStarcatcherBook() {
+      if (!scLeftPage || !scRightPage) return;
+
+      if (scState.tab === 'fish') {
+        renderBookFishTab();
+      } else if (scState.tab === 'mechanics') {
+        renderBookMechanicsTab();
+      } else if (scState.tab === 'rods') {
+        renderBookRodsTab();
+      } else if (scState.tab === 'hooks') {
+        renderBookHooksTab();
+      } else if (scState.tab === 'relics') {
+        renderBookRelicsTab();
+      }
+    }
+
+    function renderBookFishTab() {
+      const filtered = getFilteredFish();
+      const totalPages = Math.max(1, Math.ceil(filtered.length / scState.pageSize));
+      if (scState.page > totalPages) scState.page = totalPages;
+
+      const startIdx = (scState.page - 1) * scState.pageSize;
+      const paged = filtered.slice(startIdx, startIdx + scState.pageSize);
+
+      // Selected fish
+      let currentFish = filtered[scState.selectedFishIndex] || filtered[0] || window.STARCATCHER_FISH[0];
+
+      // LEFT PAGE HTML
+      if (filtered.length <= 1 && currentFish) {
+        // Enriched single specimen portrait page (matches Grimoires / Bosses aesthetics)
+        const rarityLabels = {
+          legendary: 'Легендарная',
+          epic: 'Эпическая',
+          rare: 'Редкая',
+          uncommon: 'Необычная',
+          common: 'Обычная',
+          trash: 'Мусор / Трофей'
+        };
+        scLeftPage.innerHTML = `
+          <div class="sc-page-heading">
+            <h4><img src="assets/starcatcher/starcaught_bucket.png" style="width:22px; height:22px; image-rendering:pixelated;" /> Ихтиология</h4>
+            <span class="sc-page-num">${rarityLabels[currentFish.rarity] || currentFish.rarity}</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px 8px;">
+            <div style="width:84px; height:84px; background:radial-gradient(circle, #382416, #1f1208); border-radius:14px; border:2px solid #bba37f; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,0.4);">
+              <img src="${currentFish.icon}" alt="${currentFish.name}" style="width:58px; height:58px; image-rendering:pixelated; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6));" onerror="this.src='assets/starcatcher/unknown_fish.png'" />
+            </div>
+            <h3 style="font-family:'Oswald',sans-serif; font-size:1.25rem; text-transform:uppercase; color:#2b1810; margin:0; text-align:center;">${currentFish.name}</h3>
+            <small style="font-size:0.82rem; color:#7a6348; font-family:'Share Tech Mono',monospace;">${currentFish.en_name}</small>
+          </div>
+          <div style="padding:10px 12px; font-size:0.84rem; color:#4a3828; background:rgba(255,255,255,0.65); border:1px solid #cfbe9f; border-radius:8px; margin-bottom:10px; line-height:1.45;">
+            📍 <strong>Место обитания:</strong> ${currentFish.habitat}
+          </div>
+          <div style="padding:10px 12px; font-size:0.82rem; color:#3b2816; font-style:italic; background:rgba(255,255,255,0.5); border-left:3px solid #b45309; border-radius:0 8px 8px 0; line-height:1.45;">
+            «${currentFish.lore}»
+          </div>
+        `;
+      } else {
+        // Multi-entry grid view
+        scLeftPage.innerHTML = `
+          <div class="sc-page-heading">
+            <h4><img src="assets/starcatcher/starcaught_bucket.png" style="width:22px; height:22px; image-rendering:pixelated;" /> Атлас рыб (${filtered.length})</h4>
+            <span class="sc-page-num">Стр. ${scState.page}/${totalPages}</span>
+          </div>
+
+          <div class="sc-filter-pills">
+            <button class="sc-fpill ${scState.filter === 'all' ? 'active' : ''}" data-rarity="all">Все (${window.STARCATCHER_FISH.length})</button>
+            <button class="sc-fpill fp-legendary ${scState.filter === 'legendary' ? 'active' : ''}" data-rarity="legendary">⭐ Легенды (13)</button>
+            <button class="sc-fpill fp-epic ${scState.filter === 'epic' ? 'active' : ''}" data-rarity="epic">🟣 Эпик (17)</button>
+            <button class="sc-fpill fp-rare ${scState.filter === 'rare' ? 'active' : ''}" data-rarity="rare">🔷 Редкие (16)</button>
+            <button class="sc-fpill fp-uncommon ${scState.filter === 'uncommon' ? 'active' : ''}" data-rarity="uncommon">🟢 Необычные (24)</button>
+            <button class="sc-fpill ${scState.filter === 'common' ? 'active' : ''}" data-rarity="common">⚪ Обычные (54)</button>
+          </div>
+
+          <div class="sc-inventory-grid">
+            ${paged.map((f, i) => {
+              const globalIdx = startIdx + i;
+              const isSelected = (globalIdx === scState.selectedFishIndex);
+              return `
+                <div class="sc-slot ${isSelected ? 'active' : ''}" data-fish-idx="${globalIdx}" title="${f.name} (${f.rarity})">
+                  <img src="${f.icon}" alt="${f.name}" onerror="this.src='assets/starcatcher/unknown_fish.png'" />
+                  <span class="sc-slot-badge badge-${f.rarity}"></span>
+                </div>
+              `;
+            }).join('')}
+            ${paged.length === 0 ? '<div style="grid-column:1/-1; text-align:center; padding:20px; color:#7a6348;">Рыба не найдена по запросу</div>' : ''}
+          </div>
+
+          <div class="sc-book-nav">
+            <button class="sc-book-btn" id="scPrevPage" ${scState.page <= 1 ? 'disabled style="opacity:0.4; cursor:default;"' : ''}>◀ Назад</button>
+            <span style="font-family:'Share Tech Mono',monospace; font-size:0.8rem; color:#7a6348;">Показано ${paged.length} из ${filtered.length}</span>
+            <button class="sc-book-btn" id="scNextPage" ${scState.page >= totalPages ? 'disabled style="opacity:0.4; cursor:default;"' : ''}>Вперёд ▶</button>
+          </div>
+        `;
+      }
+
+      // RIGHT PAGE HTML: Selected Fish Dossier
+      if (currentFish) {
+        const rarityLabels = {
+          legendary: 'Легендарная',
+          epic: 'Эпическая',
+          rare: 'Редкая',
+          uncommon: 'Необычная',
+          common: 'Обычная',
+          trash: 'Мусор / Трофей'
+        };
+
+        scRightPage.innerHTML = `
+          <div class="sc-page-heading">
+            <h4>📖 Дневник рыболова</h4>
+            <span class="sc-page-num">ID: ${currentFish.id}</span>
+          </div>
+
+          <div class="sc-dossier-card">
+            <div class="sc-polaroid-frame">
+              <img src="${currentFish.icon}" alt="${currentFish.name}" onerror="this.src='assets/starcatcher/unknown_fish.png'" />
+              <span class="sc-polaroid-tag tag-${currentFish.rarity}">${rarityLabels[currentFish.rarity] || currentFish.rarity}</span>
+            </div>
+
+            <div class="sc-dossier-meta">
+              <h3>
+                <span>${currentFish.name}</span>
+              </h3>
+              <small>${currentFish.en_name} · ${currentFish.item_id}</small>
+            </div>
+
+            <div class="sc-dossier-habitat">
+              📍 <strong>Ареал:</strong> ${currentFish.habitat}
+            </div>
+
+            <div class="sc-stats-row">
+              <div class="sc-stat-cell">
+                <span>Здоровье (HP)</span>
+                <strong>❤️ ${currentFish.hp}</strong>
+              </div>
+              <div class="sc-stat-cell">
+                <span>Скорость рывка</span>
+                <strong>⚡ ${currentFish.speed}</strong>
+              </div>
+              <div class="sc-stat-cell">
+                <span>Штраф промаха</span>
+                <strong>⚠️ ${currentFish.missPenalty}%</strong>
+              </div>
+              <div class="sc-stat-cell">
+                <span>Затухание</span>
+                <strong>🔻 ${currentFish.decay}x</strong>
+              </div>
+              <div class="sc-stat-cell">
+                <span>Длина</span>
+                <strong>📏 ~${currentFish.avg_size} см</strong>
+              </div>
+              <div class="sc-stat-cell">
+                <span>Вес</span>
+                <strong>⚖️ ~${currentFish.avg_weight} кг</strong>
+              </div>
+            </div>
+
+            <div class="sc-dossier-lore">
+              «${currentFish.lore}»
+            </div>
+          </div>
+        `;
+      } else {
+        scRightPage.innerHTML = `
+          <div class="sc-page-heading">
+            <h4>📖 Дневник рыболова</h4>
+            <span class="sc-page-num">—</span>
+          </div>
+          <div style="padding:40px 20px; text-align:center; color:#8c7353;">
+            Выберите рыбу из каталога слева для изучения подробного досье.
+          </div>
+        `;
+      }
+
+      // Bind slot clicks
+      scLeftPage.querySelectorAll('.sc-slot').forEach(slot => {
+        slot.addEventListener('click', () => {
+          playSfx('click');
+          scState.selectedFishIndex = parseInt(slot.getAttribute('data-fish-idx'), 10);
+          renderStarcatcherBook();
+        });
+      });
+
+      // Bind filter clicks
+      scLeftPage.querySelectorAll('.sc-fpill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          playSfx('click');
+          scState.filter = pill.getAttribute('data-rarity');
+          scState.page = 1;
+          scState.selectedFishIndex = 0;
+          renderStarcatcherBook();
+        });
+      });
+
+      // Bind pagination
+      const prevBtn = document.getElementById('scPrevPage');
+      const nextBtn = document.getElementById('scNextPage');
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          if (scState.page > 1) {
+            playSfx('click');
+            scState.page--;
+            scState.selectedFishIndex = (scState.page - 1) * scState.pageSize;
+            renderStarcatcherBook();
+          }
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          if (scState.page < totalPages) {
+            playSfx('click');
+            scState.page++;
+            scState.selectedFishIndex = (scState.page - 1) * scState.pageSize;
+            renderStarcatcherBook();
+          }
+        });
+      }
+    }
+
+    function renderBookMechanicsTab() {
+      const allMechanics = [
+        { num: '1', title: 'Заброс и Поклёвка', icon: 'assets/starcatcher/starcatcher_rod_uncast.png', desc: 'Забросьте удочку в глубокий водоём. При поклёвке над поплавком появится частица [!]. Зажмите ЛКМ для входа в мини-игру.' },
+        { num: '2', title: 'Индикатор натяжения', icon: 'assets/starcatcher/vanilla_bobber.png', desc: 'Удерживайте зеленый бегунок в зоне рыбы. Если рыба совершает рывок, ослабьте натяжение, иначе леска оборвётся!' },
+        { num: '3', title: 'Использование наживок', icon: 'assets/starcatcher/worm.png', desc: 'Наживки снижают время ожидания клёва и привлекают редкие виды. Удобряйте грядки костной мукой для добычи червей.' },
+        { num: '4', title: 'Специальные крючки', icon: 'assets/starcatcher/heavy_hook.png', desc: 'Тяжелые крючки успокаивают рыбу, золотые увеличивают золотой улов, скалковые позволяют ловить в Тёмных Глубинах.' },
+        { num: '5', title: 'Рыбалка в Лаве', icon: 'assets/starcatcher/magma_fish.png', desc: 'Для лавы Незера требуется Магмовая или Обсидиановая удочка с защитой от огня. Там водятся ценнейшие магмовые виды.' },
+        { num: '6', title: 'Рыбная Монополия', icon: 'assets/starcatcher/trophy_gold.png', desc: 'Складывайте улов в торговый ящик для оптовой продажи деревенским торговцам за золотые монеты и редкие сокровища.' },
+        { num: '7', title: 'Моллюски и Жемчуг', icon: 'assets/starcatcher/clam.png', desc: 'Разместите моллюсков на песчаном дне. Со временем они раскрываются и производят редкий жемчуг и шаблоны ковки.' },
+        { num: '8', title: 'Затонувшие Послания', icon: 'assets/starcatcher/message_in_a_bottle.png', desc: 'Бутылки с записками содержат координаты тайных кладов, истории мореплавателей и чертежи легендарных снастей.' }
+      ];
+
+      const query = (scState.searchQuery || '').toLowerCase().trim();
+      const mechanics = query
+        ? allMechanics.filter(m => m.title.toLowerCase().includes(query) || m.desc.toLowerCase().includes(query))
+        : allMechanics;
+
+      const half = Math.ceil(mechanics.length / 2);
+      const leftItems = mechanics.slice(0, half);
+      const rightItems = mechanics.slice(half);
+
+      scLeftPage.innerHTML = `
+        <div class="sc-page-heading">
+          <h4>⚙️ Механика мини-игры</h4>
+          <span class="sc-page-num">${mechanics.length > 0 ? 'Часть I' : '0 записей'}</span>
+        </div>
+        <div class="sc-item-list">
+          ${leftItems.map(m => `
+            <div class="sc-item-card">
+              <img src="${m.icon}" alt="${m.title}" />
+              <div class="sc-item-info">
+                <h5>${m.num}. ${m.title}</h5>
+                <p>${m.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+          ${leftItems.length === 0 ? '<div style="padding:20px; text-align:center; color:#8c7353;">Механики не найдены по запросу</div>' : ''}
+        </div>
+      `;
+
+      scRightPage.innerHTML = `
+        <div class="sc-page-heading">
+          <h4>🌊 Акватории & Продажа</h4>
+          <span class="sc-page-num">${rightItems.length > 0 ? 'Часть II' : ''}</span>
+        </div>
+        <div class="sc-item-list">
+          ${rightItems.map(m => `
+            <div class="sc-item-card">
+              <img src="${m.icon}" alt="${m.title}" />
+              <div class="sc-item-info">
+                <h5>${m.num}. ${m.title}</h5>
+                <p>${m.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+          ${rightItems.length === 0 && mechanics.length > 0 ? '<div style="padding:20px; text-align:center; color:#8c7353; font-style:italic;">Все совпадения показаны на левой странице.</div>' : ''}
+        </div>
+      `;
+    }
+
+    function renderBookRodsTab() {
+      const allRods = window.STARCATCHER_RODS || [];
+      const query = (scState.searchQuery || '').toLowerCase().trim();
+      const rods = query
+        ? allRods.filter(r => r.name.toLowerCase().includes(query) || r.desc.toLowerCase().includes(query))
+        : allRods;
+
+      const half = Math.ceil(rods.length / 2);
+      const leftRods = rods.slice(0, half);
+      const rightRods = rods.slice(half);
+
+      scLeftPage.innerHTML = `
+        <div class="sc-page-heading">
+          <h4>🦯 Удилища Мастеров</h4>
+          <span class="sc-page-num">${rods.length} снастей</span>
+        </div>
+        <div class="sc-item-list">
+          ${leftRods.map(r => `
+            <div class="sc-item-card">
+              <img src="${r.icon}" alt="${r.name}" onerror="this.src='assets/starcatcher/starcatcher_rod_uncast.png'" />
+              <div class="sc-item-info">
+                <h5>${r.name}</h5>
+                <p>${r.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+          ${leftRods.length === 0 ? '<div style="padding:20px; text-align:center; color:#8c7353;">Удочки не найдены по запросу</div>' : ''}
+        </div>
+      `;
+
+      scRightPage.innerHTML = `
+        <div class="sc-page-heading">
+          <h4>🦯 Элитные Удочки</h4>
+          <span class="sc-page-num">${rightRods.length > 0 ? 'Часть II' : ''}</span>
+        </div>
+        <div class="sc-item-list">
+          ${rightRods.map(r => `
+            <div class="sc-item-card">
+              <img src="${r.icon}" alt="${r.name}" onerror="this.src='assets/starcatcher/starcatcher_rod_uncast.png'" />
+              <div class="sc-item-info">
+                <h5>${r.name}</h5>
+                <p>${r.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+          ${rightRods.length === 0 && rods.length > 0 ? '<div style="padding:20px; text-align:center; color:#8c7353; font-style:italic;">Все найденные удочки показаны на левой странице.</div>' : ''}
+        </div>
+      `;
+    }
+
+    function renderBookHooksTab() {
+      const allHooks = window.STARCATCHER_HOOKS || [];
+      const allBaits = window.STARCATCHER_BAITS || [];
+      const query = (scState.searchQuery || '').toLowerCase().trim();
+
+      const hooks = query
+        ? allHooks.filter(h => h.name.toLowerCase().includes(query) || h.desc.toLowerCase().includes(query))
+        : allHooks;
+      const baits = query
+        ? allBaits.filter(b => b.name.toLowerCase().includes(query) || b.desc.toLowerCase().includes(query))
+        : allBaits;
+
+      scLeftPage.innerHTML = `
+        <div class="sc-page-heading">
+          <h4>🪝 Специальные Крючки (${hooks.length})</h4>
+          <span class="sc-page-num">Модификаторы</span>
+        </div>
+        <div class="sc-item-list">
+          ${hooks.map(h => `
+            <div class="sc-item-card">
+              <img src="${h.icon}" alt="${h.name}" onerror="this.src='assets/starcatcher/hook.png'" />
+              <div class="sc-item-info">
+                <h5>${h.name}</h5>
+                <p>${h.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+          ${hooks.length === 0 ? '<div style="padding:20px; text-align:center; color:#8c7353;">Крючки не найдены по запросу</div>' : ''}
+        </div>
+      `;
+
+      scRightPage.innerHTML = `
+        <div class="sc-page-heading">
+          <h4>🪱 Наживки & Приманки (${baits.length})</h4>
+          <span class="sc-page-num">Прикорм</span>
+        </div>
+        <div class="sc-item-list">
+          ${baits.map(b => `
+            <div class="sc-item-card">
+              <img src="${b.icon}" alt="${b.name}" onerror="this.src='assets/starcatcher/worm.png'" />
+              <div class="sc-item-info">
+                <h5>${b.name}</h5>
+                <p>${b.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+          ${baits.length === 0 ? '<div style="padding:20px; text-align:center; color:#8c7353;">Наживки не найдены по запросу</div>' : ''}
+        </div>
+      `;
+    }
+
+    function renderBookRelicsTab() {
+      const allRelics = window.STARCATCHER_RELICS || [];
+      const query = (scState.searchQuery || '').toLowerCase().trim();
+
+      // Separate into genuine trophies/relics vs bottle messages
+      let trophies = allRelics.filter(r => !r.id.includes('bottle') && !r.id.includes('letter'));
+      let bottles = allRelics.filter(r => r.id.includes('bottle') || r.id.includes('letter'));
+
+      if (query) {
+        trophies = trophies.filter(t => t.name.toLowerCase().includes(query) || t.desc.toLowerCase().includes(query));
+        bottles = bottles.filter(b => b.name.toLowerCase().includes(query) || b.desc.toLowerCase().includes(query));
+      }
+
+      scLeftPage.innerHTML = `
+        <div class="sc-page-heading">
+          <h4>🏆 Трофеи & Реликвии (${trophies.length})</h4>
+          <span class="sc-page-num">Сокровища глубин</span>
+        </div>
+        <div class="sc-item-list">
+          ${trophies.map(rel => `
+            <div class="sc-item-card">
+              <img src="${rel.icon}" alt="${rel.name}" onerror="this.src='assets/starcatcher/trophy_gold.png'" />
+              <div class="sc-item-info">
+                <h5>${rel.name}</h5>
+                <p>${rel.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+          ${trophies.length === 0 ? '<div style="padding:20px; text-align:center; color:#8c7353;">Трофеи не найдены по запросу</div>' : ''}
+        </div>
+      `;
+
+      scRightPage.innerHTML = `
+        <div class="sc-page-heading">
+          <h4>🍾 Послания в бутылках (${bottles.length})</h4>
+          <span class="sc-page-num">Записки моряков</span>
+        </div>
+        <div class="sc-item-list">
+          ${bottles.map(rel => `
+            <div class="sc-item-card">
+              <img src="${rel.icon}" alt="${rel.name}" onerror="this.src='assets/starcatcher/message_in_a_bottle.png'" />
+              <div class="sc-item-info">
+                <h5>${rel.name}</h5>
+                <p>${rel.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+          ${bottles.length === 0 ? '<div style="padding:20px; text-align:center; color:#8c7353;">Послания не найдены по запросу</div>' : ''}
+        </div>
+      `;
+    }
+
+    function renderStarcatcherGrid() {
+      if (!scCardsGridMount) return;
+      let items = [];
+      const cat = scState.gridCat;
+
+      if (cat === 'all' || ['legendary', 'epic', 'rare', 'uncommon', 'common'].includes(cat)) {
+        let fishes = window.STARCATCHER_FISH || [];
+        if (cat !== 'all') {
+          fishes = fishes.filter(f => f.rarity === cat);
+        }
+        const q = scState.searchQuery.toLowerCase().trim();
+        if (q) {
+          fishes = fishes.filter(f => f.name.toLowerCase().includes(q) || f.en_name.toLowerCase().includes(q) || f.habitat.toLowerCase().includes(q));
+        }
+        items = fishes.map(f => ({
+          icon: f.icon,
+          fallbackIcon: 'assets/starcatcher/unknown_fish.png',
+          title: f.name,
+          subtitle: `${f.en_name} • ${f.rarity.toUpperCase()}`,
+          habitat: f.habitat,
+          stats: `HP: ${f.hp} • Скорость: ${f.speed} • Вес: ${f.avg_weight} кг`,
+          lore: f.lore
+        }));
+      } else if (cat === 'rods') {
+        items = (window.STARCATCHER_RODS || []).map(r => ({
+          icon: r.icon,
+          fallbackIcon: 'assets/starcatcher/starcatcher_rod_uncast.png',
+          title: r.name,
+          subtitle: 'Удилище',
+          habitat: 'Крафт / Находка в затопленных сундуках',
+          stats: 'Поддержка насадок и поплавков',
+          lore: r.desc
+        }));
+      } else if (cat === 'hooks') {
+        const allHooks = [...(window.STARCATCHER_HOOKS || []), ...(window.STARCATCHER_BAITS || [])];
+        items = allHooks.map(h => ({
+          icon: h.icon,
+          fallbackIcon: 'assets/starcatcher/hook.png',
+          title: h.name,
+          subtitle: 'Снасть / Наживка',
+          habitat: 'Ящик для снастей (Tackle Box)',
+          stats: 'Особый модификатор рыбалки',
+          lore: h.desc
+        }));
+      } else if (cat === 'relics') {
+        items = (window.STARCATCHER_RELICS || []).map(rel => ({
+          icon: rel.icon,
+          fallbackIcon: 'assets/starcatcher/trophy_gold.png',
+          title: rel.name,
+          subtitle: 'Реликвия / Трофей',
+          habitat: 'Улов со дна водоёма',
+          stats: 'Трофейная ценность',
+          lore: rel.desc
+        }));
+      }
+
+      scCardsGridMount.innerHTML = items.map(it => `
+        <div class="sc-card">
+          <div class="sc-card-head">
+            <div class="sc-card-icon">
+              <img src="${it.icon}" alt="${it.title}" onerror="this.src='${it.fallbackIcon}'" />
+            </div>
+            <div class="sc-card-title">
+              <h4>${it.title}</h4>
+              <small>${it.subtitle}</small>
+            </div>
+          </div>
+          <div style="font-size:0.8rem; color:var(--cyan); font-weight:600;">📍 ${it.habitat}</div>
+          <div style="font-family:'Share Tech Mono',monospace; font-size:0.82rem; color:var(--gold);">${it.stats}</div>
+          <div class="sc-card-desc">«${it.lore}»</div>
+        </div>
+      `).join('');
+    }
+
+    // Bind Book Ribbon Bookmark tabs
+    document.querySelectorAll('.sc-ribbon').forEach(r => {
+      r.addEventListener('click', () => {
+        playSfx('click');
+        document.querySelectorAll('.sc-ribbon').forEach(b => b.classList.remove('active'));
+        r.classList.add('active');
+        scState.tab = r.getAttribute('data-sctab');
+        renderStarcatcherBook();
+      });
+    });
+
+    // Enable smooth mouse wheel horizontal scroll on all book ribbon bars
+    document.querySelectorAll('.sc-ribbons').forEach(bar => {
+      bar.addEventListener('wheel', (e) => {
+        if (e.deltaY !== 0 && bar.scrollWidth > bar.clientWidth) {
+          e.preventDefault();
+          bar.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+    });
+
+    // Bind Search Input
+    if (scSearchInput) {
+      scSearchInput.addEventListener('input', (e) => {
+        scState.searchQuery = e.target.value;
+        scState.page = 1;
+        scState.selectedFishIndex = 0;
+        if (scState.viewMode === 'book') {
+          renderStarcatcherBook();
+        } else {
+          renderStarcatcherGrid();
+        }
+      });
+    }
+
+    // Bind View Mode Buttons (Book vs Grid)
+    if (btnModeBook && btnModeGrid) {
+      btnModeBook.addEventListener('click', () => {
+        playSfx('click');
+        btnModeBook.classList.add('active');
+        btnModeGrid.classList.remove('active');
+        scBookView.style.display = 'block';
+        scGridView.classList.remove('active');
+        scState.viewMode = 'book';
+        renderStarcatcherBook();
+      });
+
+      btnModeGrid.addEventListener('click', () => {
+        playSfx('click');
+        btnModeGrid.classList.add('active');
+        btnModeBook.classList.remove('active');
+        scBookView.style.display = 'none';
+        scGridView.classList.add('active');
+        scState.viewMode = 'grid';
+        renderStarcatcherGrid();
+      });
+    }
+
+    // Bind Grid Filter Pills
+    document.querySelectorAll('#scGridFilterPills .sc-fpill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        playSfx('click');
+        document.querySelectorAll('#scGridFilterPills .sc-fpill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        scState.gridCat = btn.getAttribute('data-gridcat');
+        renderStarcatcherGrid();
+      });
+    });
+
+    // Init Starcatcher Book
+    if (window.STARCATCHER_FISH) {
+      renderStarcatcherBook();
+    }
+
+
+    /* ===================================================
+       GRIMOIRE INTERACTIVE BOOK LOGIC (Том Мудрости)
+       =================================================== */
+    
+  if (typeof renderStarcatcherBook === 'function') {
+    renderStarcatcherBook();
+  }
+</script>
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

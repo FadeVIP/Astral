@@ -1,0 +1,33 @@
+    match /nicknames/{nickname} {
+      allow get: if launcherAdmin();
+    }
+    match /accountWallets/{uid} {
+      allow get: if owner(uid) || launcherAdmin();
+      allow list, delete: if false;
+      allow create, update: if launcherAdmin()
+        && request.resource.data.keys().hasOnly(['balance'])
+        && request.resource.data.balance is int
+        && request.resource.data.balance >= 0 && request.resource.data.balance <= 1000000000;
+      match /history/{id} {
+        allow get, list: if launcherAdmin();
+        allow create: if launcherAdmin()
+          && request.resource.data.keys().hasOnly(['before','after','reason','admin','createdAt'])
+          && request.resource.data.before is int && request.resource.data.before >= 0
+          && request.resource.data.after is int && request.resource.data.after >= 0 && request.resource.data.after <= 1000000000
+          && request.resource.data.reason is string && request.resource.data.reason.size() > 0 && request.resource.data.reason.size() <= 200
+          && request.resource.data.admin == request.auth.uid && request.resource.data.createdAt == request.time;
+        allow update, delete: if false;
+      }
+    }
+    match /accountSkins/{nickname} {
+      allow get: if true;
+      allow list, delete: if false;
+      allow create, update: if owner(request.auth.uid)
+        && get(/databases/$(database)/documents/members/$(request.auth.uid)).data.status == 'active'
+        && get(/databases/$(database)/documents/members/$(request.auth.uid)).data.nickname.lower() == nickname
+        && request.resource.data.keys().hasOnly(['uid','png','model'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.model in ['classic','slim']
+        && request.resource.data.png is string && request.resource.data.png.size() <= 100000
+        && request.resource.data.png.matches('^data:image/png;base64,[A-Za-z0-9+/]+=*$');
+    }

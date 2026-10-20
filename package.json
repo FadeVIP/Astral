@@ -1,0 +1,16 @@
+{
+  "name": "astral-discord-bridge",
+  "version": "1.0.0",
+  "description": "Discord to Firebase Bridge for Astral RPG",
+  "main": "discord-bot.js",
+  "scripts": {
+    "start": "node discord-bot.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.15.3",
+    "firebase-admin": "^12.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,45 @@
+/* The collection is a horizontal shelf; navigation has its own stable column. */
+body{flex-direction:row}
+body>.sidebar{width:208px;min-width:208px;height:100vh;min-height:0;padding:24px 16px;display:flex;flex-direction:column;align-items:stretch;gap:24px;overflow:auto;border-right:1px solid var(--edge)}
+body>.sidebar .brand{font-size:20px;gap:9px;letter-spacing:2px}
+body>.sidebar nav{display:flex;flex-direction:column;align-items:stretch;align-self:stretch;flex:1;gap:8px;flex-wrap:nowrap}
+body>.sidebar .nav-item{width:100%;justify-content:flex-start;white-space:normal;text-align:left;padding:12px;font-size:12px;min-height:44px}
+body>.sidebar .sidebar-bottom{display:flex;flex-direction:column;align-items:stretch;gap:14px;margin-top:auto;width:100%}
+body>.sidebar .account-card{display:flex}.sidebar .account-card strong{max-width:120px}
+body>.sidebar .wardrobe-button,body>.sidebar .account-button{width:100%;white-space:normal}
+body>main{width:0;min-width:0;height:100vh;padding:0 24px 16px;flex:1}
+#homeView{display:flex;flex-direction:column;gap:16px;overflow:auto;min-width:0;padding-right:4px}
+#homeView>*{flex-shrink:0}
+#homeView>.library-heading{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+#homeView>.library-heading h2{font-size:27px}
+#homeView .quick-packs{display:none}
+.pack-shelf{min-width:0;position:relative}
+.shelf-toolbar{display:flex;align-items:center;gap:8px;margin:0 0 10px}.shelf-toolbar>span{margin-right:auto;font-size:11px;color:var(--subtle)}
+.shelf-toolbar button,.pack-picker button{background:var(--surface-soft);color:var(--text);border:1px solid var(--edge);border-radius:10px;padding:8px 12px;min-height:36px;cursor:pointer}
+#packCards{display:flex;flex-direction:row;gap:12px;overflow-x:auto;overflow-y:hidden;max-height:none;padding:3px 3px 10px;scrollbar-width:thin;overscroll-behavior-x:contain;touch-action:pan-x}
+#packCards::before{display:none}
+#packCards .pack-card{flex:0 0 184px;width:184px;min-width:0;max-width:none;margin:0;display:flex;flex-direction:column;text-align:left;padding:0;border:1px solid var(--edge);border-radius:14px;overflow:hidden;background:var(--surface);color:var(--text);transform:none}
+#packCards .pack-card.active{border:2px solid var(--accent);box-shadow:0 0 0 1px var(--accent-soft)}
+#packCards .pack-card-art{width:100%;height:85px;flex:none;margin:0;border-radius:0;background-size:cover;background-position:center}
+#packCards .pack-card>span:last-child{padding:10px 12px;min-width:0;width:100%}
+#packCards .pack-card strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0 0 5px}
+#packCards .pack-card small{display:block;font-size:10px;color:var(--subtle)}
+#homeView .hero{height:270px;min-height:240px;width:100%}
+.pack-picker{width:min(780px,90vw);max-height:85vh;background:var(--surface);color:var(--text);border:1px solid var(--edge);border-radius:20px;padding:24px}
+.pack-picker::backdrop{background:#080914bb;backdrop-filter:blur(6px)}
+.pack-picker-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.pack-picker-heading h2{margin:0}
+.pack-picker input{width:100%;background:var(--field);color:var(--text);border:1px solid var(--edge);border-radius:10px;padding:12px;margin-bottom:18px}
+.pack-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;max-height:55vh;overflow:auto;padding:4px}
+.pack-picker-grid button{text-align:left;display:flex;flex-direction:column;gap:6px;min-width:0}.pack-picker-grid strong{overflow-wrap:anywhere}.pack-picker-grid small{color:var(--subtle)}
+.pack-picker-grid img{width:100%;height:90px;object-fit:cover;border-radius:7px}.pack-picker-grid button[aria-pressed=true]{border-color:var(--accent)}
+@media(max-width:1000px){body>.sidebar{width:176px;min-width:176px;padding:20px 12px}body>.sidebar .brand{font-size:17px}body>main{padding-left:16px;padding-right:16px}.breadcrumb{letter-spacing:.5px}.platform{display:none}}
+@media(max-height:740px){#homeView .hero{height:230px;min-height:230px}#packCards .pack-card-art{height:66px}body>.sidebar{gap:18px;padding-top:18px}}
+/* Account balance belongs with the identity, not the library controls. */
+body>.sidebar .acoin-badge{margin:0;width:100%;border-radius:12px;min-height:48px;padding:12px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-size:12px;font-variant-numeric:tabular-nums}
+body>.sidebar .acoin-badge span{margin:0}.acoin-badge[aria-busy=true]{opacity:.65;cursor:progress}
+body>.sidebar .account-card{padding-top:14px;border-top:1px solid var(--edge)}
+body>main>header{justify-content:space-between;gap:16px}.breadcrumb{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shelf-toolbar button:focus-visible,.pack-picker button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#packCards .pack-card:hover:enabled{border-color:var(--accent);background:var(--surface-soft)}
+#packCards .pack-card:disabled{cursor:not-allowed}
+@media(max-height:740px){body>.sidebar .sidebar-bottom{gap:9px}body>.sidebar .acoin-badge{min-height:42px;padding:9px}body>.sidebar nav{gap:4px}}

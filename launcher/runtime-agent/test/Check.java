@@ -1,0 +1,1 @@
+public class Check {public static void main(String[] args){var world=new net.minecraft.client.server.IntegratedServer();world.m_7038_();if(world.auth)throw new AssertionError("Integrated auth unchanged");if(!new net.minecraft.server.MinecraftServer().auth)throw new AssertionError("Dedicated server changed");System.out.println("AGENT_SCOPE_PASS");}}

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Бестиарий Боссов & Тактики Сражений | ASTRAL RPG</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="guide.css">
+  <script src="guides_book_data.js"></script>
+</head>
+
+<body>
+  <!-- Canvas для падающих звёзд и астральных искр Void Embers -->
+  <canvas id="snow-canvas"></canvas>
+
+  <!-- Шапка сайта -->
+  <header id="header">
+    <div class="wrap nav">
+      <a href="index.html" class="brand" aria-label="ASTRAL RPG Главная">
+        <div class="brand-mark">✨</div>
+        <div class="brand-title">ASTRAL RPG</div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Главная</a></li>
+        <li><a href="guide.html" class="nav-link active">📖 Квестбук & Кодекс</a></li>
+        <li><a href="download.html" class="nav-link">Скачать</a></li>
+        <li><a href="chat.html" class="nav-link" style="color:var(--ice-bright);font-weight:800">💬 Чат</a></li>
+        <li><a href="chat.html#faq" class="nav-link" style="color:#fde68a;font-weight:700">❓ FAQ</a></li>
+      </ul>
+      <a href="download.html" class="nav-cta">
+        <span>Скачать сборку</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Hero раздел -->
+    <section class="questbook-hero">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>FTB Quests & Valoria Codex · Astral RPG 1.20.1</span>
+      </div>
+      <h1 class="hero-title">Кодекс & <span class="glow">Квестбук</span></h1>
+      <p class="hero-sub">Единый интерактивный архив вселенной: сюжетные ветки квестов, древний Кодекс Valoria, священные гримуары (Хомячьи Советы, Ловец Звёзд) и тактики битв с титанами.</p>
+
+      <!-- Главные переключатели разделов -->
+      <!-- Главные переключатели разделов: разделение на Квесты и Гайды -->
+      
+
+      <!-- Главные переключатели разделов: разделение на Квесты и Гайды -->
+      <div class="view-tabs-master">
+        <div class="vtab-clusters">
+          <!-- КЛАСТЕР 1: КВЕСТЫ -->
+          <div class="vtab-cluster cluster-quests">
+            <span class="vtab-cluster-label">🎯 Квесты:</span>
+            <a href="quests.html" class="vtab-btn ">📜 Сюжетный Квестбук (13 глав)</a>
+            <a href="codex.html" class="vtab-btn ">📖 Кодекс Valoria (84 квеста)</a>
+          </div>
+
+          <!-- КЛАСТЕР 2: ГАЙДЫ & ПУТЕВОДИТЕЛИ -->
+          <div class="vtab-cluster cluster-guides">
+            <span class="vtab-cluster-label">📚 Гайды:</span>
+            <a href="starcatcher.html" class="vtab-btn ">🎣 Путеводитель Ловца Звёзд</a>
+            <a href="grimoires.html" class="vtab-btn ">🐹 Гримуары & Советы</a>
+            <a href="bosses.html" class="vtab-btn active">⚔️ Боссы & Тактики</a>
+          </div>
+
+          <!-- КЛАСТЕР 3: КРАФТЫ & ВЕРСТАК -->
+          <div class="vtab-cluster cluster-crafts">
+            <span class="vtab-cluster-label">🔨 Крафты:</span>
+            <a href="quests.html#crafts" class="vtab-btn">🛠️ Интерактивный Верстак & Рецепты</a>
+          </div>
+        </div>
+      </div>
+  
+
+      <!-- Шкала общего прогресса -->
+      <div class="stats-bar">
+        <div class="stat-progress-box">
+          <div class="spb-text">
+            <span>Общий прогресс прохождения</span>
+            <span id="total-progress-stat">0 / 43 квестов (0%)</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-fill" id="total-progress-fill"></div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <small>Текущий раздел</small>
+          <strong id="active-section-name">Бестиарий Боссов</strong>
+        </div>
+        <div class="stat-pill">
+          <small>Ранг исследователя</small>
+          <strong id="user-rank-text" style="color:var(--cyan)">Странник</strong>
+        </div>
+        <button class="btn-reset-stat" id="btnResetAll">Сбросить прогресс</button>
+      </div>
+    </section>
+  
+
+<footer>
+    <div class="wrap">
+      <p style="margin-bottom: 8px;">Created by RikiMarci · <strong>Astral RPG © 2026</strong></p>
+      <p>Нужна помощь в прохождении? Обсуди с другими игроками в <a href="chat.html">💬 Онлайн-чате</a> или в <a href="https://discord.com/invite/Daa93fUsh3" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
+      <div style="margin-top: 14px;"><a href="https://pay.cloudtips.ru/p/e6302623" target="_blank" rel="noopener noreferrer" class="footer-donate">☕ Поддержать автора</a></div>
+    </div>
+  </footer>
+
+  
+
+  <script src="sfx.js"></script>
+  <script>
+    // Starfield & Astral Void Embers particle background
+    (function () {
+      const canvas = document.getElementById('snow-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = 0, h = 0, stars = [], embers = [];
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      for (let i = 0; i < 70; i++) {
+        stars.push({
+          x: Math.random() * w, y: Math.random() * h,
+          r: Math.random() * 1.5 + 0.5, v: Math.random() * 0.4 + 0.2, o: Math.random() * 0.6 + 0.2
+        });
+      }
+
+      for (let i = 0; i < 45; i++) {
+        embers.push({
+          x: Math.random() * w, y: Math.random() * h,
+          r: Math.random() * 2.2 + 0.8, vy: -(Math.random() * 0.6 + 0.25), vx: (Math.random() - 0.5) * 0.35,
+          phase: Math.random() * Math.PI * 2, life: Math.random() * 0.8 + 0.2,
+          hue: Math.random() > 0.4 ? '192, 132, 252' : '56, 189, 248'
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, w, h);
+        for (let s of stars) {
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(240, 230, 255, ${s.o})`;
+          ctx.fill();
+          s.y += s.v;
+          if (s.y > h) s.y = 0;
+        }
+        for (let e of embers) {
+          e.phase += 0.02;
+          const sway = Math.sin(e.phase) * 0.5;
+          ctx.beginPath();
+          ctx.arc(e.x + sway, e.y, e.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${e.hue}, ${e.life * 0.75})`;
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = `rgba(${e.hue}, 0.9)`;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          e.y += e.vy;
+          e.x += e.vx;
+          if (e.y < -10) {
+            e.y = h + 10;
+            e.x = Math.random() * w;
+          }
+        }
+        requestAnimationFrame(render);
+      }
+      render();
+    })();
+
+    // Header scroll
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      if (header) {
+        if (window.scrollY > 30) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+      }
+    });
+
+    // Sound effect helper
+    function playSfx(name) {
+      const sfx = window.AstralSFX || window.FrostSFX;
+      if (sfx && typeof sfx.play === 'function') {
+        try { sfx.play(name); } catch(e) {}
+      }
+    }
+
+    // Copy snippet helper
+    window.copySnippet = function(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        playSfx('tab');
+        alert('Скопировано в буфер обмена: ' + text);
+      });
+    };
+  </script>
+
+<script>
+  // Bosses JS Logic
+  let bossState = {
+      tab: 'all',
+      searchQuery: '',
+      selectedBossIndex: 0,
+      viewMode: 'book',
+      gridCat: 'all'
+    };
+
+    const bossSearchInput = document.getElementById('bossSearchInput');
+    const btnBossBook = document.getElementById('btnBossBook');
+    const btnBossGrid = document.getElementById('btnBossGrid');
+    const bossBookView = document.getElementById('bossBookView');
+    const bossGridView = document.getElementById('bossGridView');
+    const bossLeftPage = document.getElementById('bossLeftPage');
+    const bossRightPage = document.getElementById('bossRightPage');
+    const bossCardsGridMount = document.getElementById('bossCardsGridMount');
+
+    function getFilteredBosses() {
+      const all = window.BOSSES_DATA || [];
+      return all.filter(b => {
+        const matchesTab = (bossState.tab === 'all') || (b.category === bossState.tab);
+        const q = bossState.searchQuery.toLowerCase().trim();
+        const matchesSearch = !q || b.name.toLowerCase().includes(q) || b.en_name.toLowerCase().includes(q) || b.chapter.toLowerCase().includes(q) || b.arena.toLowerCase().includes(q);
+        return matchesTab && matchesSearch;
+      });
+    }
+
+    function renderBossesBook() {
+      if (!bossLeftPage || !bossRightPage) return;
+      const filtered = getFilteredBosses();
+      if (bossState.selectedBossIndex >= filtered.length) {
+        bossState.selectedBossIndex = 0;
+      }
+      const b = filtered[bossState.selectedBossIndex] || (window.BOSSES_DATA && window.BOSSES_DATA[0]);
+
+      // Left Page: Boss List
+      bossLeftPage.innerHTML = `
+        <div class="sc-page-heading">
+          <h4><img src="assets/mod_icons/wither_skeleton_skull.png" class="ch-pixel-img" alt="Бестиарий" /> Титаны (${filtered.length})</h4>
+          <span class="sc-page-num">Опаснейшие существа</span>
+        </div>
+        <div class="sc-item-list" style="max-height: 490px;">
+          ${filtered.map((boss, i) => {
+            const isSel = (i === bossState.selectedBossIndex);
+            const stars = '⭐'.repeat(boss.danger);
+            return `
+              <div class="book-entry-card ${isSel ? 'active' : ''}" data-boss-idx="${i}">
+                <div class="bec-icon">
+                  <img src="${boss.icon}" alt="${boss.name}" onerror="this.src='assets/mod_icons/wither_skeleton_skull.png'" />
+                </div>
+                <div class="bec-info">
+                  <h5>${boss.name}</h5>
+                  <small style="color:#b45309; font-weight:700;">${stars} · ${boss.chapter.split('·')[0].trim()}</small>
+                </div>
+              </div>
+            `;
+          }).join('')}
+          ${filtered.length === 0 ? '<div style="padding:20px; text-align:center; color:#8c7353;">Босс не найден</div>' : ''}
+        </div>
+      `;
+
+      // Right Page: Boss Dossier
+      if (b) {
+        bossRightPage.innerHTML = `
+          <div class="sc-page-heading">
+            <h4>⚔️ ${b.chapter}</h4>
+            <span class="sc-page-num">${b.mod}</span>
+          </div>
+          <div class="boss-dossier">
+            <div class="boss-portrait-card">
+              <div class="boss-portrait-frame">
+                <img src="${b.icon}" alt="${b.name}" onerror="this.src='assets/mod_icons/wither_skeleton_skull.png'" />
+                <div class="boss-danger-tag">РАНГ: ${'⭐'.repeat(b.danger)}</div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                <h3 style="font-family:'Oswald',sans-serif; font-size:1.35rem; text-transform:uppercase; color:#201006; margin:0;">${b.name}</h3>
+                <small style="font-size:0.75rem; color:#8c7353;">${b.en_name}</small>
+              </div>
+              <div class="boss-stats-row">
+                <div class="boss-stat-cell">
+                  <small>Здоровье</small>
+                  <strong style="color:#dc2626;">${b.hp} ❤️</strong>
+                </div>
+                <div class="boss-stat-cell">
+                  <small>Урон удара</small>
+                  <strong style="color:#d97706;">${b.attack} ⚔️</strong>
+                </div>
+                <div class="boss-stat-cell">
+                  <small>Броня</small>
+                  <strong style="color:#2563eb;">${b.armor} 🛡️</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="boss-details-block">
+              <div>📍 <strong>Арена:</strong> ${b.arena}</div>
+              <div>🗝️ <strong>Призыв:</strong> ${b.summon}</div>
+            </div>
+
+            <div class="boss-details-block">
+              <h6>⚔️ Фазы сражения</h6>
+              ${b.phases.map(p => `
+                <div class="boss-phase-item">
+                  <strong>${p.phase}</strong>
+                  <span>${p.desc}</span>
+                </div>
+              `).join('')}
+              <div style="margin-top:4px; font-size:0.82rem; color:#451a03; background:rgba(251,191,36,0.15); padding:6px 10px; border-radius:6px;">
+                <strong>🛡️ Тактика победы:</strong> ${b.strategy}
+              </div>
+            </div>
+
+            <div class="boss-details-block">
+              <h6>🏆 Гарантированный & Редкий Дроп</h6>
+              <div class="boss-drops-grid">
+                ${b.drops.map(d => `
+                  <div class="boss-drop-card" title="${d.name} (${d.chance})">
+                    <img src="${d.icon}" alt="${d.name}" onerror="this.src='assets/mod_icons/gold_ingot.png'" />
+                    <div class="boss-drop-info">
+                      <small>${d.name}</small>
+                      <span>Шанс: ${d.chance}</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Attach click events on left page boss cards
+      bossLeftPage.querySelectorAll('.book-entry-card').forEach(card => {
+        card.addEventListener('click', () => {
+          playSfx('click');
+          bossState.selectedBossIndex = parseInt(card.getAttribute('data-boss-idx'), 10);
+          renderBossesBook();
+        });
+      });
+    }
+
+    function renderBossesGrid() {
+      if (!bossCardsGridMount) return;
+      let all = window.BOSSES_DATA || [];
+      if (bossState.gridCat !== 'all') {
+        all = all.filter(b => b.category === bossState.gridCat);
+      }
+      const q = bossState.searchQuery.toLowerCase().trim();
+      if (q) {
+        all = all.filter(b => b.name.toLowerCase().includes(q) || b.en_name.toLowerCase().includes(q) || b.chapter.toLowerCase().includes(q) || b.arena.toLowerCase().includes(q));
+      }
+
+      bossCardsGridMount.innerHTML = all.map(b => `
+        <div class="sc-card">
+          <div class="sc-card-head">
+            <div class="sc-card-icon" style="border-color:rgba(244,63,94,0.4);">
+              <img src="${b.icon}" alt="${b.name}" onerror="this.src='assets/mod_icons/wither_skeleton_skull.png'" />
+            </div>
+            <div class="sc-card-title">
+              <h4>${b.name}</h4>
+              <small>${b.mod} • ${b.chapter}</small>
+            </div>
+          </div>
+          <div style="font-family:'Share Tech Mono',monospace; font-size:0.84rem; color:var(--danger); font-weight:700;">
+            HP: ${b.hp} ❤️ • Атака: ${b.attack} ⚔️ • Броня: ${b.armor} 🛡️
+          </div>
+          <div style="font-size:0.8rem; color:var(--cyan); font-weight:600;">📍 ${b.arena}</div>
+          <div class="sc-card-desc">«${b.lore}»</div>
+          <div style="font-size:0.8rem; color:var(--gold);"><strong>🛡️ Тактика:</strong> ${b.strategy}</div>
+          <div style="margin-top:auto; padding-top:8px;">
+            <button class="btn-copy-craft" style="width:100%;" onclick="copySnippet('${b.summon.replace(/'/g, "\\'")}')">Скопировать способ призыва</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Boss Ribbons
+    document.querySelectorAll('.boss-ribbons .sc-ribbon').forEach(r => {
+      r.addEventListener('click', () => {
+        playSfx('click');
+        document.querySelectorAll('.boss-ribbons .sc-ribbon').forEach(b => b.classList.remove('active'));
+        r.classList.add('active');
+        bossState.tab = r.getAttribute('data-bosstab');
+        bossState.selectedBossIndex = 0;
+        renderBossesBook();
+      });
+    });
+
+    // Boss Search
+    if (bossSearchInput) {
+      bossSearchInput.addEventListener('input', (e) => {
+        bossState.searchQuery = e.target.value;
+        bossState.selectedBossIndex = 0;
+        if (bossState.viewMode === 'book') {
+          renderBossesBook();
+        } else {
+          renderBossesGrid();
+        }
+      });
+    }
+
+    // Boss View Mode Buttons
+    if (btnBossBook && btnBossGrid) {
+      btnBossBook.addEventListener('click', () => {
+        playSfx('click');
+        btnBossBook.classList.add('active');
+        btnBossGrid.classList.remove('active');
+        bossBookView.style.display = 'block';
+        bossGridView.classList.remove('active');
+        bossState.viewMode = 'book';
+        renderBossesBook();
+      });
+
+      btnBossGrid.addEventListener('click', () => {
+        playSfx('click');
+        btnBossGrid.classList.add('active');
+        btnBossBook.classList.remove('active');
+        bossBookView.style.display = 'none';
+        bossGridView.classList.add('active');
+        bossState.viewMode = 'grid';
+        renderBossesGrid();
+      });
+    }
+
+    // Boss Grid Filter Pills
+    document.querySelectorAll('#bossGridFilterPills .sc-fpill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        playSfx('click');
+        document.querySelectorAll('#bossGridFilterPills .sc-fpill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        bossState.gridCat = btn.getAttribute('data-bosscat');
+        renderBossesGrid();
+      });
+    });
+
+    // Init Bosses Book
+    if (window.BOSSES_DATA) {
+      renderBossesBook();
+    }
+
+    
+  if (typeof renderBossesBook === 'function') {
+    renderBossesBook();
+  }
+</script>
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

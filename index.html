@@ -1,0 +1,4614 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#070210" />
+  <meta name="description"
+    content="Добро пожаловать в Astral — сюжетное приключение с элементами RPG, которое переворачивает представление о ванильном Майнкрафте. Пройди путь от потерянного странника до существа, способного бросить вызов богам разрушенных измерений." />
+  <meta property="og:title" content="ASTRAL — сюжетное RPG-приключение в Minecraft" />
+  <meta property="og:description"
+    content="Добро пожаловать в Astral — сюжетное приключение с элементами RPG, которое переворачивает представление о ванильном Майнкрафте." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/images/og-cover.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="assets/images/og-cover.jpg" />
+  <title>ASTRAL | Сюжетное RPG-приключение · Minecraft</title>
+  <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=Rajdhani:wght@600;700&family=Share+Tech+Mono&display=swap&subset=cyrillic,cyrillic-ext,latin,latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="extras.css?v=2.30">
+  <style>
+    /* ============================================================
+     ASTRAL RPG — Космический неоново-фиолетовый стиль
+     Палитра: глубокий вакуум, электрический пурпур, неон и звёзды
+     ============================================================ */
+    :root {
+      --bg: #070210;
+      --bg-2: #0e051e;
+      --deep: #16092c;
+      --panel: rgba(22, 11, 40, .80);
+      --panel-2: rgba(14, 7, 26, .95);
+      --glass: rgba(192, 132, 252, .07);
+      --line: rgba(192, 132, 252, .22);
+      --line-2: rgba(255, 255, 255, .08);
+      --text: #f5efff;
+      --muted: #b3a2ce;
+      --muted-2: #82709e;
+      --ice: #c084fc;
+      --ice-bright: #f0abfc;
+      --ice-deep: #8b5cf6;
+      --accent: #c084fc;
+      --accent-2: #9333ea;
+      --neon-pink: #f43f5e;
+      --neon-purple: #c084fc;
+      --neon-cyan: #38bdf8;
+      --danger: #f43f5e;
+      --blood: #be123c;
+      --good: #34d399;
+      --warn: #fbbf24;
+      --shadow: 0 30px 90px rgba(0, 0, 0, .7);
+      --shadow-ice: 0 20px 60px rgba(168, 85, 247, .28);
+      --radius: 22px;
+      --radius-lg: 28px;
+      --max: 1240px;
+      --ticker-h: 0px;
+      --header-h: 74px;
+      --ease: cubic-bezier(.22, .61, .36, 1);
+    }
+
+    .ticker {
+      display: none !important
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #070210
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(168, 85, 247, .45);
+      border-radius: 5px;
+      border: 2px solid #070210
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(192, 132, 252, .8)
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+      padding-top: calc(var(--ticker-h) + var(--header-h));
+      background:
+        radial-gradient(1250px 800px at 50% -12%, rgba(147, 51, 234, .26), transparent 60%),
+        radial-gradient(950px 600px at 12% 16%, rgba(192, 132, 252, .14), transparent 55%),
+        radial-gradient(850px 550px at 88% 28%, rgba(244, 63, 94, .12), transparent 60%),
+        radial-gradient(750px 500px at 50% 65%, rgba(124, 58, 237, .14), transparent 65%),
+        linear-gradient(180deg, #070210 0%, #0e051e 50%, #06020d 100%);
+      background-attachment: fixed;
+    }
+
+    /* CRT / scanline overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .09;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, .03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(192, 132, 252, .04) 1px, transparent 1px);
+      background-size: 100% 3px, 90px 90px;
+      mix-blend-mode: screen;
+    }
+
+    /* vignette */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(4, 1, 8, .65) 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    img {
+      max-width: 100%;
+      display: block
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--ice);
+      outline-offset: 3px;
+      border-radius: 6px
+    }
+
+    ::selection {
+      background: rgba(192, 132, 252, .4);
+      color: #fff
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 36px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 2
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 16px;
+      z-index: 3000;
+      background: var(--ice);
+      color: #0a0214;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 800
+    }
+
+    .skip-link:focus {
+      top: 12px
+    }
+
+    /* ---------- starfield canvas ---------- */
+    .snow {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    .aurora {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 65vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .65;
+      background:
+        radial-gradient(65% 85% at 20% 0%, rgba(168, 85, 247, .22), transparent 70%),
+        radial-gradient(55% 75% at 80% 0%, rgba(240, 171, 252, .18), transparent 70%),
+        radial-gradient(40% 60% at 50% 8%, rgba(56, 189, 248, .10), transparent 70%);
+      filter: blur(30px);
+      animation: auroraDrift 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes auroraDrift {
+      0% {
+        transform: translateX(-4%) skewX(-2deg);
+        opacity: .45
+      }
+
+      100% {
+        transform: translateX(4%) skewX(2deg);
+        opacity: .75
+      }
+    }
+
+    body.storm .aurora {
+      background: radial-gradient(60% 80% at 50% 0%, rgba(244, 63, 94, .2), transparent 70%)
+    }
+
+    /* ---------- загрузочный шлюз ---------- */
+    .dl-cta {
+      position: relative;
+      max-width: 980px;
+      margin: 0 auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(192, 132, 252, .28);
+      background: linear-gradient(180deg,
+          rgba(24, 12, 44, .88), rgba(11, 5, 22, .96));
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .5), 0 0 40px rgba(168, 85, 247, .16)
+    }
+
+    .dl-cta-glow {
+      position: absolute;
+      inset: -40% 30% auto -10%;
+      height: 280px;
+      pointer-events: none;
+      background: radial-gradient(closest-side, rgba(192, 132, 252, .22), transparent 70%);
+      filter: blur(6px)
+    }
+
+    .dl-cta-body {
+      position: relative;
+      z-index: 1;
+      padding: 38px 40px
+    }
+
+    .dl-cta-badge {
+      display: inline-block;
+      font-family: "Share Tech Mono", monospace;
+      font-size: .64rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--ice);
+      border: 1px solid rgba(192, 132, 252, .35);
+      border-radius: 999px;
+      padding: 6px 13px;
+      margin-bottom: 16px
+    }
+
+    .dl-cta-title {
+      font-family: var(--font-display, Oswald), sans-serif;
+      font-weight: 600;
+      font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+      line-height: 1.08;
+      text-transform: uppercase;
+      color: #fff;
+      margin: 0 0 12px
+    }
+
+    .dl-cta-text {
+      max-width: 62ch;
+      color: var(--muted);
+      margin: 0 0 26px;
+      line-height: 1.65
+    }
+
+    .dl-cta-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 28px
+    }
+
+    .dl-cta-stat {
+      background: rgba(12, 5, 24, .92);
+      padding: 16px 14px;
+      text-align: center
+    }
+
+    .dl-cta-stat .v {
+      font-family: var(--font-display, Oswald), sans-serif;
+      font-size: 1.35rem;
+      color: var(--ice-bright);
+      line-height: 1.1
+    }
+
+    .dl-cta-stat .l {
+      margin-top: 5px;
+      font-family: "Share Tech Mono", monospace;
+      font-size: .58rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted-2)
+    }
+
+    .dl-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 30px;
+      font-size: 1rem
+    }
+
+    @media (max-width:760px) {
+      .dl-cta-body {
+        padding: 26px 20px
+      }
+
+      .dl-cta-meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .dl-cta-btn {
+        width: 100%
+      }
+    }
+
+    @media (max-width:420px) {
+      .dl-cta-stat {
+        padding: 13px 10px
+      }
+
+      .dl-cta-stat .v {
+        font-size: 1.15rem
+      }
+    }
+
+    /* ---------- ticker ---------- */
+    .ticker {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--ticker-h);
+      z-index: 1001;
+      background: rgba(8, 3, 16, .94);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: 2.5rem;
+      white-space: nowrap;
+      align-items: center;
+      height: 100%;
+      padding-left: 100%;
+      animation: marquee 42s linear infinite
+    }
+
+    .ticker:hover .ticker-track {
+      animation-play-state: paused
+    }
+
+    .ticker-item {
+      font-family: "Share Tech Mono", monospace;
+      font-size: .74rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #eddcf8
+    }
+
+    .ticker-item span {
+      color: var(--ice)
+    }
+
+    @keyframes marquee {
+      from {
+        transform: translateX(0)
+      }
+
+      to {
+        transform: translateX(-100%)
+      }
+    }
+
+    body.storm .ticker {
+      border-bottom-color: rgba(244, 63, 94, .4);
+      background: rgba(20, 5, 14, .95)
+    }
+
+    body.storm .ticker-item span {
+      color: var(--danger)
+    }
+
+    body.secret .ticker {
+      border-bottom-color: rgba(192, 132, 252, .34);
+      background: rgba(12, 4, 24, .96)
+    }
+
+    body.secret .ticker-item span {
+      color: var(--ice-bright)
+    }
+
+    /* ---------- header ---------- */
+    header {
+      position: fixed;
+      top: var(--ticker-h);
+      left: 0;
+      right: 0;
+      height: var(--header-h);
+      z-index: 1000;
+      background: rgba(7, 2, 15, .74);
+      backdrop-filter: blur(18px) saturate(1.2);
+      border-bottom: 1px solid var(--line-2);
+      transition: background .3s ease, box-shadow .3s ease;
+    }
+
+    header.scrolled {
+      background: rgba(7, 2, 15, .95);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, .6), 0 0 24px rgba(168, 85, 247, .16)
+    }
+
+    .nav {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: Oswald, sans-serif;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      user-select: none;
+      cursor: pointer;
+      white-space: nowrap
+    }
+
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(192, 132, 252, .22), rgba(124, 58, 237, .12));
+      border: 1px solid rgba(192, 132, 252, .35);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 16px rgba(192, 132, 252, .25)
+    }
+
+    .logo-mark::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, .22), transparent);
+      transform: translateX(-120%);
+      transition: transform .5s ease
+    }
+
+    .logo:hover .logo-mark::after {
+      transform: translateX(120%)
+    }
+
+    .logo-mark svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--ice);
+      filter: drop-shadow(0 0 8px rgba(192, 132, 252, .7))
+    }
+
+    .logo-text {
+      font-size: 1.05rem;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .logo-text span {
+      color: var(--ice);
+      text-shadow: 0 0 18px rgba(192, 132, 252, .5)
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 15px;
+      border-radius: 12px;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: #0a0214;
+      background: linear-gradient(135deg, var(--ice-bright), var(--ice));
+      box-shadow: 0 6px 22px rgba(192, 132, 252, .4);
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      transition: opacity .28s var(--ease), transform .28s var(--ease), box-shadow .2s ease;
+    }
+
+    .nav-cta b {
+      font-family: "Share Tech Mono", monospace;
+      font-weight: 400;
+      opacity: .65
+    }
+
+    .nav-cta.show {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto
+    }
+
+    .nav-cta:hover {
+      box-shadow: 0 8px 30px rgba(240, 171, 252, .55)
+    }
+
+    @media (max-width:520px) {
+      .nav-cta b {
+        display: none
+      }
+
+      .nav-cta {
+        padding: 9px 12px
+      }
+    }
+
+    .nav-link {
+      color: var(--muted);
+      font-size: .84rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      position: relative;
+      transition: color .2s ease
+    }
+
+    .nav-link:hover {
+      color: #fff
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--ice), transparent);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform .25s var(--ease)
+    }
+
+    .nav-link:hover::after {
+      transform: scaleX(1)
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px
+    }
+
+    .pill-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .82rem;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(192, 132, 252, .28);
+      background: rgba(147, 51, 234, .1);
+      color: #ecd9ff;
+      transition: transform .2s var(--ease), background .2s ease, box-shadow .2s ease
+    }
+
+    .pill-link:hover {
+      transform: translateY(-2px);
+      background: rgba(147, 51, 234, .22);
+      box-shadow: 0 10px 24px rgba(168, 85, 247, .3)
+    }
+
+    .menu-btn {
+      display: none;
+      border: 1px solid var(--line-2);
+      background: rgba(255, 255, 255, .03);
+      color: #fff;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.1rem
+    }
+
+    .mobile-panel {
+      display: none;
+      border-top: 1px solid var(--line-2);
+      background: rgba(7, 2, 16, .98);
+      backdrop-filter: blur(16px);
+      padding: 16px 0 20px
+    }
+
+    .mobile-panel.open {
+      display: block;
+      animation: slideDown .3s var(--ease)
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .mobile-panel .nav-links,
+    .mobile-panel .social-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px
+    }
+
+    .mobile-panel .pill-link,
+    .mobile-panel .nav-link {
+      justify-content: center;
+      text-align: center;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--line-2)
+    }
+
+    .mobile-panel .nav-link::after {
+      display: none
+    }
+
+    /* ---------- section scaffolding ---------- */
+    section {
+      padding: 96px 0;
+      position: relative
+    }
+
+    .eyebrow {
+      font-family: "Share Tech Mono", monospace;
+      font-size: .76rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--ice);
+      text-align: center;
+      margin-bottom: 14px;
+      opacity: .9
+    }
+
+    .section-title {
+      margin: 0 0 22px;
+      font-family: Oswald, sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      text-align: center;
+      color: #fff;
+      line-height: 1.04
+    }
+
+    .section-title .hl {
+      color: var(--ice);
+      text-shadow: 0 0 32px rgba(192, 132, 252, .5)
+    }
+
+    .section-subtitle {
+      margin: 0 auto 44px;
+      max-width: 720px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 1.02rem
+    }
+
+    .cl-lang {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      max-width: 720px;
+      margin: -22px auto 38px;
+      padding: 8px 14px;
+      border: 1px dashed rgba(192, 132, 252, .25);
+      border-radius: 10px;
+      background: rgba(192, 132, 252, .05);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .68rem;
+      letter-spacing: .04em;
+      line-height: 1.5;
+      color: var(--muted);
+      text-align: center
+    }
+
+    .cl-lang[hidden] {
+      display: none
+    }
+
+    /* reveal-on-scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(34px);
+      filter: blur(6px);
+      transition: opacity .9s var(--ease), transform .9s var(--ease), filter .9s var(--ease)
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: none;
+      filter: none
+    }
+
+    .reveal.d1 {
+      transition-delay: .08s
+    }
+
+    .reveal.d2 {
+      transition-delay: .16s
+    }
+
+    .reveal.d3 {
+      transition-delay: .24s
+    }
+
+    .reveal.d4 {
+      transition-delay: .32s
+    }
+
+    /* ---------- glitch ---------- */
+    .glitch {
+      position: relative;
+      display: inline-block
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      mix-blend-mode: screen
+    }
+
+    .glitch:hover::before,
+    .glitch:hover::after,
+    .glitch.glitching::before,
+    .glitch.glitching::after {
+      opacity: .9;
+      animation: glitchShift .26s steps(2, end) infinite
+    }
+
+    .glitch:hover::before,
+    .glitch.glitching::before {
+      color: var(--danger);
+      transform: translate(2px, -1px);
+      clip-path: inset(0 0 55% 0)
+    }
+
+    .glitch:hover::after,
+    .glitch.glitching::after {
+      color: var(--ice);
+      transform: translate(-2px, 1px);
+      clip-path: inset(55% 0 0 0)
+    }
+
+    @keyframes glitchShift {
+      0% {
+        transform: translate(0)
+      }
+
+      25% {
+        transform: translate(2px, -1px)
+      }
+
+      50% {
+        transform: translate(-2px, 1px)
+      }
+
+      75% {
+        transform: translate(1px, 2px)
+      }
+
+      100% {
+        transform: translate(-2px, -1px)
+      }
+    }
+
+    /* ---------- buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border-radius: 14px;
+      transition: transform .22s var(--ease), box-shadow .22s ease, background .22s ease;
+      padding: 16px 22px;
+      min-height: 54px;
+      font-size: .92rem;
+      position: relative;
+      overflow: hidden
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, .2), transparent);
+      transform: translateX(-130%);
+      transition: transform .5s ease
+    }
+
+    .btn:hover::after {
+      transform: translateX(130%)
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      box-shadow: 0 14px 38px rgba(147, 51, 234, .4)
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 46px rgba(168, 85, 247, .55)
+    }
+
+    .btn-ice {
+      color: #090214;
+      background: linear-gradient(135deg, var(--ice-bright), var(--ice));
+      box-shadow: 0 14px 38px rgba(192, 132, 252, .38)
+    }
+
+    .btn-ice:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 46px rgba(240, 171, 252, .5)
+    }
+
+    .btn-secondary {
+      color: #f5efff;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--line-2)
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-3px);
+      background: rgba(192, 132, 252, .08)
+    }
+
+    .btn-ghost {
+      color: #ecd9ff;
+      background: transparent;
+      border: 1px solid var(--line)
+    }
+
+    .btn-ghost:hover {
+      transform: translateY(-3px);
+      background: rgba(192, 132, 252, .1)
+    }
+
+    /* ---------- frost card hover ---------- */
+    .frostable {
+      position: relative;
+      overflow: hidden
+    }
+
+    .frostable::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .4s ease;
+      z-index: 1;
+      background:
+        radial-gradient(120px 80px at var(--fx, 30%) var(--fy, 20%), rgba(240, 171, 252, .16), transparent 70%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='0.5'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+
+    .frostable:hover::before {
+      opacity: .5
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      padding-top: 40px;
+      min-height: calc(100vh - var(--header-h));
+      display: grid;
+      align-items: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(900px 500px at 50% 8%, rgba(192, 132, 252, .18), transparent 60%),
+        radial-gradient(700px 500px at 18% 80%, rgba(147, 51, 234, .14), transparent 60%);
+    }
+
+    .hero-bg img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .25;
+      filter: saturate(.7) brightness(.7) contrast(1.05);
+      mix-blend-mode: luminosity
+    }
+
+    .hero-fog {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent 40%, var(--bg) 96%)
+    }
+
+    .hero-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      max-width: 960px;
+      margin: 0 auto
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 22px
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(192, 132, 252, .28);
+      background: rgba(192, 132, 252, .08);
+      color: #f0abfc;
+      font-size: .76rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase
+    }
+
+    .tag.danger {
+      border-color: rgba(244, 63, 94, .3);
+      background: rgba(244, 63, 94, .08);
+      color: #fca5a5
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Oswald, sans-serif;
+      font-weight: 700;
+      font-size: clamp(3.8rem, 10vw, 7.2rem);
+      line-height: .9;
+      letter-spacing: .03em;
+      text-transform: uppercase
+    }
+
+    h1 .l1 {
+      display: block;
+      color: #fff;
+      text-shadow: 0 0 40px rgba(192, 132, 252, .3), 0 0 80px rgba(147, 51, 234, .25)
+    }
+
+    h1 .l2 {
+      display: block;
+      color: var(--ice);
+      text-shadow: 0 0 50px rgba(192, 132, 252, .55), 0 0 90px rgba(147, 51, 234, .35)
+    }
+
+    .hero-copy {
+      max-width: 880px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center
+    }
+
+    .hero-tagline {
+      margin: 20px 0 0;
+      font-family: "Share Tech Mono", monospace;
+      color: var(--ice-bright);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: 1.02rem
+    }
+
+    .hero-copy p.lead {
+      margin: 18px auto 0;
+      color: #c7b8dd;
+      font-size: 1.15rem;
+      line-height: 1.75;
+      max-width: 68ch;
+      text-align: center
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 34px
+    }
+
+    .hero-meta {
+      margin-top: 34px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--line-2);
+      font-family: "Share Tech Mono", monospace;
+      font-size: .74rem;
+      letter-spacing: .06em;
+      color: #ecd9ff
+    }
+
+    .meta-chip b {
+      color: var(--ice)
+    }
+
+    .breathing {
+      animation: breathe 5s ease-in-out infinite
+    }
+
+    @keyframes breathe {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 0 transparent)
+      }
+
+      50% {
+        filter: drop-shadow(0 0 24px rgba(192, 132, 252, .25))
+      }
+    }
+
+    /* hero status panel */
+    .hero-panel {
+      background: linear-gradient(180deg, rgba(20, 11, 38, .86), rgba(11, 5, 22, .94));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow), 0 0 40px rgba(147, 51, 234, .15);
+      padding: 24px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--ice), transparent);
+      opacity: .7
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--line-2);
+      background: rgba(255, 255, 255, .03);
+      font-family: "Share Tech Mono", monospace;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: #eddcf8
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warn);
+      box-shadow: 0 0 10px currentColor;
+      animation: pulse 2s ease-in-out infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .4
+      }
+    }
+
+    .status-pill.live .status-dot {
+      background: var(--good)
+    }
+
+    .status-pill.offline .status-dot {
+      background: var(--warn)
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--line-2);
+      border-radius: 18px;
+      padding: 16px;
+      min-height: 108px;
+      transition: transform .2s var(--ease), border-color .2s ease
+    }
+
+    .stat-card h3 {
+      margin: 0 0 10px;
+      font-family: Rajdhani, sans-serif;
+      font-size: .84rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted)
+    }
+
+    .wide-card {
+      grid-column: 1 / -1;
+      cursor: pointer
+    }
+
+    .wide-card:hover,
+    .wide-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(192, 132, 252, .35);
+      background: rgba(192, 132, 252, .06);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, .35), 0 0 25px rgba(168, 85, 247, .18)
+    }
+
+    .stat-value {
+      font-family: Oswald, sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      color: #fff
+    }
+
+    .stat-value.good {
+      color: var(--good)
+    }
+
+    .stat-value.danger {
+      color: var(--danger)
+    }
+
+    .stat-note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .8rem
+    }
+
+    .sim-mark {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0 0 10px;
+      font-family: "Share Tech Mono", monospace;
+      font-size: .66rem;
+      letter-spacing: .16em;
+      color: var(--muted-2);
+      text-transform: uppercase;
+      cursor: help
+    }
+
+    .sim-mark .sim-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--warn);
+      opacity: .7;
+      flex: none
+    }
+
+    .sim-tag {
+      display: block;
+      margin-top: 5px;
+      font-family: "Share Tech Mono", monospace;
+      font-size: .58rem;
+      letter-spacing: .14em;
+      color: var(--muted-2);
+      text-transform: uppercase
+    }
+
+    .hud-grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px
+    }
+
+    .hud-item {
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid rgba(192, 132, 252, .14);
+      border-radius: 16px;
+      padding: 15px
+    }
+
+    .hud-item.interactive {
+      cursor: pointer;
+      transition: transform .18s var(--ease), background .2s ease, border-color .2s ease
+    }
+
+    .hud-item.interactive:hover {
+      background: rgba(192, 132, 252, .08);
+      transform: translateY(-2px);
+      border-color: rgba(192, 132, 252, .35)
+    }
+
+    .hud-label {
+      display: block;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      font-family: Rajdhani, sans-serif;
+      font-size: .78rem;
+      color: var(--muted)
+    }
+
+    .hud-value {
+      font-family: Oswald, sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+      color: #fff
+    }
+
+    .hud-value.danger {
+      color: var(--danger)
+    }
+
+    /* live metrics row */
+    .metrics-row {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px
+    }
+
+    .metric {
+      background: rgba(20, 11, 38, .72);
+      border: 1px solid var(--line-2);
+      border-radius: 18px;
+      padding: 20px 16px;
+      text-align: center;
+      transition: transform .2s var(--ease), border-color .2s ease
+    }
+
+    .metric:hover {
+      transform: translateY(-3px);
+      border-color: rgba(192, 132, 252, .35);
+      box-shadow: 0 10px 30px rgba(147, 51, 234, .16)
+    }
+
+    .metric-number {
+      font-family: Oswald, sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--ice);
+      line-height: 1;
+      text-shadow: 0 0 24px rgba(192, 132, 252, .35)
+    }
+
+    .metric-label {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .07em
+    }
+
+    .connection-note {
+      margin-top: 14px;
+      color: var(--muted-2);
+      font-size: .82rem;
+      text-align: center;
+      font-family: "Share Tech Mono", monospace
+    }
+
+    /* ---------- about / lore ---------- */
+    .lore {
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center
+    }
+
+    .lore .big {
+      font-family: Oswald, sans-serif;
+      font-weight: 600;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      line-height: 1.2;
+      color: #f5efff;
+      letter-spacing: .01em;
+      margin: 0 0 24px
+    }
+
+    .lore .big b {
+      color: var(--ice)
+    }
+
+    .lore p {
+      color: var(--muted);
+      font-size: 1.06rem;
+      margin: 0 0 16px
+    }
+
+    .lore-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 42px
+    }
+
+    .lore-stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 26px 18px;
+      backdrop-filter: blur(8px)
+    }
+
+    .lore-stat .n {
+      font-family: Oswald, sans-serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--ice);
+      line-height: 1
+    }
+
+    .lore-stat .t {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .86rem;
+      text-transform: uppercase;
+      letter-spacing: .06em
+    }
+
+    /* ---------- video ---------- */
+    .video-frame {
+      position: relative;
+      max-width: 1000px;
+      margin: 0 auto;
+      border-radius: var(--radius);
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(192, 132, 252, .18), rgba(147, 51, 234, .08));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-ice)
+    }
+
+    .video-frame::before,
+    .video-frame::after {
+      content: "";
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      border: 2px solid var(--ice);
+      opacity: .7
+    }
+
+    .video-frame::before {
+      top: -2px;
+      left: -2px;
+      border-right: 0;
+      border-bottom: 0;
+      border-radius: 8px 0 0 0
+    }
+
+    .video-frame::after {
+      bottom: -2px;
+      right: -2px;
+      border-left: 0;
+      border-top: 0;
+      border-radius: 0 0 8px 0
+    }
+
+    .video-wrap {
+      position: relative;
+      aspect-ratio: 16/9;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #06020e
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0
+    }
+
+    .video-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem
+    }
+
+    /* ---------- shaders compare ---------- */
+    .compare-wrap {
+      max-width: 1040px;
+      margin: 0 auto
+    }
+
+    .compare {
+      position: relative;
+      aspect-ratio: 16/9;
+      min-height: 340px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(192, 132, 252, .28);
+      user-select: none;
+      box-shadow: var(--shadow), 0 0 35px rgba(147, 51, 234, .14);
+      touch-action: none
+    }
+
+    .compare-layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      pointer-events: none
+    }
+
+    .compare-before {
+      background-color: #0c0618
+    }
+
+    .compare-before.ld {
+      background-image: url('assets/images/shader-before.webp')
+    }
+
+    .compare-after {
+      background-color: #140826;
+      clip-path: inset(0 50% 0 0)
+    }
+
+    .compare-after.ld {
+      background-image: url('assets/images/shader-after.webp')
+    }
+
+    .compare-bar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: var(--ice);
+      transform: translateX(-50%);
+      box-shadow: 0 0 20px rgba(192, 132, 252, .9);
+      cursor: ew-resize;
+      z-index: 3
+    }
+
+    .compare-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--ice-bright), var(--ice));
+      color: #0a0214;
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .5), 0 0 30px rgba(192, 132, 252, .6);
+      z-index: 4
+    }
+
+    .compare-badge {
+      position: absolute;
+      top: 16px;
+      z-index: 4;
+      padding: 8px 13px;
+      border-radius: 999px;
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: rgba(8, 3, 16, .82);
+      border: 1px solid var(--line-2);
+      backdrop-filter: blur(10px)
+    }
+
+    .badge-left {
+      left: 16px;
+      color: var(--muted)
+    }
+
+    .badge-right {
+      right: 16px;
+      color: var(--ice-bright)
+    }
+
+    .shader-tiers {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 24px
+    }
+
+    .tier {
+      background: var(--panel);
+      border: 1px solid var(--line-2);
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      transition: transform .2s var(--ease), border-color .2s ease
+    }
+
+    .tier:hover {
+      transform: translateY(-3px);
+      border-color: rgba(192, 132, 252, .35)
+    }
+
+    .tier .tn {
+      font-family: Oswald, sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-size: .96rem;
+      color: #fff
+    }
+
+    .tier .td {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: .74rem
+    }
+
+    .tier .fps {
+      margin-top: 10px;
+      font-family: "Share Tech Mono", monospace;
+      font-size: .72rem;
+      color: var(--ice)
+    }
+
+    /* ---------- gallery ---------- */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px
+    }
+
+    .shot {
+      position: relative;
+      aspect-ratio: 16/10;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--line-2);
+      cursor: pointer;
+      background: #0e061a
+    }
+
+    .shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .6s var(--ease), filter .4s ease;
+      filter: saturate(.85)
+    }
+
+    .shot:hover img {
+      transform: scale(1.08);
+      filter: saturate(1.08)
+    }
+
+    .shot::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(192, 132, 252, 0.08);
+      opacity: 0;
+      transition: opacity .3s ease;
+      pointer-events: none;
+    }
+
+    .shot:hover::after {
+      opacity: 1;
+    }
+
+    .shot .cap {
+      display: none;
+    }
+
+    .shot .zoom {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(7, 2, 16, .7);
+      border: 1px solid var(--line-2);
+      color: var(--ice);
+      opacity: 0;
+      transition: opacity .3s ease
+    }
+
+    .shot:hover .zoom {
+      opacity: 1
+    }
+
+    /* lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 2200;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(4, 1, 8, .94);
+      backdrop-filter: blur(10px)
+    }
+
+    .lightbox.open {
+      display: grid;
+      animation: fadeIn .3s ease
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    .lightbox img {
+      max-width: min(1100px, 92vw);
+      max-height: 84vh;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .7), 0 0 50px rgba(168, 85, 247, .2)
+    }
+
+    .lb-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      border: 1px solid var(--line-2);
+      background: rgba(255, 255, 255, .04);
+      color: #fff;
+      font-size: 1.3rem;
+      cursor: pointer
+    }
+
+    .lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      border: 1px solid var(--line-2);
+      background: rgba(255, 255, 255, .04);
+      color: var(--ice);
+      font-size: 1.6rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center
+    }
+
+    .lb-prev {
+      left: 24px
+    }
+
+    .lb-next {
+      right: 24px
+    }
+
+    .lb-counter {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: "Share Tech Mono", monospace;
+      color: var(--muted);
+      font-size: .82rem
+    }
+
+    /* ---------- features ---------- */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px
+    }
+
+    .feature {
+      background: linear-gradient(180deg, rgba(22, 12, 40, .82), rgba(13, 6, 25, .94));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .25s var(--ease), border-color .25s ease, box-shadow .25s ease
+    }
+
+    .feature:hover {
+      transform: translateY(-5px);
+      border-color: rgba(216, 145, 255, .45);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, .45), 0 0 30px rgba(168, 85, 247, .22)
+    }
+
+    .feature::before {
+      content: "";
+      position: absolute;
+      inset: auto auto 0 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(192, 132, 252, .85), transparent);
+      opacity: .3;
+      transition: opacity .3s ease
+    }
+
+    .feature:hover::before {
+      opacity: .85
+    }
+
+    .feature .ic {
+      width: 54px;
+      height: 54px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      font-size: 1.7rem;
+      background: linear-gradient(135deg, rgba(192, 132, 252, .22), rgba(147, 51, 234, .1));
+      border: 1px solid rgba(192, 132, 252, .3);
+      margin-bottom: 18px
+    }
+
+    .feature h3 {
+      margin: 0 0 10px;
+      font-family: Oswald, sans-serif;
+      font-weight: 600;
+      font-size: 1.22rem;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      color: #fff
+    }
+
+    .feature p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .94rem;
+      white-space: pre-line;
+      line-height: 1.6
+    }
+
+    /* ---------- mods list ---------- */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 22px
+    }
+
+    .segmented {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .seg-btn {
+      border: 1px solid var(--line-2);
+      background: rgba(255, 255, 255, .03);
+      color: #ecd9ff;
+      padding: 11px 15px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-size: .74rem;
+      transition: .2s ease
+    }
+
+    .seg-btn:hover,
+    .seg-btn.active {
+      background: rgba(192, 132, 252, .18);
+      border-color: rgba(192, 132, 252, .4);
+      color: #fff
+    }
+
+    .seg-btn .ct {
+      opacity: .6;
+      margin-left: 6px;
+      font-family: "Share Tech Mono", monospace
+    }
+
+    .mod-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px
+    }
+
+    .mod-cat {
+      font-family: "Share Tech Mono", monospace;
+      font-size: .66rem;
+      color: var(--cat-color, var(--ice));
+      background: rgba(192, 132, 252, .1);
+      padding: 4px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: .05em
+    }
+
+    /* ---------- requirements ---------- */
+    .req-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      max-width: 980px;
+      margin: 0 auto
+    }
+
+    .req-card {
+      background: linear-gradient(180deg, rgba(22, 12, 40, .84), rgba(13, 6, 25, .94));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .req-card.rec {
+      border-color: rgba(192, 132, 252, .4);
+      box-shadow: 0 0 50px rgba(168, 85, 247, .16)
+    }
+
+    .req-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px dashed var(--line-2)
+    }
+
+    .req-head h3 {
+      margin: 0;
+      font-family: Oswald, sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-size: 1.2rem;
+      color: #fff
+    }
+
+    .req-tag {
+      font-family: "Share Tech Mono", monospace;
+      font-size: .7rem;
+      padding: 5px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .06em
+    }
+
+    .req-tag.min {
+      color: var(--muted);
+      border: 1px solid var(--line-2)
+    }
+
+    .req-tag.rec {
+      color: #090214;
+      background: var(--ice)
+    }
+
+    .req-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .04)
+    }
+
+    .req-row:last-child {
+      border-bottom: none
+    }
+
+    .req-row .k {
+      color: var(--muted);
+      font-size: .86rem;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .req-row .v {
+      font-family: Oswald, sans-serif;
+      font-weight: 600;
+      color: #fff;
+      font-size: .98rem;
+      text-align: right
+    }
+
+    .req-card.rec .req-row .v {
+      color: var(--ice-bright)
+    }
+
+    /* ---------- accordion (faq + changelog) ---------- */
+    .acc {
+      max-width: 880px;
+      margin: 0 auto
+    }
+
+    .acc-item {
+      border: 1px solid var(--line-2);
+      border-radius: 16px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      background: rgba(18, 9, 33, .65);
+      transition: border-color .2s ease
+    }
+
+    .acc-item.open {
+      border-color: rgba(192, 132, 252, .35)
+    }
+
+    .acc-btn {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      text-align: left;
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      font-family: Oswald, sans-serif;
+      font-weight: 600;
+      font-size: 1.04rem;
+      letter-spacing: .01em;
+      transition: background .2s ease
+    }
+
+    .acc-btn:hover {
+      background: rgba(192, 132, 252, .05)
+    }
+
+    .acc-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s var(--ease);
+      color: #c4b5dd;
+      font-size: .95rem
+    }
+
+    .acc-content .inner {
+      padding: 0 22px 22px
+    }
+
+    .acc-content .inner b {
+      color: var(--ice)
+    }
+
+    .acc-toggle {
+      flex: 0 0 auto;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--ice);
+      font-size: 1.3rem;
+      transition: transform .3s var(--ease);
+      background: rgba(192, 132, 252, .12)
+    }
+
+    .acc-item.open .acc-toggle {
+      transform: rotate(45deg)
+    }
+
+    /* terminal changelog */
+    .terminal {
+      max-width: 880px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, rgba(18, 9, 33, .96), rgba(10, 4, 19, .98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow)
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, .03);
+      border-bottom: 1px solid var(--line-2)
+    }
+
+    .tdot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px
+    }
+
+    .term-title {
+      margin-left: 8px;
+      color: var(--muted);
+      font-family: "Share Tech Mono", monospace;
+      font-size: .8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .term-body {
+      padding: 8px 0
+    }
+
+    /* ---------- download gate ---------- */
+    .download-gate {
+      position: relative;
+      background: radial-gradient(ellipse at top, rgba(26, 12, 46, .95), rgba(9, 4, 18, .98));
+      border: 1px solid rgba(192, 132, 252, .24);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow), 0 0 50px rgba(147, 51, 234, .16);
+      overflow: hidden;
+      max-width: 1040px;
+      margin: 0 auto
+    }
+
+    .download-gate::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(240, 171, 252, .9), transparent);
+      animation: scan 4s linear infinite
+    }
+
+    @keyframes scan {
+      from {
+        transform: translateX(-100%)
+      }
+
+      to {
+        transform: translateX(100%)
+      }
+    }
+
+    .gate-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px
+    }
+
+    .checklist,
+    .gate-status {
+      background: rgba(0, 0, 0, .3);
+      border: 1px solid var(--line-2);
+      border-radius: 20px;
+      padding: 22px
+    }
+
+    .checklist h3,
+    .gate-status h3 {
+      margin: 0 0 16px;
+      font-family: Oswald, sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-size: 1.1rem
+    }
+
+    .check {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: #cfc1e4;
+      cursor: pointer;
+      user-select: none;
+      padding: 11px 0;
+      transition: color .2s ease
+    }
+
+    .check:hover {
+      color: #fff
+    }
+
+    .box {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid rgba(179, 162, 206, .7);
+      flex: 0 0 auto;
+      margin-top: 1px;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      color: #090214;
+      transition: .2s ease
+    }
+
+    .check.checked .box {
+      border-color: var(--ice);
+      background: var(--ice);
+      box-shadow: 0 0 16px rgba(192, 132, 252, .5)
+    }
+
+    .gate-state {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 1.04rem;
+      font-weight: 800;
+      color: var(--danger);
+      margin-bottom: 16px
+    }
+
+    .gate-state.ready {
+      color: var(--good)
+    }
+
+    .gate-progress {
+      margin: 12px 0 14px
+    }
+
+    .gate-progress-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: #eddcf8;
+      font-family: Rajdhani, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-size: .8rem
+    }
+
+    .gate-progress-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .05);
+      overflow: hidden;
+      border: 1px solid var(--line-2)
+    }
+
+    .gate-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--danger), var(--warn), var(--ice-bright));
+      box-shadow: 0 0 18px rgba(192, 132, 252, .35);
+      transition: width .3s var(--ease)
+    }
+
+    .gate-bonus {
+      margin-top: 12px;
+      min-height: 44px;
+      color: #bba9d7;
+      font-size: .88rem;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .03);
+      border: 1px dashed rgba(192, 132, 252, .2)
+    }
+
+    .download-actions {
+      display: grid;
+      gap: 12px;
+      opacity: .35;
+      pointer-events: none;
+      transition: opacity .3s ease
+    }
+
+    .download-actions.open {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .dl {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 16px;
+      padding: 17px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      border: 1px solid transparent;
+      transition: transform .2s var(--ease), background .2s ease
+    }
+
+    .dl:hover {
+      transform: translateY(-2px)
+    }
+
+    .dl.drive {
+      background: rgba(52, 211, 153, .1);
+      color: #86efc4;
+      border-color: rgba(52, 211, 153, .35)
+    }
+
+    .dl.drive:hover {
+      background: rgba(52, 211, 153, .18)
+    }
+
+    .dl.curse {
+      background: rgba(241, 100, 54, .1);
+      color: #ffb399;
+      border-color: rgba(241, 100, 54, .35)
+    }
+
+    .dl.curse:hover {
+      background: rgba(241, 100, 54, .18)
+    }
+
+    .dl-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px
+    }
+
+    .dl-meta .m {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--line-2);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center
+    }
+
+    .dl-meta .m .mk {
+      font-family: "Share Tech Mono", monospace;
+      font-size: .68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em
+    }
+
+    .dl-meta .m .mv {
+      margin-top: 6px;
+      font-family: Oswald, sans-serif;
+      font-weight: 600;
+      color: #fff;
+      font-size: .96rem
+    }
+
+    /* ---------- socials ---------- */
+    .socials {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 960px;
+      margin: 0 auto
+    }
+
+    .social-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: linear-gradient(180deg, rgba(22, 12, 40, .82), rgba(13, 6, 25, .94));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 22px;
+      transition: transform .25s var(--ease), border-color .25s ease, box-shadow .25s ease
+    }
+
+    .social-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(192, 132, 252, .4);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, .4), 0 0 25px rgba(168, 85, 247, .18)
+    }
+
+    .social-card .si {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      flex: 0 0 auto
+    }
+
+    .social-card.ds .si {
+      background: rgba(88, 101, 242, .18);
+      border: 1px solid rgba(88, 101, 242, .45);
+      color: #939fff
+    }
+
+    .social-card.tg .si {
+      background: rgba(56, 189, 248, .14);
+      border: 1px solid rgba(56, 189, 248, .35);
+      color: #38bdf8
+    }
+
+    .social-card.vk .si {
+      background: rgba(0, 119, 255, .16);
+      border: 1px solid rgba(0, 119, 255, .4);
+      color: #38bdf8
+    }
+
+    .social-card .st {
+      font-family: Oswald, sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: #fff;
+      font-size: 1.04rem
+    }
+
+    .social-card .ss {
+      color: var(--muted);
+      font-size: .82rem;
+      margin-top: 2px
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 60px 0 48px;
+      border-top: 1px solid var(--line-2);
+      background: linear-gradient(180deg, transparent, rgba(6, 2, 14, .98));
+      text-align: center;
+      position: relative
+    }
+
+    .footer-logo {
+      font-family: Oswald, sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #fff;
+      margin-bottom: 14px
+    }
+
+    .footer-logo span {
+      color: var(--ice)
+    }
+
+    .footer p {
+      margin: 6px 0;
+      color: var(--muted-2);
+      font-size: .84rem;
+      letter-spacing: .04em
+    }
+
+    .footer .made {
+      font-family: "Share Tech Mono", monospace;
+      color: var(--muted);
+      margin-top: 14px
+    }
+
+    .footer-donate-wrap {
+      margin-top: 16px
+    }
+
+    .footer-donate {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 22px;
+      background: rgba(192, 132, 252, .08);
+      border: 1px solid rgba(192, 132, 252, .32);
+      border-radius: 999px;
+      color: var(--ice);
+      font-size: .86rem;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: .03em;
+      transition: all .25s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .2)
+    }
+
+    .footer-donate:hover {
+      background: rgba(192, 132, 252, .22);
+      border-color: var(--ice-bright, #f0abfc);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(192, 132, 252, .45);
+      transform: translateY(-2px)
+    }
+
+    /* ---------- toast ---------- */
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 2000;
+      width: min(360px, calc(100vw - 36px));
+      background: rgba(14, 6, 26, .96);
+      border: 1px solid rgba(192, 132, 252, .35);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .6), 0 0 20px rgba(168, 85, 247, .2);
+      border-radius: 18px;
+      padding: 16px;
+      transform: translateY(160%);
+      transition: transform .5s cubic-bezier(.22, .9, .23, 1.2)
+    }
+
+    .toast.show {
+      transform: translateY(0)
+    }
+
+    .toast-title {
+      font-family: Oswald, sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--ice);
+      margin-bottom: 6px
+    }
+
+    .toast-body {
+      margin: 0;
+      color: #cfc1e4;
+      font-size: .88rem
+    }
+
+    body.storm .toast {
+      border-color: rgba(244, 63, 94, .4)
+    }
+
+    body.storm .toast-title {
+      color: var(--danger)
+    }
+
+    /* ---------- audio panel ---------- */
+    .audio-panel {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 1900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(14, 6, 26, .92);
+      border: 1px solid rgba(192, 132, 252, .26);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, .45);
+      border-radius: 16px;
+      padding: 10px 12px;
+      backdrop-filter: blur(12px)
+    }
+
+    .audio-btn {
+      border: none;
+      cursor: pointer;
+      background: rgba(192, 132, 252, .12);
+      color: #f5efff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-size: .72rem;
+      transition: .2s ease
+    }
+
+    .audio-btn:hover {
+      background: rgba(192, 132, 252, .24);
+      transform: translateY(-1px)
+    }
+
+    .audio-label {
+      font-family: "Share Tech Mono", monospace;
+      color: var(--muted);
+      font-size: .7rem;
+      letter-spacing: .06em;
+      text-transform: uppercase
+    }
+
+    .audio-range {
+      width: 110px;
+      accent-color: var(--ice)
+    }
+
+    .audio-panel.muted {
+      border-color: var(--line-2)
+    }
+
+    .audio-panel.muted .audio-btn {
+      background: rgba(255, 255, 255, .04);
+      color: #b3a2ce
+    }
+
+    /* scroll progress */
+    .scroll-prog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      z-index: 1002;
+      background: linear-gradient(90deg, var(--ice-bright), var(--accent-2));
+      width: 0%;
+      box-shadow: 0 0 12px rgba(192, 132, 252, .7)
+    }
+
+    /* back to top */
+    .to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 84px;
+      z-index: 1850;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(14, 6, 26, .92);
+      color: var(--ice);
+      cursor: pointer;
+      font-size: 1.2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease, transform .2s var(--ease);
+      backdrop-filter: blur(10px)
+    }
+
+    .to-top.show {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .to-top:hover {
+      transform: translateY(-3px);
+      background: rgba(192, 132, 252, .18);
+      box-shadow: 0 0 20px rgba(192, 132, 252, .35)
+    }
+
+
+
+    /* ---------- responsive ---------- */
+    @media (max-width:1100px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 28px
+      }
+
+      .features,
+      .gallery,
+      .socials,
+      .shader-tiers {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .shader-tiers {
+        grid-template-columns: repeat(3, 1fr)
+      }
+
+      .lore-grid {
+        grid-template-columns: repeat(3, 1fr)
+      }
+    }
+
+    @media (max-width:820px) {
+      :root {
+        --header-h: 64px
+      }
+
+      section {
+        padding: 68px 0
+      }
+
+      .nav-links,
+      .social-links {
+        display: none
+      }
+
+      .menu-btn {
+        display: inline-grid;
+        place-items: center
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 20px
+      }
+
+      .stat-grid,
+      .hud-grid,
+      .metrics-row {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .hero-actions {
+        flex-direction: column
+      }
+
+      .hero-actions .btn {
+        width: 100%
+      }
+
+      .req-grid {
+        grid-template-columns: 1fr
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .lb-nav {
+        width: 46px;
+        height: 46px
+      }
+    }
+
+    /* ⚠ Шапка на телефоне: логотип + кнопка скачивания + колокол + язык + меню
+     не помещаются в 375px и растягивают документ, а вместе с ним и всё, что
+     прибито к его краям (тикер, шапка). Лишнее убираем: кнопка скачивания
+     дублируется на первом экране, а колокол и язык живут в меню. */
+    @media (max-width:680px) {
+      .nav-cta {
+        display: none
+      }
+
+      .nav-actions {
+        gap: 9px
+      }
+
+      .brand-text small {
+        display: none
+      }
+    }
+
+    @media (max-width:420px) {
+      .nb-btn {
+        width: 34px;
+        height: 34px
+      }
+
+      .lang-switch {
+        transform: scale(.9);
+        transform-origin: right center
+      }
+    }
+
+    @media (max-width:560px) {
+
+      .features,
+      .socials,
+      .shader-tiers,
+      .lore-grid {
+        grid-template-columns: 1fr
+      }
+
+      .stat-grid,
+      .hud-grid,
+      .metrics-row {
+        grid-template-columns: 1fr
+      }
+
+      .gallery {
+        grid-template-columns: 1fr
+      }
+
+      .logo-text {
+        font-size: .92rem
+      }
+
+      .gate-grid {
+        grid-template-columns: 1fr
+      }
+
+      .audio-panel {
+        left: 12px;
+        right: auto;
+        bottom: 12px
+      }
+
+      .audio-range {
+        width: 80px
+      }
+
+      .to-top {
+        bottom: 78px;
+        right: 12px
+      }
+
+      .dl-meta {
+        grid-template-columns: 1fr
+      }
+
+      h1 {
+        font-size: clamp(2.6rem, 13vw, 4rem)
+      }
+
+      .lb-prev {
+        left: 10px
+      }
+
+      .lb-next {
+        right: 10px
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+        filter: none
+      }
+    }
+  </style>
+<link rel="stylesheet" href="/community.css"><link rel="stylesheet" href="/easter-egg.css?v=1"></head>
+
+<body>
+  <a class="skip-link" href="#content">Перейти к содержимому</a>
+  <div class="scroll-prog" id="scroll-prog" aria-hidden="true"></div>
+  <div class="aurora" aria-hidden="true"></div>
+
+  <!-- header -->
+  <header id="site-header">
+    <div class="container nav">
+      <div class="logo" id="logo-storm" title="Скрытый протокол">
+        <div class="logo-mark">
+          <img src="assets/images/logo.png" alt="ASTRAL" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;">
+        </div>
+        <div class="logo-text">ASTRAL // <span>RPG</span></div>
+      </div>
+      <div class="nav-actions">
+        <nav class="nav-links" aria-label="Основная навигация">
+          <a href="/account" class="nav-link">Личный кабинет</a>
+          <a href="/cosmetics" class="nav-link">Косметика</a>
+          <a href="#about" class="nav-link" data-i18n="nav.world">Мир</a>
+          <a href="#features" class="nav-link" data-i18n="nav.features">Особенности</a>
+          <a href="#requirements" class="nav-link" data-i18n="nav.req">Требования</a>
+          <a href="chat.html#faq" class="nav-link" data-i18n="nav.faq">FAQ</a>
+          <a href="#download" class="nav-link" data-i18n="nav.download">Скачать</a>
+          <a href="guide.html" class="nav-link" style="color:var(--ice-bright);font-weight:700">📖 Гайд</a>
+          <a href="chat.html" class="nav-link" style="color:var(--ice-bright);font-weight:800">💬 Чат</a>
+        </nav>
+        <a href="#download" class="nav-cta" id="nav-cta" aria-label="Скачать сборку">
+          <span aria-hidden="true">💾</span><span data-i18n="nav.download">Скачать</span><b data-ver="pack">R1.1</b>
+        </a>
+        <span class="lang-switch" id="langMount"></span>
+        <div class="social-links">
+          <a href="https://discord.com/invite/Daa93fUsh3" target="_blank" rel="noopener noreferrer" class="pill-link"
+            style="display:inline-flex;align-items:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+            </svg>Discord</a>
+        </div>
+        <button class="menu-btn" id="menu-btn" aria-label="Открыть меню" aria-expanded="false">☰</button>
+      </div>
+    </div>
+    <div class="mobile-panel" id="mobile-panel">
+      <div class="container">
+        <div class="nav-links">
+          <a href="#about" class="nav-link" data-i18n="nav.world">Мир</a>
+          <a href="#features" class="nav-link" data-i18n="nav.features">Особенности</a>
+          <a href="#requirements" class="nav-link" data-i18n="nav.req">Требования</a>
+          <a href="chat.html#faq" class="nav-link" data-i18n="nav.faq">FAQ</a>
+          <a href="#download" class="nav-link" data-i18n="nav.download">Скачать</a>
+          <a href="guide.html" class="nav-link" style="color:var(--ice-bright);font-weight:700">📖 Гайд</a>
+          <a href="chat.html" class="nav-link" style="color:var(--ice-bright);font-weight:800">💬 Чат</a>
+        </div>
+        <div class="social-links">
+          <a href="https://discord.com/invite/Daa93fUsh3" target="_blank" rel="noopener noreferrer" class="pill-link"
+            style="display:inline-flex;align-items:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+            </svg>Discord</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <canvas class="snow" id="snow-canvas" aria-hidden="true"></canvas>
+
+  <main id="content">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <div class="hero-bg" aria-hidden="true"><img src="assets/images/hero-bg.webp" alt="" loading="eager"
+          onerror="this.style.display='none'"></div>
+      <div class="hero-fog" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="hero-badges">
+            <span class="tag">✦ RPG ADVENTURE</span>
+            <span class="tag">STORY QUESTS</span>
+            <span class="tag danger">✦ GODS & DIMENSIONS</span>
+          </div>
+          <h1 class="glitch breathing" id="hero-title" data-text="ASTRAL"><span class="l1"
+              data-i18n="hero.t1">ASTRAL</span></h1>
+          <p class="hero-tagline" data-i18n="hero.tagline">Сюжетное RPG-приключение</p>
+          <p class="lead" data-i18n="hero.desc">Добро пожаловать в Astral - сюжетное приключение с элементами RPG,
+            которое переворачивает представление о ванильном Майнкрафте. Тебе предстоит пройти путь от потерянного
+            странника до существа, способного бросить вызов богам разрушенных измерений. Astral стирает границы между
+            одиночной игрой и многопользовательским сервером!</p>
+          <div class="hero-actions">
+            <a class="btn btn-ice" href="#download" data-i18n="hero.dl">💾 Скачать сборку</a>
+            <a class="btn btn-secondary" href="#features">✦ Особенности</a>
+          </div>
+          <div class="hero-meta">
+            <span class="meta-chip">MINECRAFT <b>1.20.1</b></span>
+            <span class="meta-chip">FORGE <b>47.4.20</b></span>
+            <span class="meta-chip"><b>192</b> <span data-i18n="hero.mc">МОДА</span></span>
+            <span class="meta-chip">VERSION <b data-ver="pack">R1.1</b></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT / LORE ============ -->
+    <section id="about">
+      <div class="container">
+        <div class="eyebrow reveal" data-i18n="about.kicker">// Хроника катастрофы</div>
+        <h2 class="section-title reveal" data-i18n-html="about.title">Мир разрушен. <span class="hl">Боги
+            пробудились.</span></h2>
+        <div class="lore">
+          <p class="big reveal d1" data-i18n="about.lead">Древние измерения раскололись, высвободив первородную тьму.
+            То, что началось как выживание в одиночку, превращается в грандиозную битву за судьбу миров.</p>
+          <p class="reveal d2" data-i18n="about.body">Astral — это глубокое сюжетное приключение с элементами RPG,
+            уникальной системой квестов и боссами древних миров. Каждое решение определяет твою силу. Пройди путь от
+            потерянного странника до существа, способного бросить вызов богам разрушенных измерений.</p>
+          <div class="lore-grid">
+            <div class="lore-stat reveal d1">
+              <div class="n">RPG</div>
+              <div class="t" data-i18n="about.s1">Сюжетная линия</div>
+            </div>
+            <div class="lore-stat reveal d2">
+              <div class="n">192</div>
+              <div class="t" data-i18n="about.s2">Мода в сборке</div>
+            </div>
+            <div class="lore-stat reveal d3">
+              <div class="n">✦</div>
+              <div class="t" data-i18n="about.s3">Боги и измерения</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============ SHADERS ============ -->
+    <section id="shaders">
+      <div class="container">
+        <div class="eyebrow reveal" data-i18n="sh.kicker">// Спектр эфира</div>
+        <h2 class="section-title reveal" data-i18n-html="sh.title">Эксклюзивные <span class="hl">шейдеры</span></h2>
+        <p class="section-subtitle reveal" data-i18n="sh.sub">Перетащи ползунок. Астральная цветокоррекция, объёмный
+          туман и свечение эфира — 5 профилей под любое железо.</p>
+        <div class="compare-wrap reveal d1">
+          <div class="compare" id="compare">
+            <div class="compare-layer compare-before"></div>
+            <div class="compare-layer compare-after" id="compare-after"></div>
+            <div class="compare-bar" id="compare-bar">
+              <div class="compare-handle">⇄</div>
+            </div>
+            <div class="compare-badge badge-left" data-i18n="sh.before">Ваниль</div>
+            <div class="compare-badge badge-right" data-i18n="sh.after">Астральный пресет</div>
+          </div>
+          <div class="shader-tiers">
+            <div class="tier">
+              <div class="tn">Potato</div>
+              <div class="td" data-i18n="tier.potato">Слабые ПК / встройка</div>
+              <div class="fps">40–60 FPS</div>
+            </div>
+            <div class="tier">
+              <div class="tn">Low</div>
+              <div class="td">GTX 1060 / RX 580</div>
+              <div class="fps">50–75 FPS</div>
+            </div>
+            <div class="tier">
+              <div class="tn">Medium</div>
+              <div class="td">RTX 3060 / RX 6600</div>
+              <div class="fps">55–80 FPS</div>
+            </div>
+            <div class="tier">
+              <div class="tn">High</div>
+              <div class="td">RTX 3070+ / RX 6800</div>
+              <div class="fps">60–90 FPS</div>
+            </div>
+            <div class="tier">
+              <div class="tn">Extreme</div>
+              <div class="td" data-i18n="tier.extreme">RTX 4070+ / кино-кадры</div>
+              <div class="fps">60–80 FPS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GALLERY ============ -->
+    <section id="gallery">
+      <div class="container">
+        <div class="eyebrow reveal" data-i18n="g.kicker">// Архив странствий</div>
+        <h2 class="section-title reveal" data-i18n-html="g.title">Хроники <span class="hl">измерений</span></h2>
+        <p class="section-subtitle reveal" data-i18n="g.sub">Кадры из миров Astral. Нажми на любой, чтобы открыть в
+          полном размере.</p>
+        <div class="gallery" id="gallery-grid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section id="features">
+      <div class="container">
+        <div class="eyebrow reveal" data-i18n="f.kicker">// Что внутри</div>
+        <h2 class="section-title reveal" data-i18n-html="f.title">Ключевые <span class="hl">особенности</span></h2>
+        <p class="section-subtitle reveal" id="features-sub">Столпы, на которых держится приключение в мире Astral.</p>
+        <div class="features" id="features-grid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ REQUIREMENTS ============ -->
+    <section id="requirements">
+      <div class="container">
+        <div class="eyebrow reveal" data-i18n="req.kicker">// Аппаратный профиль</div>
+        <h2 class="section-title reveal" data-i18n-html="req.title">Системные <span class="hl">требования</span></h2>
+        <p class="section-subtitle reveal" data-i18n="req.sub">Сборка тяжёлая — это честно. Вот к чему готовиться.</p>
+        <div class="req-grid">
+          <div class="req-card reveal d1">
+            <div class="req-head">
+              <h3 data-i18n="req.min">Минимум</h3><span class="req-tag min" data-i18n="req.minTag">Запустится</span>
+            </div>
+            <div class="req-row"><span class="k" data-i18n="req.kOs">💻 ОС</span><span class="v">Windows 10 / 11
+                64-bit</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kRam">🧠 ОЗУ выделить</span><span class="v"
+                data-i18n="req.vRamMin">6 ГБ</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kCpu">⚙ Процессор</span><span class="v">Ryzen 5 2600 /
+                i5-9400</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kGpu">🎮 Видеокарта</span><span class="v">GTX 1060 / RX
+                580</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kJava">☕ Java</span><span class="v">Java 17</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kDisk">💾 Диск</span><span class="v"
+                data-i18n="req.vDiskMin">10 ГБ (SSD желательно)</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kShaders">🌑 Шейдеры</span><span class="v">Profile:
+                Potato / Low</span></div>
+          </div>
+          <div class="req-card rec reveal d2">
+            <div class="req-head">
+              <h3 data-i18n="req.rec">Рекомендуется</h3><span class="req-tag rec" data-i18n="req.recTag">Комфорт</span>
+            </div>
+            <div class="req-row"><span class="k" data-i18n="req.kOs">💻 ОС</span><span class="v">Windows 11
+                64-bit</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kRam">🧠 ОЗУ выделить</span><span class="v"
+                data-i18n="req.vRamRec">8–10 ГБ</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kCpu">⚙ Процессор</span><span class="v">Ryzen 5 5600X /
+                i5-12400</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kGpu">🎮 Видеокарта</span><span class="v">RTX 3060 Ti /
+                RX 6700 XT</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kJava">☕ Java</span><span class="v">Java 17
+                (64-bit)</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kDisk">💾 Диск</span><span class="v"
+                data-i18n="req.vDiskRec">SSD NVMe, 12 ГБ</span></div>
+            <div class="req-row"><span class="k" data-i18n="req.kShaders">🌑 Шейдеры</span><span class="v">Profile:
+                Medium / High</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="faq">
+      <div class="container">
+        <div class="eyebrow reveal" data-i18n="faq.kicker">// База знаний</div>
+        <h2 class="section-title reveal" data-i18n-html="faq.title">Частые <span class="hl">вопросы</span></h2>
+        <p class="section-subtitle reveal" data-i18n="faq.sub">Ответы на популярные вопросы о запуске, настройке и
+          особенностях мира Astral.</p>
+        <div class="acc reveal d1" id="faq-acc">
+          <div class="acc-item open">
+            <button class="acc-btn" type="button" aria-expanded="true">
+              <span>❓ Как установить сборку Astral?</span>
+              <span class="acc-toggle">+</span>
+            </button>
+            <div class="acc-content" style="max-height:300px">
+              <div class="inner">
+                Скачайте архив со страницы <a href="download.html"
+                  style="color:var(--ice-bright);text-decoration:underline;font-weight:600">протокола установки</a>.
+                Сборка готова для импорта в <b>Prism Launcher</b>, <b>CurseForge</b> или <b>Legacy Launcher</b>.
+                Распакуйте архив в папку <code>.minecraft</code> или перетащите zip-архив в окно лаунчера.
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-btn" type="button" aria-expanded="false">
+              <span>🧠 Сколько оперативной памяти (ОЗУ) нужно выделить?</span>
+              <span class="acc-toggle">+</span>
+            </button>
+            <div class="acc-content">
+              <div class="inner">
+                Минимальный объём — <b>6 ГБ</b>. Для комфортной игры с дальностью прорисовки 12+ чанков и встроенными
+                шейдерами рекомендуется выделить <b>8–10 ГБ</b>. Не выделяйте больше 12 ГБ, чтобы избежать микрофризов
+                сборщика мусора Java.
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-btn" type="button" aria-expanded="false">
+              <span>⚔️ Можно ли играть с друзьями по сети?</span>
+              <span class="acc-toggle">+</span>
+            </button>
+            <div class="acc-content">
+              <div class="inner">
+                <b>Да, обязательно!</b> Astral стирает границы между одиночной игрой и сервером. Поддерживается как
+                открытие мира для друзей через встроенные функции без настройки портов (e4mc / Essential), так и запуск
+                выделенного сервера Forge 47.4.20.
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-btn" type="button" aria-expanded="false">
+              <span>🎮 Нужна ли лицензия Minecraft?</span>
+              <span class="acc-toggle">+</span>
+            </button>
+            <div class="acc-content">
+              <div class="inner">
+                Лицензия не является обязательной. Сборка работает как на официальном лаунчере Minecraft, так и на
+                сторонних лаунчерах. Главное — использовать <b>Java 17 (64-bit)</b> и версию Forge <b>47.4.20</b>.
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-btn" type="button" aria-expanded="false">
+              <span>🌑 Какие шейдеры встроены и как их настроить?</span>
+              <span class="acc-toggle">+</span>
+            </button>
+            <div class="acc-content">
+              <div class="inner">
+                В сборку встроены 5 профилей оптимизированных шейдеров: от лёгкого <i>Fast/Medium</i> (для слабых
+                видеокарт и ноутбуков) до кинематографичного <i>Ultra</i> со светящимися частицами и объёмным туманом.
+                Переключать профили можно в настройках графики прямо во время игры клавишей <b>O</b>.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DOWNLOAD CTA ============ -->
+    <section id="download">
+      <div class="container">
+        <div class="eyebrow reveal">// Вперёд к звёздам</div>
+        <h2 class="section-title reveal">Вперёд к <span class="hl">звёздам</span></h2>
+        <p class="section-subtitle reveal">Скачайте Astral Launcher, войдите в аккаунт и установите сборку прямо в приложении.</p>
+        <div class="dl-cta reveal d1">
+          <div class="dl-cta-glow"></div>
+          <div class="dl-cta-body">
+            <div class="dl-cta-badge">// ВПЕРЁД К ЗВЁЗДАМ · ASTRAL RPG 1.20.1</div>
+            <h3 class="dl-cta-title">Готов отправиться в <span class="hl">космическое приключение?</span></h3>
+            <p class="dl-cta-text">Лаунчер для Windows x64 установит сборку и обновления для локальной игры. Версия 0.5.11, около 110 МБ.</p>
+            <div class="dl-cta-meta">
+              <div class="dl-cta-stat">
+                <div class="v" data-ver="pack">R1.1</div>
+                <div class="l">Версия</div>
+              </div>
+              <div class="dl-cta-stat">
+                <div class="v">Google Drive</div>
+                <div class="l">Хранилище</div>
+              </div>
+              <div class="dl-cta-stat">
+                <div class="v">192</div>
+                <div class="l">Мода</div>
+              </div>
+              <div class="dl-cta-stat">
+                <div class="v astral-dl-counter-val" id="hero-dl-count">1 428</div>
+                <div class="l">Скачиваний</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:22px;">
+              <a href="https://github.com/FadeVIP/astral-launcher-downloads/releases/download/v0.5.11/Astral-Launcher-0.5.11-x64-signed.exe" target="_blank"
+                rel="noopener noreferrer" class="btn btn-ice dl-cta-btn astral-dl-trigger"
+                style="font-size:1.02rem;padding:18px 32px">
+                🚀 Скачать лаунчер для Windows
+              </a>
+              <a href="download.html" class="btn btn-secondary dl-cta-btn" style="font-size:0.95rem;padding:18px 24px">
+                📖 Установка и архив сборки →
+              </a>
+            </div>
+            <p style="margin-top:14px;font-size:.85rem;color:var(--muted)">Подпись RikiMarci Studio — самоподписанная. Windows может показать предупреждение при первом запуске.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="socials">
+      <div class="container">
+        <div class="eyebrow reveal" data-i18n="soc.kicker">// Сообщество</div>
+        <h2 class="section-title reveal">Мы в <span class="hl">соцсетях</span></h2>
+        <p class="section-subtitle reveal">Присоединяйся к нашему комьюнити: официальный Discord-сервер, группа
+          ВКонтакте и канал Telegram.</p>
+        <div class="socials">
+          <a href="https://discord.com/invite/Daa93fUsh3" target="_blank" rel="noopener noreferrer"
+            class="social-card ds reveal d1">
+            <div class="si"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+              </svg></div>
+            <div>
+              <div class="st">Discord</div>
+              <div class="ss">Официальный сервер ASTRAL</div>
+            </div>
+          </a>
+          <a href="https://t.me/FadeVIPcommunity" target="_blank" rel="noopener noreferrer"
+            class="social-card tg reveal d2">
+            <div class="si"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="m22 2-7 20-4-9-9-4Z" />
+                <path d="M22 2 11 13" />
+              </svg></div>
+            <div>
+              <div class="st">Telegram</div>
+              <div class="ss">@FadeVIPcommunity (В поиск)</div>
+            </div>
+          </a>
+          <a href="https://vk.ru/fadevipofficial" target="_blank" rel="noopener noreferrer"
+            class="social-card vk reveal d3">
+            <div class="si"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M15.684 0H8.316C3.592 0 0 3.592 0 8.316v7.368C0 20.408 3.592 24 8.316 24h7.368C20.408 24 24 20.408 24 15.684V8.316C24 3.592 20.408 0 15.684 0zm4.238 17.387h-2.131c-.808 0-1.055-.642-2.51-2.102-1.266-1.233-1.826-1.393-2.137-1.393-.434 0-.558.125-.558.723v1.942c0 .518-.166.83-1.528.83-2.253 0-4.756-1.368-6.525-3.921C2.392 10.428 1.5 6.945 1.5 6.425c0-.312.124-.602.726-.602h2.131c.54 0 .747.249.954.83.996 2.885 2.678 5.418 3.364 5.418.27 0 .394-.124.394-.809V8.022c-.083-1.453-.85-1.577-.85-2.096 0-.249.208-.498.54-.498h3.362c.456 0 .622.249.622.788v4.254c0 .457.208.623.332.623.27 0 .498-.166 1.017-.685 1.556-1.743 2.677-4.358 2.677-4.358.146-.312.395-.519.934-.519h2.131c.643 0 .788.332.643.788-.27 1.246-2.885 4.96-2.885 4.96-.228.374-.311.54 0 .955.228.29 1.017.975 1.536 1.577 1.204 1.349 2.116 2.49 2.365 3.28.187.518-.104.788-.623.788z" />
+              </svg></div>
+            <div>
+              <div class="st">VKontakte</div>
+              <div class="ss">vk.ru/fadevipofficial</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+  <section id="astral-community" aria-label="События Astral"><div class="community-heading"><div><h2>Приключения вместе</h2><p>Активные события и планы на ближайшие дни</p></div><div class="community-online">✦ В сборке сейчас: <strong data-online>…</strong></div></div><div data-events></div><p class="community-note">Онлайн игроков с обновлённым MinePass · одиночные миры и игра по сети. Прогресс события общий для игроков одного мира. Время указано в вашем часовом поясе.</p></section></main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-logo"><img src="assets/images/logo.png" alt="ASTRAL" style="width:28px;height:28px;object-fit:cover;border-radius:8px;vertical-align:middle;margin-right:8px;box-shadow:0 0 10px rgba(192,132,252,0.4)">ASTRAL <span>RPG</span></div>
+      <p>Сюжетное RPG-приключение · Minecraft 1.20.1 · Forge 47.4.20 · 192 мода</p>
+      <p class="made">Created by RikiMarci · Astral RPG © 2026</p>
+      <div class="footer-donate-wrap">
+        <a href="https://pay.cloudtips.ru/p/e6302623" target="_blank" rel="noopener noreferrer" class="footer-donate" data-i18n="foot.donate">☕ Поддержать автора</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- floating UI -->
+  <button class="to-top" id="to-top" aria-label="Наверх">↑</button>
+  <div class="audio-panel muted" id="audio-panel" aria-label="Управление звуком">
+    <button class="audio-btn" id="audio-toggle" type="button">🔇 Звук</button>
+    <span class="audio-label">Vol</span>
+    <input class="audio-range" id="audio-volume" type="range" min="0" max="100" value="65" aria-label="Громкость">
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div class="toast-title" id="toast-title">SYSTEM ALERT</div>
+    <p class="toast-body" id="toast-body">Сообщение системы</p>
+  </div>
+
+  <!-- lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-close" id="lb-close" aria-label="Закрыть">✕</button>
+    <button class="lb-nav lb-prev" id="lb-prev" aria-label="Предыдущее">‹</button>
+    <img id="lb-img" src="" alt="Скриншот Astral RPG">
+    <button class="lb-nav lb-next" id="lb-next" aria-label="Следующее">›</button>
+    <div class="lb-counter" id="lb-counter"></div>
+  </div>
+
+  <style>
+    /* D-07: точка «в ленте есть новое». Число не пишем — на главной оно
+       было бы шумом; важно лишь, стоит ли заглянуть. */
+    .feed-w {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      max-width: 760px;
+      margin: 0 auto
+    }
+
+    .feed-w .w-ev {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px 17px;
+      background: #070d16
+    }
+
+    .feed-w .w-ic {
+      width: 30px;
+      height: 30px;
+      flex: none;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      font-size: .95rem;
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--line)
+    }
+
+    .feed-w .w-tx {
+      flex: 1;
+      min-width: 0
+    }
+
+    .feed-w .w-a {
+      margin: 0;
+      color: #e8f5ff;
+      font-size: .94rem;
+      line-height: 1.45
+    }
+
+    .feed-w .w-a b {
+      color: #fff;
+      font-weight: 600
+    }
+
+    .feed-w .w-m {
+      margin-top: 5px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .58rem;
+      letter-spacing: .06em;
+      color: var(--muted-2)
+    }
+
+    .nav-link.has-new {
+      position: relative
+    }
+
+    .nav-link.has-new::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      right: -9px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ice, #7cceff);
+      box-shadow: 0 0 8px rgba(124, 206, 255, .8)
+    }
+  </style>
+  <script src="firebase-config.js?v=2.30"></script>
+  <script src="version.js?v=2.30"></script>
+  <script src="sfx.js?v=2.30"></script>
+  <script src="i18n.js?v=2.30"></script>
+  <script src="frostextras.js?v=2.30"></script>
+  <script>
+    (function () {
+      'use strict';
+      const $ = (s, p = document) => p.querySelector(s);
+      const $$ = (s, p = document) => Array.from(p.querySelectorAll(s));
+      const fmt = (n) => new Intl.NumberFormat('ru-RU').format(n);
+      const esc = (s) => String(s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isMobile = window.matchMedia('(max-width: 820px)').matches;
+      const FV = window.FROST_VERSION || { pack: 'R1.1', packName: 'Foundation Release', packFull: 'R1.1 «Foundation Release»' };
+      const T = (k) => (window.I18N ? I18N.t(k) : k);
+      // Кэш телеметрии: null = «не знаем», а не «ноль». Цифры за базу не выдумываем.
+      const cachedNum = (k) => { const v = localStorage.getItem(k), n = Number(v); return (v === null || v === '' || !Number.isFinite(n)) ? null : n; };
+      const clockFmt = (ms) => new Date(ms).toLocaleTimeString(document.documentElement.lang || 'ru', { hour: '2-digit', minute: '2-digit' });
+
+      const fbConfig = window.__ASTRAL_FIREBASE_CONFIG__ || window.__FROSTBORNE_FIREBASE_CONFIG__ || null;
+      /* Только ключи Firebase: пустой adminUid не должен гасить телеметрию. */
+      var FB_NEED = ['apiKey', 'authDomain', 'databaseURL', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
+      const fbConfigured = Boolean(fbConfig && FB_NEED.every(function (k) {
+        var v = fbConfig[k]; return typeof v === 'string' && v && !v.startsWith('PASTE_');
+      }));
+
+      /* ---------- toast ---------- */
+      function showToast(title, text) {
+        $('#toast-title').textContent = title;
+        $('#toast-body').textContent = text;
+        const t = $('#toast'); t.classList.add('show');
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => t.classList.remove('show'), 4200);
+      }
+
+      /* ---------- state ---------- */
+      const state = {
+        soundOn: false, volume: cachedNum('fb_volume') !== null ? Math.min(1, Math.max(0, cachedNum('fb_volume'))) : .65,
+        soundMuted: localStorage.getItem('fb_sound') === 'off',
+        audioCtx: null, master: null, audioUnlocked: false,
+        mode: (localStorage.getItem('astral_mode') || localStorage.getItem('frostborne_mode')) || 'normal',
+        storm: false, secret: false,
+        firebase: { live: false, db: null, fbDb: null, refs: null },
+        presenceId: (sessionStorage.getItem('astral_presence_id') || sessionStorage.getItem('frostborne_presence_id')) || ('anon-' + Math.random().toString(36).slice(2, 10)),
+        modFilter: 'all',
+        telemetry: 'pending',                                   // pending | live | cached | offline
+        syncedAt: Number(localStorage.getItem('fb_synced_at') || 0),
+        local: {
+          views: cachedNum('fb_views'),
+          downloads: cachedNum('fb_downloads'),
+          online: cachedNum('fb_online')
+        }
+      };
+      sessionStorage.setItem('astral_presence_id', state.presenceId);
+
+      /* ---------- data ---------- */
+      const FEATURES = [
+        {
+          id: 'dimensions',
+          ic: '🌌',
+          t: '6 дополнительных измерений',
+          d: 'Astral не заканчивается в Эндер крае. Вас ждут 6 уникальных миров, каждый со своей атмосферой, правилами и опасностями:\n• Миры, где гравитация работает против Вас.\n• Забытые биомы, наполненные древними руинами.\n• Измерения, где время течет иначе.\nКаждое измерение — это новая глава Вашего приключения.'
+        },
+        {
+          id: 'bosses',
+          ic: '⚔️',
+          t: 'Боссы с RPG-механикой',
+          d: 'Сражения - это искусство. Вас ждут эпичные битвы с боссами, которые требуют подготовки, уклонения и тактики. Это не просто «клик-клик» мечом. Каждый босс уникален, обладает собственными фазами и механиками, а за победу Вы получите легендарные трофеи.'
+        },
+        {
+          id: 'atmosphere',
+          ic: '✨',
+          t: 'Атмосфера (Ресурспаки и Шейдеры)',
+          d: 'Мы встроили кастомные ресурс-паки и предустановленные настройки шейдеров, чтобы мир Astral выглядела как идеальная игра. Тени, освещение, небо и текстуры настроены так, чтобы подчеркнуть магическую эстетику сборки.'
+        },
+        {
+          id: 'battlepass',
+          ic: '🏆',
+          t: 'Боевой Пропуск (Battle Pass)',
+          d: 'Продвигаясь по сюжету и убивая монстров, Вы зарабатываете очки опыта для Боевого Пропуска. Каждый новый уровень - это крутые награды: уникальные ресурсы, косметические предметы и усиления, которые невозможно получить иначе.'
+        },
+        {
+          id: 'discord',
+          ic: '💬',
+          t: 'Живой Discord-сервер',
+          d: 'Сборка интегрирована с Discord. Ваши достижения (победы над боссами, завершение глав) будут транслироваться в общий чат, а в игре Вы будете получать уведомления о событиях, которые устраивает сообщество. Играйте вместе, соревнуйтесь в прохождении и обсуждайте лор!'
+        }
+      ];
+
+      const CHANGELOG = [
+        {
+          v: 'STATION OS 2.30', t: 'Лента, сигналы и защита узла', open: true, items: [
+            'У станции появилась лента событий — седьмой раздел. Рекорды выживания, новые чертежи, потери и объявления смотрителя собираются в одном месте, с фильтром по типам и архивом по месяцам.',
+            'События заносятся сами: погиб — попал в ленту, выложил чертёж — попал, побил личный рекорд — попал. Рекорды считаются от десяти дней, иначе лента состояла бы из «выжил один день».',
+            'Вернулся после отлучки — узел покажет сводку «пока тебя не было» и подсветит то, что появилось без тебя. Отметка о прочтении ставится, только если страницу действительно смотрят.',
+            'К событиям можно ставить отметки и писать короткие ответы. Итоги недели и чертёж недели по голосам — там же.',
+            'На главной появился блок последних событий, а в шапке — точка, если в ленте есть что-то новое. Своё за новое не считается.',
+            'В шапке зажёгся колокол: зовут по позывному, отвечают на сообщение, происходит что-то на станции — сигнал придёт. Со звуком, счётчиком на вкладке и настройками, что уведомляет, а что молчит.',
+            'Есть тихие часы и отписка одним нажатием. Разрешение на уведомления браузера узел просит по нажатию, а не на входе: запрос в первую секунду почти всегда получает отказ навсегда.',
+            'Про iPhone сказано честно: там сигналы приходят только после добавления сайта на экран «Домой».',
+            'Антифлуд чата переехал в правила базы. Раньше он жил в браузере, и обойти его мог любой, кто откроет консоль. Теперь предел держит сама база.',
+            'Под сообщениями появилась кнопка «пожаловаться» — в два нажатия, без формы с причинами. Жалобы уходят в очередь смотрителя, где их можно закрыть, удалить сообщение или заглушить автора на сутки.',
+            'Действия смотрителей пишутся в открытый журнал: кто что удалил, видно всем. Модерация, которую нельзя проверить, — это не модерация.',
+            'Ссылки наружу теперь показывают, куда ведут. Свои домены пропускаются молча, остальные просят подтверждения — фишинг живёт ровно на том, что человек не смотрит в адресную строку.',
+            'Появился устав станции: правила эфира, честная таблица о том, какие данные и зачем хранятся, и возрастная оговорка. Согласие спрашивается перед первым сообщением, а не баннером на входе.',
+            'Добавлена поддержка App Check — запросы к базе можно ограничить одним нашим сайтом.',
+            'Журнал стал книгой, с которой можно работать: поиск по тексту, заметки на полях, несколько закладок, режим чтения, автолистание и печать. В оглавлении видно, сколько прочитано и сколько времени займёт глава.',
+            'Понятия, о которых пишет выживший, теперь ведут в Кодекс: подчёркнутое слово открывает карточку справочника.',
+            'В Кодексе появился маршрут: Alt + клик по цели — и узел покажет, что осталось сделать. Отмечаешь пройденное — остаток сокращается.',
+            'Ctrl + K открывает поиск по всему узлу: разделы, узлы дерева и предметы в одном окне. Недавние запросы запоминаются.',
+            'МОРОЗ-01 научился отвечать данными Кодекса, а не только заготовками: если словаря не хватает, он смотрит в справочник.',
+            'У станции появились знаки — за дни, за Кодекс, за прочитанное, за вклад в эфир и за разгаданный шифр. Их не выдают кнопкой: знак считается из того, что узел и так проверяет, поэтому накрутить его нельзя.',
+            'В Хрониках можно посмотреть причины гибели не только за всё время, но и за последний месяц.',
+            'Профиль разложен по вкладкам: личность, прогресс, настройки и отдельная вкладка смотрителя. Раньше всё это шло одной лентой.',
+            'Блок «Скачать сборку» на главной наконец получил оформление — он всё это время жил без стилей, поэтому цифры валились в столбик.',
+            'Техно-доктор стал глубже: распознаёт конфликт OptiFine с Sodium, смерть драйвера, нехватку видеопамяти, битый мир, повреждённый jar, ошибку конфига, несобравшиеся шейдеры и конфликт аддонов Create. Плюс расшифровывает код выхода процесса.',
+            'Смотритель может закрыть неполадку в Костре, а её автор получает об этом сигнал.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.29', t: 'Личность выжившего', items: [
+            'Узел научился узнавать людей. Раньше личность жила только в браузере: сменил его — стал другим выжившим, а база не отличала одного от другого. Теперь у каждого постоянный пропуск, и на нём держится всё будущее: кланы, личные каналы, репутация.',
+            'Прошлое не потеряно. Узел помнит старый пропуск и считает своими прежние сообщения, голоса и реакции — авторство никуда не делось.',
+            'В профиле появилась честная строка о состоянии личности: закреплена она или живёт до первой смены браузера. Рядом кнопка, которая привязывает её к Google, сохраняя всё нажитое.',
+            'Заодно закрыта дыра в правилах базы: голоса и реакции можно было ставить от чужого имени. Теперь только от своего.',
+            'Позывной теперь закрепляется за выжившим: под чужим именем в эфир не выйти, а занятое имя узел присвоить не даст.',
+            'У каждого появилось личное дело — страница с классом, фракцией, днями и рекордом. Открывается кликом по позывному прямо в чате.',
+            'В профиле появился раздел «Твои данные»: что показывать в личном деле, кого не хочешь слышать, выгрузка всего нажитого одним файлом и стирание личности.',
+            'Скрытые выжившие пропадают из чата, но узел честно пишет, сколько сообщений спрятано — иначе разговор выглядел бы рваным.',
+            'Стирание личности требует двух нажатий: случайным кликом себя не удалить. Сказанное в эфир при этом остаётся — узел не умеет править чужие записи, и обещать обратное было бы неправдой.',
+            'В личном деле появилась активность: сообщения, отклики, идеи, неполадки, чертежи и гибели. Числа читаются из эфира, а не пишутся самим выжившим — накрутить их нельзя.',
+            'Дело помнит прошлые позывные. Смена имени больше не работает как способ начать с чистого листа.',
+            'Вход с другого устройства возвращает дело: позывной, звание и день приезжают с узла. В пустой браузер — сами, в занятый — по кнопке, чтобы не затереть того, кто уже играет здесь.',
+            'У станции появились смотрители: владелец назначает их по позывному прямо из профиля, а не правкой файлов. Раздавать права дальше смотритель не может — это остаётся за владельцем.',
+            'Аватар теперь на выбор: скин по нику, свой кадр по ссылке или знак, который станция рисует сама из твоего номера — двух одинаковых не бывает.',
+            'У удостоверения появилась рамка ранга. Её не выбирают в настройках: цвет и подпись даёт личный рекорд дней, иначе рамка ничего не значила бы.',
+            'Всё сделано мягко: если вход недоступен, узел работает ровно как раньше.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.28', t: 'У станции появился смотритель', open: false, items: [
+            'Модератор настроен: вход через Google, права проверяются не в браузере, а в самой базе — подделать их нельзя.',
+            'Вместе с этим включилась премодерация архива чертежей. Новые схемы попадают в очередь и появляются в архиве после проверки; всё, что было добавлено раньше, осталось на месте.',
+            'В чате, идеях, багах и хрониках у смотрителя появились кнопки удаления — теперь мусор убирается прямо с узла, а не через консоль.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.27', t: 'Пустое поле гасило всю базу', open: false, items: [
+            'Найден и починен баг, который выключал Firebase на всём сайте: проверка конфига требовала непустыми ВСЕ поля, а поле модератора по умолчанию пустое. Из-за этого телеметрия, чат, хроники и вход модератора уходили в локальный режим.',
+            'Проявился он изнутри: чтобы стать модератором, нужно войти, а кнопка входа не работала именно потому, что база считалась недоступной. Замкнутый круг.',
+            'Теперь проверяются только те ключи, которые действительно нужны Firebase, а служебные поля могут быть пустыми. Исправлено на главной, странице загрузки и в Эфире.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.26', t: 'Журнал по-английски и премодерация', open: false, items: [
+            'Записи журнала теперь можно переводить. Перевод приезжает отдельным файлом — только на странице журнала и только для выбранного языка: складывать 76 тысяч знаков в общий словарь нельзя, он грузится на всех шести страницах.',
+            'Английский готов для первых трёх глав — тех, что открыты без спойлеров. Остальные показываются по-русски и честно помечены «не переведено», а заметка над книгой считает, сколько записей готово.',
+            'В архиве чертежей появилась премодерация. Она включается сама, когда у станции есть модератор: без него одобрять было бы некому, поэтому сейчас чертежи по-прежнему публикуются сразу.',
+            'Чертежи, добавленные до включения премодерации, остаются видимыми — задним числом их одобрять не нужно.',
+            'Попутно нашлись два бага демо-режима: чертежи не сохранялись между заходами и не отрисовывались при загрузке. Теперь ведут себя как чат, идеи и хроники.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.25', t: 'Кодекс заговорил на шести языках', open: false, items: [
+            'Кодекс переведён на украинский, немецкий, белорусский и казахский: по 205 строк на язык — названия узлов, описания, рецепты, карточки «где взять», гайд первых часов и главы квестбука. До этого четыре языка показывали русский текст.',
+            'Поиск предметов теперь понимает язык страницы: немец вводит «Ton», казах — «саз», и находит нужное. Раньше искались только русские основы и английские слова, так что перевод названий сам по себе поиска не чинил.',
+            'Каждый перевод прогнан проверкой на смешанный алфавит — латинскую букву внутри кириллического слова. Две такие опечатки нашлись и были исправлены до вставки.',
+            'Служебные скрипты собраны в папку tools: сборка картинок и три инструмента перевода Кодекса. На хостинг их заливать не нужно.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.24', t: 'Свежие кадры из R1.2', open: false, items: [
+            'Картинки сайта пересняты в R1.2: обложка ссылки, пара для слайдера шейдеров, шесть кадров галереи и фон первого экрана. Прежние были сделаны 4 июля, до релиза — сайт наконец показывает то, во что играют.',
+            'Подписи галереи переписаны под то, что реально снято, а не наоборот. «Заброшенный город» стал «Ночной сменой», «Орда в метель» — «Заражёнными днём», «Завод патронов» — «Складом и дробилками».',
+            'Фон первого экрана выбран замером, а не на глаз: туманный кадр под затемнением сайта превращался в плоское серое пятно, у кадра с руинами контраст в полтора раза выше.',
+            'Ночной патруль осветлён на 22% — в оригинале он становился чёрным прямоугольником на превью галереи.',
+            'Папка картинок весит 1,3 МБ, а фон первого экрана стал легче прежнего: 120 КБ вместо 138.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.23', t: 'Пеленгатор схем', open: false, items: [
+            'Архив чертежей больше не встречает пустотой. Вместо заглушки — пеленгатор: выбираешь, что нужно (фермы, обработка, энергия, добыча, база, транспорт) и что важнее (популярное, свежее, рейтинг), а шкала приёмника настраивается на свою частоту.',
+            'Строка запроса собирается на глазах и показывает ровно то, что уйдёт в каталог: категория, сортировка, Minecraft 1.20.1 и Create 6.0.x. Никаких сюрпризов после нажатия.',
+            'Каждая из шести кнопок проверена на живую выдачу — ни одна не ведёт в пустоту. Логистики и хранения среди них нет именно поэтому: под нашу версию там пусто.',
+            'Если ввести свой запрос, категория снимается и поиск идёт по всему каталогу: пара «слово + категория» слишком часто даёт пустой экран, а пустой экран хуже широкого.',
+            'Кнопка «Наугад» перестраивает приёмник на случайную частоту — для тех, кто не знает, чего хочет, но хочет посмотреть.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.22', t: 'Мост в каталог CreateMod', open: false, items: [
+            'В архиве чертежей появился блок внешнего каталога: поиск и четыре быстрые ссылки уводят на createmod.com уже с фильтром под нашу сборку — Minecraft 1.20.1 и Create 6.0.x. Без фильтра половина выдачи приходит под 1.21 и в игру не встанет.',
+            'Чертежи со ссылкой на createmod.com получают в архиве бейдж источника: сразу видно, что схема лежит в общем каталоге, а не собрана под Astral.',
+            'Прямые ссылки на .nbt каталога больше не принимаются — их сайт этого не разрешает. Нужна ссылка на страницу схемы, с неё и скачивают.',
+            'Данные каталога мы не копируем и не храним: их API отвечает только своему домену, а правила сайта разрешают ссылаться, но не выкачивать.',
+            'Журнал изменений остаётся русским: переводить его на шесть языков при каждом релизе дороже, чем он того стоит. Но теперь тот, кто читает не по-русски, видит честную подпись вместо молчащего блока кириллицы.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.21', t: 'День выживания и сводка', open: false, items: [
+            'В профиле Эфира появился день выживания. Игра его не сообщает, поэтому счёт ведёшь сам — сайт запоминает и текущий день, и личный рекорд.',
+            'Кнопка «Погиб» рядом с полем открывает Хроники с уже вписанным позывным и днём. После записи счётчик обнуляется, рекорд остаётся.',
+            'День и полоса прогресса Кодекса печатаются прямо на удостоверении: картинка стала отчётом, а не только именной табличкой.',
+            'В Кодексе появилась «Сводка» — PNG с общим прогрессом, разбивкой по ярусам, гайдом первых часов и днём выживания. Есть что показать в чате.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.20', t: 'Кодекс и Эфир срослись', open: false, items: [
+            'МОРОЗ-01 больше не отвечает в пустоту: под ответом появилась ссылка в Кодекс, и он открывается с уже заполненным поиском по твоему же вопросу.',
+            'Профиль в Эфире показывает, сколько узлов Кодекса пройдено. Прогресс теперь часть личности выжившего, а не отдельная страница со своим счётчиком.',
+            'Раньше Кодекс, Эфир и профиль жили порознь. Теперь спросил у ИИ — попал в справочник, отметил пройденное — увидел это в удостоверении.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.19', t: 'Архив чертежей', open: false, items: [
+            'В Эфире открылась пятая вкладка — архив схем Create. Выжившие могут передать в него то, что собрали сами: ферму, оборону, логистику или энергетику.',
+            'Файлы на узел не загружаются — он хранит только ссылку, описание и голоса. Схема остаётся у автора, а раздел не упирается в хранилище и не требует проверки чужих файлов.',
+            'Принимаются только ссылки, начинающиеся с https — и это проверяется дважды: в браузере и в самой базе.',
+            'У каждого чертежа своя категория, фильтр по ним и голосование снежинкой. Владелец может удалить любую запись после настройки модератора.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.18', t: 'Модерация, бэкап и разгон', open: false, items: [
+            'Кадры сравнения шейдеров больше не грузятся вместе со страницей — они лежат ниже первого экрана и приходят, когда до них доскроллишь. Первый экран похудел с 636 до 349 килобайт.',
+            'В Эфире появился вход для модератора. После настройки владелец видит кнопки удаления у сообщений — раньше убрать мусор можно было только через консоль Firebase.',
+            'Права проверяются в самой базе, а не в браузере: даже если подделать интерфейс, правила отклонят чужой запрос.',
+            'Добавлен скрипт резервной копии базы. Забирает счётчики, Эфир и Хроники в один файл и хранит последние десять копий.',
+            'Проверены переносы на немецком при ширине телефона: ни одного переполнения на всех шести страницах.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.17', t: 'Журнал: три листа и печать', open: false, items: [
+            'В журнале появились вложенные листы — перехват, обрывок чертежа и страница чужого альманаха. Они лежат между главами и выглядят как найденные документы, а не как дневник.',
+            'Последняя страница запечатана воском. Три листа дают код, который её открывает — и последнюю запись, закрывающую линию Форпоста 11.',
+            'Загадка честная: ключ Морзе напечатан прямо на странице, никаких внешних расшифровщиков не нужно. Регистр и дефис в коде значения не имеют.',
+            'Всё это опирается на то, что уже было в сборке: обрывок передатчика, повторяющийся сигнал, зашифрованный поток, который выживший расшифровал за ночь. Мы просто дописали листы, которые он не успел добить.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.16', t: 'Открыт бортовой журнал', open: false, items: [
+            'Появилась пятая страница узла — бортовой журнал. Дневник выжившего от первой ночи до стального тепла: двести шестьдесят три записи, разложенные по тринадцати главам.',
+            'Записи не сочинены для сайта. Это те же строки, что открываются в игре по мере прохождения — авторский текст, перенесённый из сборки без единой правки.',
+            'Журнал сделан книгой: разворот на две страницы, бумага в пятнах масла и крови, перелистывание стрелками или с клавиатуры. Есть закладка и отметка о том, где ты остановился.',
+            'Дальше третьей главы стоит замок: журнал пересказывает кампанию до самого финала, и открывать её без спроса нечестно. Один клик снимает замок навсегда — но предупредить нужно было.',
+            'Журнал существует только на русском, и это честная оговорка прямо на странице: английской версии этих строк в самой сборке нет.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.15', t: 'Кодекс заговорил по-английски', open: false, items: [
+            'Содержимое Кодекса переведено на английский: 36 узлов дерева с описаниями и рецептами, 26 предметов индекса, все девятнадцать шагов гайда и оба блока предупреждений. Двести пять строк.',
+            'Названия глав квестбука тоже переводятся — раньше они хранились русскими строками и остались бы русскими на любом языке.',
+            'На остальных четырёх языках Кодекс пока показывает русский текст. Это осознанный фолбэк, а не поломка: интерфейс переведён везде, а содержимое подставится сразу, как появятся ключи.',
+            'Проверено измерением: на английской версии страницы не осталось ни одного русского элемента.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.14', t: 'Кодекс: индекс вырос втрое', open: false, items: [
+            'Индекс «где взять» вырос с десяти предметов до двадцати шести. Добавлены лисья трава и вакцина, антибиотики и бинты, чистая вода, консервы, проволока с баррикадами, швейный стол, котёл, латунь, кокс и сканер нефти.',
+            'Каждый ответ теперь подписан главой квестбука — сразу видно, на каком этапе игры это вообще ищут.',
+            'Отдельной карточкой вынесен самый частый вопрос чата: карта не заперта за квестами и крафтится как обычно.',
+            'Поиск переписан: раньше он искал кусок слова где угодно и путался — «конСЕРвы» ловились по основе «сера», а «орду» не находилась вовсе. Теперь совпадение ищется с начала слова, и падежи работают, а ложные срабатывания ушли.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.13', t: 'Кодекс: первые часы', open: false, items: [
+            'В Кодексе появился гайд первых часов — девятнадцать шагов, разбитых на четыре отрезка: не замёрзнуть, поставить стены до темноты, наладить постоянное тепло и воду, встретить первую орду.',
+            'Каждый шаг отмечается галочкой и запоминается, сверху виден общий счёт. Гайд свёрнут по умолчанию и не мешает тем, кто пришёл за деревом прогрессии.',
+            'Отдельно — «пять способов умереть на старте» и «чего делать не надо». Это не общие советы: всё взято из прямых предупреждений квестбука, включая цифры вроде минус десяти градусов от промокшей одежды.',
+            'Самое неочевидное из собранного: сырую воду пить нельзя, обеззараживает только огонь, а заражение от укуса нельзя переждать — сначала жар, потом слабость, потом ты встаёшь уже не собой.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.12', t: 'Кодекс: главы и вторая нефть', open: false, items: [
+            'Каждый узел дерева теперь подписан главой квестбука — видно не только что делать, но и где это искать в игре.',
+            'Нашлось расхождение: в сборке две нефтяные цепочки, а в Кодексе была только поздняя. Ранняя — на Create, из главы «Генератор»: сканер, качалка, сырая нефть, перегонка, дизель. Именно до неё доходят первыми, и именно она включает генератор.',
+            'Заодно объяснилась старая загадка про «дистилляционный бак»: это не предмет, а состояние жидкостного бака, к которому применили контроллер дистилляции. Подержать его в руках нельзя в принципе.',
+            'В дереве 36 узлов и 19 шагов. Путь от первых брёвен до дизеля — четырнадцать из них, и теперь его видно целиком одним нажатием.',
+            'Три узла верхнего яруса помечены отдельно: электролиз, вращающаяся печь и когенерация в квестбуке не описаны — они есть в сборке, но книга к ним не ведёт.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.11', t: 'Кодекс сверен с самой сборкой', open: false, items: [
+            'Дерево прогрессии больше не собрано по чейнджлогу — оно сверено с квестбуком сборки: 558 квестов в 14 главах разобраны, ранняя игра описана по тому, что реально написано в книге.',
+            'Добавлены первые девять шагов, которых раньше не было вовсе: брёвна, костёр, четыре стены, швейный стол, подкладки, уголь, котёл, кольцо стойкости. С цифрами из игры — костёр даёт около +10°, котёл около +15°, промокшая одежда отнимает 10°.',
+            'Непроверенных узлов в дереве не осталось ни одного.',
+            'Открылась неочевидная связь: старшие тиры утеплителя требуют сталь. То есть вещь «чтобы не замёрзнуть» стоит за всей индустриальной цепочкой — от глины до доменной печи, одиннадцать шагов.',
+            'Ответ про карту переписан по факту. Карта не заперта за квестами и крафтится как обычно: путаницу создавал квест «Координаты на пепле», который сам просит принести карту, а компас выдаёт в награду.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.10', t: 'Кодекс: «где взять предмет»', open: false, items: [
+            'В Кодексе появился поиск по предметам — тот самый вопрос, с которым чаще всего приходят в чат. Спрашиваешь «где взять глину» и получаешь ответ, а не совет посмотреть в книге.',
+            'Поиск понимает падежи и английские названия: «глину», «нитки», «sun fern leaf», «сера» находятся одинаково. От каждого ответа можно перейти в дерево и увидеть весь путь до нужной ветки.',
+            'В индексе десять предметов, все на проверенных данных релиза. Чего в нём нет — честно отправляет к МОРОЗ-01, а не выдумывает ответ.',
+            'Исправлена собственная ошибка: ответ про карту утверждал, что она открывается по квестам, хотя источником была догадка игрока в чате со словами «вроде бы». Теперь ответ честно говорит, что это не проверено по файлам сборки.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.9', t: 'Локализация: закрыт главный долг', open: false, items: [
+            'Сайт наконец действительно говорит на шести языках. Раньше на любом языке, кроме русского, переводились только заголовки разделов, а всё содержимое оставалось русским.',
+            'Причина оказалась не в отсутствии перевода: восемнадцать ключей были заведены ещё в версии 2.4 и всё это время лежали неиспользованными — разметка на них просто не ссылалась.',
+            'Переведены девять карточек особенностей, обе таблицы системных требований, подписи галереи, лор-блок, тиры шейдеров, показатели телеметрии и подписи соцсетей.',
+            'Экран входа и блок скачивания, которые были русскими на всех языках, тоже закрыты — вместе с единицей размера, показывавшей «437 МБ» даже в английской версии.',
+            'Проверено измерением: на английской и немецкой версии из семидесяти одного русского элемента остался один — кодовое имя релиза, а его переводить и не следует.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.8', t: 'Кодекс: дерево прогрессии', open: false, items: [
+            'Открыт «Кодекс» — справочник по сборке. Показывает, в каком порядке она открывается: что за чем идёт и что чем заблокировано. Появился по следам чата, где раз за разом спрашивали одно и то же — что делать дальше.',
+            '21 узел на проверенных данных релиза R1.2: от тёплой нити и глины до стали, нефтехимии и электролиза. Ничего выдуманного — что не подтверждено по сборке, помечено прямо на карточке.',
+            'Shift и клик по узлу показывают весь путь к нему. До электролиза, например, десять шагов — и теперь их видно целиком.',
+            'Пройденное отмечается галочкой и запоминается между заходами, сверху считается общий прогресс.',
+            'Фильтры по ярусам: выживание, индустрия, оборона, поздняя игра. Плюс режим «скрыть пройденное», чтобы осталось только то, что впереди.',
+            'Попутная уборка: удалён мёртвый каталог модов, оставшийся с версии 2.2, и 84 неиспользуемых ключа перевода от старой таблицы шейдеров.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.7', t: 'Эфир: разбор сигнала', open: false, items: [
+            'Время в чате больше не врёт: появились разделители дней («сегодня», «вчера», «28 июня»), а наведение показывает точную дату. Раньше выводились только часы и минуты, из-за чего переписка за два месяца выглядела как один перемешанный день.',
+            'Позывные и статусы теперь проходят тот же фильтр, что и сообщения — раньше через статус в эфир проходило что угодно.',
+            'Когда в эфире никого нет, узел пишет, сколько времени назад был последний сигнал, вместо глухой «тишины».',
+            'У вкладок появились подписи: сразу видно, что Радиовышка — это чат, Костёр — идеи, баги, FAQ и патчноут, МОРОЗ-01 — помощник, а Хроники — статистика гибели.',
+            'Наверху чата закреплено объявление о свежем релизе сборки со ссылкой прямо в патчноут. Скрывается одним кликом и возвращается только при следующем релизе.',
+            'В чате появились ответы на сообщения с цитатой и реакции — можно отметить полезный ответ, не засоряя ленту.',
+            'Добавлен поиск по эфиру: ищет и по тексту, и по позывному.',
+            'Пока вкладка свёрнута, число новых сообщений показывается прямо в её заголовке.',
+            'МОРОЗ-01 научился отвечать на самые частые вопросы из чата: тёплая нить, запертые сундуки и лом, архив для Prism, отсутствие карты, добыча глины.',
+            'В Хрониках появилась разбивка смертей по причинам — с долями и полосами, а не только одна «частая причина».'
+          ]
+        },
+        {
+          v: 'STATION OS 2.6', t: 'Приём сборки R1.2 «Сталь и слово»', open: false, items: [
+            'Сайт принял релиз сборки R1.2 «Сталь и слово» от 24 августа 2026 года. Версия подтянулась во все баннеры, HUD и терминалы разом — из одного источника.',
+            'Патчноут в Эфире стал многоверсионным: сверху вкладки релизов, актуальный помечен точкой. R1.1 «Foundation Release» ушёл в архив и остался доступным для чтения.',
+            'Патчноут R1.2 выложен на всех шести языках: индустриальный пласт со сталью и нефтехимией, квестбук с 80 квестов до 558, локализация на 5034 строки, разбор исправлений установки и баланса.',
+            'Блок рекомендуемых настроек показывается только у актуального релиза — у архивных он скрыт, чтобы старые советы не выдавались за нынешние. Таблица тиров обновлена под замеры R1.2.',
+            'Число модов приведено к реально проверенному составу архива: 197 вместо прежнего «230+».',
+            'Добавление следующего релиза теперь занимает одну строку в списке версий: раньше это была ручная переверстка всего блока.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.5', t: 'Разгон, честность и укрепление узла', open: false, items: [
+            'Все девять изображений пережаты в настоящий WebP: 15 МБ → 1,1 МБ. Главная грузится в разы быстрее, особенно с телефона и на слабой связи.',
+            'Найдена причина веса: файлы в assets/images были обычными PNG с расширением .webp — браузер их показывал, но тянул как PNG, в 10–15 раз тяжелее нужного.',
+            'Качество не пострадало: скриншоты и кадры сравнения шейдеров пережаты в q92, отличий от оригинала на глаз нет. Для галереи добавлены облегчённые версии — на широком экране браузер грузит их вместо полноразмерных.',
+            'Правила Firebase переписаны: счётчики просмотров и загрузок теперь можно только увеличить на единицу — обнулить, накрутить или стереть статистику больше нельзя.',
+            'Эфир защищён от порчи: сообщения, идеи, баги и записи Хроник можно только создать — чужие править и удалять запрещено, у каждого поля проверяются тип и длина.',
+            'Телеметрия перестала врать: если база недоступна, узел честно пишет «Телеметрия недоступна» и ставит прочерки. Раньше в этом случае подставлялись выдуманные числа, сильно завышенные против реальных.',
+            'У живой статистики появилось время последней синхронизации, а декоративные показатели станции (стабильность ядра, радиационный фон) помечены как СИМУЛЯЦИЯ — чтобы их не принимали за настоящие замеры.',
+            'Версия сборки теперь берётся из одного места (version.js) и подставляется во все баннеры, HUD и переводы разом — раньше она была прописана руками в двух десятках мест и разъезжалась.',
+            'Подпись раздела особенностей считает карточки сама: больше не разойдётся с их реальным числом, как случилось с «шестью столпами» при девяти карточках.',
+            'Шаг установки честно переименован в «Проверку браузера» с оговоркой, что версию Java и реальную видеокарту браузер определить не может.',
+            'В калькулятор ОЗУ добавлено предупреждение не отдавать игре почти всю память — иначе своп и фризы вместо прироста.',
+            'Узел запоминает громкость, выбор звука, просмотренное интро и профиль шейдеров. Интро больше не появляется в каждой новой вкладке.',
+            'Режим пониженной анимации (prefers-reduced-motion) заработал на всех четырёх страницах, а не только на главной.',
+            'В шапке после первого экрана появляется кнопка скачивания — не нужно возвращаться наверх или искать раздел.',
+            'Секретный режим остался на тройном клике по логотипу и коде Konami: дублирующий хоткей, который сам себя выдавал подсказкой на экране входа, убран.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.4', t: 'Полная локализация узла', open: false, items: [
+            'download.html, aether.html и tech.html переведены на все 6 языков — до этого переключатель языка на них ничего не менял.',
+            'Локализовано всё: калькулятор ОЗУ, Техно-доктор (15 категорий ошибок), чат, форум (Идеи/Баги/FAQ/Патчноут), ИИ МОРОЗ-01 (база знаний на 16 тем), Хроники погибших, профиль и ID-карточка на canvas.',
+            'Причины гибели и статусы хранятся на сайте в неизменном виде (для общей статистики), а отображаются переведёнными — переключение языка не путает общие Хроники.',
+            'Заодно починены два скрытых бага: бейдж «✓ ВЫБРАН» на странице загрузки рисовался через CSS и не переводился; единицы «ГБ/МБ» в Техно-докторе были захардкожены на русском.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.3', t: 'Приём сигнала: сборка R1.1', open: false, items: [
+            'В Эфир (раздел «Костёр») добавлена вкладка «Патчноут R1.1» — адаптированный чейнджлог глобального обновления сборки «Foundation Release».',
+            'Версия сборки на сайте обновлена с R1.0 до R1.1 повсеместно: hero-бейдж, HUD-протокол, страница загрузки, терминал развёртывания.',
+            'Мелкая правка текста: подпись раздела «Ключевые особенности» приведена в соответствие с реальным числом карточек (9, не 6) на всех 6 языках.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.2', t: 'Реструктуризация станции', open: false, items: [
+            'Список модов убран с главной — «Ключевые особенности» расширены до 9 детальных карточек механик.',
+            'FAQ перенесён в Эфир (раздел «Костёр»), убран с главной страницы.',
+            'Загрузка вынесена на отдельную страницу download.html — пошаговый протокол установки.',
+            '«Хроники погибших» переехали в Эфир и интегрированы как полноценный раздел.',
+            'Калькулятор ОЗУ значительно расширен; Техно-доктор переписан для детального разбора любых логов.',
+            '«Удостоверение Выжившего» объединено с профилем Эфира. «Радио Пустоши» убрано.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.1', t: 'Большое обновление узла', open: false, items: [
+            'Локализация интерфейса на 6 языков: RU, EN, UK, DE, BE, KK (с поддержкой казахской кириллицы и немецких умлаутов).',
+            'Динамический favicon: замёрзший радар с мигающим красным SOS-маяком.',
+            'Полностью переработан звуковой движок — атмосферные процедурные звуки станции.',
+            'Новые пасхалки: «Великое обледенение» (набери frost/ice), код Конами (ретро-радар), скрытая SOS-вышка.',
+            'Открыт «Технический отсек»: калькулятор ОЗУ, генератор Удостоверения, Техно-доктор, Радио Пустоши.',
+            'Добавлены «Хроники погибших» — общий счётчик жертв Великого Обледенения.'
+          ]
+        },
+        {
+          v: 'STATION OS 2.0', t: 'Перезапуск станции', open: false, items: [
+            'Полная визуальная переработка: ледяная палитра, кинематографичная подача.',
+            'Живая телеметрия через Firebase: просмотры, онлайн, загрузки.',
+            'Интерактивный слайдер сравнения шейдеров и галерея с лайтбоксом.',
+            'Каталог модов с поиском и фильтром по категориям.'
+          ]
+        },
+        {
+          v: 'STATION OS 1.0', t: 'Первый сигнал в эфире', open: false, items: [
+            'Запуск промо-узла Astral RPG.',
+            'Базовый лендинг, описание сборки и ссылки на загрузку.'
+          ]
+        }
+      ];
+
+      // Mods: представительная выборка из реального состава сборки, по категориям
+
+      const CAT_LABEL = { survival: 'Выживание', atmosphere: 'Атмосфера', tech: 'Техника', world: 'Мир', perf: 'Оптимизация' };
+      const CAT_COLOR = { survival: '#7cceff', atmosphere: '#a78bfa', tech: '#fbbf24', world: '#34d399', perf: '#ff8da3' };
+
+      const GALLERY = [
+        { src: 'assets/images/shot-1.webp', capKey: 'g.c1', cap: 'Ночная смена' },
+        { src: 'assets/images/shot-2.webp', capKey: 'g.c2', cap: 'Заражённые днём' },
+        { src: 'assets/images/shot-3.webp', capKey: 'g.c3', cap: 'Укреплённый бункер' },
+        { src: 'assets/images/shot-4.webp', capKey: 'g.c4', cap: 'Ночной патруль' },
+        { src: 'assets/images/shot-5.webp', capKey: 'g.c5', cap: 'Склад и дробилки' },
+        { src: 'assets/images/shot-6.webp', capKey: 'g.c6', cap: 'Ледяные пустоши' }
+      ];
+
+      /* ---------- ticker ---------- */
+      const tickerPresets = {
+        base: [
+          '⚡ <span>СТАТУС:</span> Глобальный релиз Astral RPG ' + FV.packFull + ' активен',
+          '❄️ <span>ИНФО:</span> Forge 1.20.1, чистая установка, Java 17',
+          '🚨 <span>ВНИМАНИЕ:</span> Аномальные бури усиливаются',
+          '📡 <span>СЕТЬ:</span> Радиоэфир и FAQ доступны',
+          '🛰️ <span>ПАКЕТ:</span> Радиосигнал идёт без потерь',
+          '🧪 <span>ЛАБ:</span> Охлаждение реакторов в норме',
+          '🪓 <span>ЛУТ:</span> Караваны доставили новый груз',
+          '☢️ <span>ФОН:</span> Радиационный пик ниже порога'
+        ],
+        storm: [
+          '🚨 <span>КРИТИЧЕСКИЙ СБОЙ:</span> Реактор нестабилен. Эвакуация немедленно.',
+          '⚠️ <span>БУРЯ:</span> Видимость падает до нуля',
+          '☢️ <span>ФОН:</span> Радиация растёт в северном секторе',
+          '🧊 <span>ХОЛОД:</span> Температура обрушилась ниже нормы'
+        ],
+        secret: [
+          '🕯️ <span>СЕКРЕТ:</span> Лог разработчика разблокирован',
+          '❄️ <span>ШЁПОТ:</span> Под льдом есть ещё один мир',
+          '🗝️ <span>КОД:</span> ICE-17 принят терминалом'
+        ]
+      };
+      const els = {
+        ticker: $('#ticker-track'), body: document.body,
+        menuBtn: $('#menu-btn'), mobilePanel: $('#mobile-panel'),
+        audioPanel: $('#audio-panel'), audioToggle: $('#audio-toggle'), audioVolume: $('#audio-volume'),
+        views: $('#views-count'), downloads: $('#downloads-count'), online: $('#online-count'),
+        firebaseStatus: $('#firebase-status'), statusPill: $('#status-pill'), statusPillText: $('#status-pill-text'),
+        temp: $('#hud-temp'), rad: $('#hud-rad'), mutation: $('#hud-mutation'),
+        stability: $('#hud-stability'), stabilityCard: $('#hud-stability-card'),
+        logo: $('#logo-storm'), hudRadTrigger: $('#hud-rad-trigger'),
+        gateChecks: $$('.gate-check'), gateState: $('#gate-state'), gateProgressText: $('#gate-progress-text'),
+        gateProgressFill: $('#gate-progress-fill'), gateBonus: $('#gate-bonus'), gateScan: $('#gate-scan-btn'),
+        downloadActions: $('#download-actions')
+      };
+
+      function updateTicker() {
+        if (els.ticker) {
+          const list = state.secret ? tickerPresets.secret : (state.storm ? tickerPresets.storm : tickerPresets.base);
+          els.ticker.innerHTML = list.map(t => `<div class="ticker-item">${t}</div>`).join('');
+        }
+        els.body.classList.toggle('storm', state.storm);
+        els.body.classList.toggle('secret', state.secret);
+      }
+
+
+
+      /* ---------- audio (Web Audio SFX) ---------- */
+      const audio = {
+        ensure() {
+          if (state.audioCtx) return true; const C = window.AudioContext || window.webkitAudioContext; if (!C) return false;
+          state.audioCtx = new C(); state.master = state.audioCtx.createGain(); state.master.gain.value = state.volume; state.master.connect(state.audioCtx.destination); return true;
+        },
+        async unlock() { if (!this.ensure()) return false; if (state.audioCtx.state === 'suspended') { try { await state.audioCtx.resume(); } catch (e) { } } state.audioUnlocked = true; return true; },
+        setVolume(v) { state.volume = Math.max(0, Math.min(1, v)); if (state.master) state.master.gain.value = state.volume; localStorage.setItem('fb_volume', String(state.volume)); },
+        tone({ freq = 440, dur = .08, type = 'sine', gain = .06, filter = 0 } = {}) {
+          if (!state.audioUnlocked || !this.ensure()) return;
+          const t = state.audioCtx.currentTime, o = state.audioCtx.createOscillator(), g = state.audioCtx.createGain();
+          o.type = type; o.frequency.setValueAtTime(freq, t); g.gain.setValueAtTime(.0001, t);
+          g.gain.exponentialRampToValueAtTime(Math.max(.0002, gain), t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + dur + .08);
+          if (filter > 0) { const bq = state.audioCtx.createBiquadFilter(); bq.type = 'lowpass'; bq.frequency.setValueAtTime(filter, t); o.connect(bq); bq.connect(g); } else o.connect(g);
+          g.connect(state.master); o.start(t); o.stop(t + dur + .1);
+        },
+        noise({ dur = .22, gain = .03, filter = 700 } = {}) {
+          if (!state.audioUnlocked || !this.ensure()) return;
+          const t = state.audioCtx.currentTime, size = Math.max(1, Math.floor(state.audioCtx.sampleRate * dur));
+          const buf = state.audioCtx.createBuffer(1, size, state.audioCtx.sampleRate), d = buf.getChannelData(0);
+          for (let i = 0; i < size; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / size);
+          const src = state.audioCtx.createBufferSource(), bq = state.audioCtx.createBiquadFilter(), g = state.audioCtx.createGain();
+          bq.type = 'bandpass'; bq.frequency.setValueAtTime(filter, t); bq.Q.setValueAtTime(.9, t);
+          g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+          src.buffer = buf; src.connect(bq); bq.connect(g); g.connect(state.master); src.start(t); src.stop(t + dur + .03);
+        },
+        click() { this.tone({ freq: 220, dur: .05, type: 'triangle', gain: .04, filter: 1100 }); setTimeout(() => this.tone({ freq: 330, dur: .04, type: 'sine', gain: .025, filter: 1500 }), 30); },
+        hover() { this.tone({ freq: 620, dur: .03, type: 'sine', gain: .012, filter: 2200 }); },
+        chord() { this.tone({ freq: 392, dur: .10, type: 'triangle', gain: .05, filter: 1600 }); setTimeout(() => this.tone({ freq: 523.25, dur: .10, type: 'sine', gain: .045, filter: 1900 }), 70); setTimeout(() => this.tone({ freq: 659.25, dur: .12, type: 'sawtooth', gain: .055, filter: 2300 }), 140); },
+        storm() { this.noise({ dur: .8, gain: .055, filter: 380 }); this.tone({ freq: 68, dur: .55, type: 'sawtooth', gain: .05, filter: 180 }); },
+        secret() { [523.25, 659.25, 783.99, 987.77].forEach((f, i) => setTimeout(() => this.tone({ freq: f, dur: .08, type: i % 2 ? 'triangle' : 'sine', gain: .035, filter: 2000 + i * 400 }), i * 60)); }
+      };
+      const toggleSoundUI = (on) => { els.audioToggle.textContent = on ? '🔊 Звук' : '🔇 Звук'; els.audioPanel.classList.toggle('muted', !on); };
+
+      async function unlockAudio() {
+        if (window.FrostSFX) FrostSFX.unlock();
+        if (state.audioUnlocked) return;
+        if (!(await audio.unlock())) return;
+        if (state.soundMuted) { state.soundOn = false; toggleSoundUI(false); return; }   // уважаем прошлый выбор
+        state.soundOn = true; toggleSoundUI(true); audio.chord();
+        showToast('ЗВУК ВКЛЮЧЁН', 'Активированы системные звуки интерфейса.');
+      }
+      els.audioToggle.addEventListener('click', async () => {
+        if (!state.audioUnlocked) { await unlockAudio(); return; }
+        state.soundOn = !state.soundOn; state.soundMuted = !state.soundOn;
+        localStorage.setItem('fb_sound', state.soundOn ? 'on' : 'off');
+        toggleSoundUI(state.soundOn);
+        if (state.soundOn) { audio.chord(); showToast('ЗВУК ВКЛЮЧЁН', 'Аудиослой снова активен.'); }
+        else showToast('ЗВУК ВЫКЛЮЧЕН', 'Аудиослой остановлен.');
+      });
+      els.audioVolume.value = Math.round(state.volume * 100);
+      els.audioVolume.addEventListener('input', () => { audio.setVolume(Number(els.audioVolume.value) / 100); });
+
+      // global hover/click sfx (delegated, lightweight)
+      const sfxSel = '.btn,.seg-btn,.pill-link,.nav-link,.acc-btn,.check,.dl,.feature,.shot,.social-card,.tier';
+      document.addEventListener('pointerover', (e) => { if (state.soundOn && e.target.closest(sfxSel)) audio.hover(); }, { passive: true });
+      document.addEventListener('click', (e) => { if (state.soundOn && e.target.closest('.btn,.seg-btn,.dl,.acc-btn')) audio.click(); }, { passive: true });
+
+      /* ---------- mobile menu ---------- */
+      els.menuBtn.addEventListener('click', () => {
+        const open = els.mobilePanel.classList.toggle('open');
+        els.menuBtn.textContent = open ? '✕' : '☰';
+        els.menuBtn.setAttribute('aria-expanded', String(open));
+      });
+      $$('.mobile-panel a').forEach(a => a.addEventListener('click', () => {
+        els.mobilePanel.classList.remove('open'); els.menuBtn.textContent = '☰'; els.menuBtn.setAttribute('aria-expanded', 'false');
+      }));
+
+      /* Кадры сравнения шейдеров — 286 КБ ниже первого экрана. Грузим их,
+         когда секция подходит к вьюпорту, а не вместе со страницей. */
+      var loadCompare = (function () {
+        var done = false;
+        return function () {
+          if (done) return; done = true;
+          $$('.compare-before,.compare-after').forEach(function (el) { el.classList.add('ld'); });
+        };
+      })();
+      (function deferCompare() {
+        var sec = $('#shaders'); if (!sec) return loadCompare();
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (en) {
+            if (en.some(function (e) { return e.isIntersecting; })) { loadCompare(); io.disconnect(); }
+          }, { rootMargin: '400px' });
+          io.observe(sec);
+        }
+        // Страховка: наблюдатель может не сработать (старый браузер, фоновая вкладка).
+        // Пустое сравнение шейдеров хуже лишних 286 КБ, поэтому дублируем проверкой скролла.
+        var guard = function () {
+          var r = sec.getBoundingClientRect();
+          if (r.top < window.innerHeight + 500) loadCompare();
+        };
+        window.addEventListener('scroll', guard, { passive: true });
+        window.addEventListener('resize', guard, { passive: true });
+        setTimeout(guard, 1200);
+      })();
+
+      /* ---------- header scroll + progress + back-to-top ---------- */
+      const header = $('#site-header'), prog = $('#scroll-prog'), toTop = $('#to-top'), navCta = $('#nav-cta');
+      function onScroll() {
+        const y = window.scrollY;
+        header.classList.toggle('scrolled', y > 30);
+        toTop.classList.toggle('show', y > 600);
+        if (navCta) navCta.classList.toggle('show', y > window.innerHeight * .7);   // после первого экрана
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        prog.style.width = (h > 0 ? (y / h * 100) : 0) + '%';
+      }
+      window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+      toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }));
+
+      /* ---------- reveal on scroll ---------- */
+      if (!reduced && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+        }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+        const watchReveal = () => $$('.reveal:not(.in)').forEach(el => io.observe(el));
+        watchReveal(); window.__watchReveal = watchReveal;
+      } else {
+        $$('.reveal').forEach(el => el.classList.add('in'));
+        window.__watchReveal = () => $$('.reveal').forEach(el => el.classList.add('in'));
+      }
+
+      /* ---------- starry sky & meteor shower canvas ---------- */
+      const canvas = $('#snow-canvas'), cx = canvas.getContext('2d');
+      let stars = [], meteors = [], sparks = [], voidEmbers = [];
+      let starMode = 'normal';
+      let mouseX = innerWidth / 2, mouseY = innerHeight / 2;
+      let smoothMouseX = innerWidth / 2, smoothMouseY = innerHeight / 2;
+      const MAX_STARS = isMobile ? 130 : 280;
+      const MAX_EMBERS = isMobile ? 20 : 38;
+
+      function createEmber(startY) {
+        const hues = [
+          '192, 132, 252', // Soft astral violet
+          '168, 85, 247',  // Electric purple
+          '240, 171, 252', // Radiant lilac
+          '56, 189, 248',  // Astral cyan / rift teal
+          '216, 70, 239'   // Pulse magenta
+        ];
+        return {
+          x: Math.random() * innerWidth,
+          y: startY !== undefined ? startY : (innerHeight + 25 + Math.random() * 50),
+          r: Math.random() * 1.8 + 0.9,
+          vy: - (Math.random() * 0.42 + 0.22),
+          swaySpeed: Math.random() * 0.002 + 0.0012,
+          swayAmp: Math.random() * 26 + 14,
+          phase: Math.random() * Math.PI * 2,
+          baseAlpha: Math.random() * 0.45 + 0.35,
+          rgb: hues[Math.floor(Math.random() * hues.length)],
+          life: 0,
+          maxLife: Math.random() * 420 + 380
+        };
+      }
+
+      function initEmbers() {
+        voidEmbers = [];
+        for (let i = 0; i < MAX_EMBERS; i++) {
+          voidEmbers.push(createEmber(Math.random() * innerHeight));
+        }
+      }
+
+      function resize() {
+        canvas.width = innerWidth * devicePixelRatio;
+        canvas.height = innerHeight * devicePixelRatio;
+        cx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        initStars();
+        initEmbers();
+      }
+      addEventListener('resize', resize);
+
+      function initStars() {
+        stars = [];
+        for (let i = 0; i < MAX_STARS; i++) {
+          const isBright = Math.random() < 0.15;
+          const isMajor = isBright && Math.random() < 0.35;
+          const r = isMajor ? (Math.random() * 1.3 + 2.0) : (isBright ? (Math.random() * 0.9 + 1.2) : (Math.random() * 0.7 + 0.45));
+          stars.push({
+            x: Math.random() * innerWidth,
+            y: Math.random() * innerHeight,
+            r: r,
+            baseAlpha: isMajor ? 0.9 : (isBright ? 0.7 : Math.random() * 0.45 + 0.25),
+            twinkleSpeed: Math.random() * 0.035 + 0.015,
+            phase: Math.random() * Math.PI * 2,
+            isMajor: isMajor,
+            isBright: isBright,
+            spikeAngle: Math.random() * Math.PI,
+            parallax: (r / 3.0) * 0.02,
+            hue: Math.random() < 0.6 ? 'ice' : (Math.random() < 0.85 ? 'white' : 'warm')
+          });
+        }
+      }
+      resize();
+
+      window.addEventListener('pointermove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      }, { passive: true });
+
+      // Spawn shooting star / meteor
+      function spawnMeteor(opts = {}) {
+        const angle = opts.angle || (Math.PI / 4 + (Math.random() - 0.5) * 0.25);
+        const speed = opts.speed || (15 + Math.random() * 12 * (starMode === 'storm' ? 1.4 : 1));
+        const len = opts.len || (150 + Math.random() * 150);
+        const startX = opts.x !== undefined ? opts.x : (Math.random() * (innerWidth + 300) - 150);
+        const startY = opts.y !== undefined ? opts.y : (-40 - Math.random() * 90);
+        meteors.push({
+          x: startX,
+          y: startY,
+          angle: angle,
+          speed: speed,
+          len: len,
+          r: opts.r || (Math.random() * 1.5 + 1.8),
+          colorType: starMode,
+          life: 0,
+          maxLife: 75 + Math.random() * 45
+        });
+      }
+
+      // Meteor shower scheduler
+      let lastMeteorTime = performance.now();
+      let nextMeteorInterval = 1000;
+
+      function scheduleMeteors(now) {
+        const interval = starMode === 'storm' ? (200 + Math.random() * 400) : (800 + Math.random() * 1400);
+        if (now - lastMeteorTime > nextMeteorInterval) {
+          lastMeteorTime = now;
+          nextMeteorInterval = interval;
+          spawnMeteor();
+          // 30% chance of a double or triple meteor volley
+          if (Math.random() < (starMode === 'storm' ? 0.65 : 0.32)) {
+            setTimeout(() => spawnMeteor({
+              x: Math.random() * innerWidth,
+              y: -30,
+              len: 130 + Math.random() * 120
+            }), 110 + Math.random() * 160);
+            if (starMode === 'storm') {
+              setTimeout(() => spawnMeteor({
+                x: Math.random() * innerWidth,
+                y: -30
+              }), 240 + Math.random() * 180);
+            }
+          }
+        }
+      }
+
+      // Click anywhere to shoot a star
+      window.addEventListener('click', (e) => {
+        if (e.target.closest('button, a, input, select, textarea, .interactive, .clickable')) return;
+        spawnMeteor({ x: e.clientX - 60, y: Math.max(-20, e.clientY - 90) });
+      });
+
+      let frameCount = 0;
+      function draw(time) {
+        cx.clearRect(0, 0, innerWidth, innerHeight);
+        frameCount++;
+        smoothMouseX += (mouseX - smoothMouseX) * 0.04;
+        smoothMouseY += (mouseY - smoothMouseY) * 0.04;
+        const offsetX = (smoothMouseX - innerWidth / 2);
+        const offsetY = (smoothMouseY - innerHeight / 2);
+
+        // 1. Draw Stars
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          const alpha = Math.max(0.1, Math.min(1, s.baseAlpha + Math.sin(time * 0.003 * s.twinkleSpeed * 100 + s.phase) * 0.35));
+          const px = s.x + offsetX * s.parallax;
+          const py = s.y + offsetY * s.parallax;
+
+          // Determine star color
+          let rgb = '245, 235, 255';
+          if (starMode === 'storm') {
+            rgb = s.hue === 'ice' ? '255, 60, 120' : (s.hue === 'warm' ? '255, 140, 180' : '255, 210, 230');
+          } else if (starMode === 'secret') {
+            rgb = s.hue === 'ice' ? '124, 236, 255' : (s.hue === 'warm' ? '140, 255, 210' : '210, 245, 255');
+          } else {
+            rgb = s.hue === 'ice' ? '192, 132, 252' : (s.hue === 'warm' ? '240, 171, 252' : '255, 255, 255');
+          }
+
+          // Draw halo for major stars
+          if (s.isMajor && alpha > 0.35) {
+            const halo = cx.createRadialGradient(px, py, 0, px, py, s.r * 5);
+            halo.addColorStop(0, `rgba(${rgb}, ${alpha * 0.45})`);
+            halo.addColorStop(1, `rgba(${rgb}, 0)`);
+            cx.fillStyle = halo;
+            cx.beginPath();
+            cx.arc(px, py, s.r * 5, 0, Math.PI * 2);
+            cx.fill();
+
+            // 4-point cross diffraction spikes
+            const spikeLen = s.r * 4.5 * alpha;
+            cx.strokeStyle = `rgba(${rgb}, ${alpha * 0.65})`;
+            cx.lineWidth = 0.75;
+            cx.beginPath();
+            cx.moveTo(px - spikeLen, py);
+            cx.lineTo(px + spikeLen, py);
+            cx.moveTo(px, py - spikeLen);
+            cx.lineTo(px, py + spikeLen);
+            cx.stroke();
+          } else if (s.isBright && alpha > 0.45) {
+            const glow = cx.createRadialGradient(px, py, 0, px, py, s.r * 2.8);
+            glow.addColorStop(0, `rgba(${rgb}, ${alpha * 0.35})`);
+            glow.addColorStop(1, `rgba(${rgb}, 0)`);
+            cx.fillStyle = glow;
+            cx.beginPath();
+            cx.arc(px, py, s.r * 2.8, 0, Math.PI * 2);
+            cx.fill();
+          }
+
+          // Star core
+          cx.fillStyle = `rgba(${rgb}, ${alpha})`;
+          cx.beginPath();
+          cx.arc(px, py, s.r, 0, Math.PI * 2);
+          cx.fill();
+        }
+
+        // 2. Draw & Update Floating Void Embers (Astral Sparks rising upward)
+        for (let i = 0; i < voidEmbers.length; i++) {
+          const em = voidEmbers[i];
+          em.y += em.vy;
+          em.life++;
+          const swayX = Math.sin(time * em.swaySpeed + em.phase) * em.swayAmp;
+          const currentX = em.x + swayX;
+
+          // Smooth sinusoidal fade-in and fade-out
+          const progress = em.life / em.maxLife;
+          let alpha = em.baseAlpha * Math.sin(progress * Math.PI);
+          alpha = Math.max(0, Math.min(1, alpha));
+
+          // Soft outer glowing aura
+          const glow = cx.createRadialGradient(currentX, em.y, 0, currentX, em.y, em.r * 4.2);
+          glow.addColorStop(0, `rgba(${em.rgb}, ${alpha * 0.88})`);
+          glow.addColorStop(0.45, `rgba(${em.rgb}, ${alpha * 0.32})`);
+          glow.addColorStop(1, `rgba(${em.rgb}, 0)`);
+          cx.fillStyle = glow;
+          cx.beginPath();
+          cx.arc(currentX, em.y, em.r * 4.2, 0, Math.PI * 2);
+          cx.fill();
+
+          // Hot radiant ember spark core
+          cx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.95})`;
+          cx.beginPath();
+          cx.arc(currentX, em.y, em.r * 0.65, 0, Math.PI * 2);
+          cx.fill();
+
+          if (em.y < -40 || em.life >= em.maxLife) {
+            voidEmbers[i] = createEmber();
+          }
+        }
+
+        // 3. Draw & Update Meteor Trail Sparks
+        for (let i = 0; i < sparks.length; i++) {
+          const sp = sparks[i];
+          sp.x += sp.vx;
+          sp.y += sp.vy;
+          sp.alpha -= sp.decay;
+          if (sp.alpha <= 0) {
+            sparks.splice(i, 1);
+            i--;
+            continue;
+          }
+          cx.fillStyle = `rgba(${sp.rgb}, ${sp.alpha})`;
+          cx.beginPath();
+          cx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
+          cx.fill();
+        }
+
+        // 3. Draw & Update Meteors
+        for (let i = 0; i < meteors.length; i++) {
+          const m = meteors[i];
+          const tailX = m.x - Math.cos(m.angle) * m.len;
+          const tailY = m.y - Math.sin(m.angle) * m.len;
+
+          let headRgb = '255, 255, 255';
+          let midRgb = '240, 171, 252';
+          let tailRgb = '147, 51, 234';
+          if (m.colorType === 'storm') {
+            headRgb = '255, 240, 240';
+            midRgb = '255, 70, 120';
+            tailRgb = '190, 18, 60';
+          } else if (m.colorType === 'secret') {
+            headRgb = '240, 255, 250';
+            midRgb = '52, 211, 153';
+            tailRgb = '30, 140, 180';
+          }
+
+          // Tail gradient
+          const grad = cx.createLinearGradient(m.x, m.y, tailX, tailY);
+          grad.addColorStop(0, `rgba(${headRgb}, 0.95)`);
+          grad.addColorStop(0.15, `rgba(${midRgb}, 0.8)`);
+          grad.addColorStop(0.6, `rgba(${tailRgb}, 0.35)`);
+          grad.addColorStop(1, `rgba(${tailRgb}, 0)`);
+
+          cx.lineWidth = m.r;
+          cx.lineCap = 'round';
+          cx.strokeStyle = grad;
+          cx.beginPath();
+          cx.moveTo(m.x, m.y);
+          cx.lineTo(tailX, tailY);
+          cx.stroke();
+
+          // Meteor Head Glow
+          const headGlow = cx.createRadialGradient(m.x, m.y, 0, m.x, m.y, m.r * 3.5);
+          headGlow.addColorStop(0, `rgba(${headRgb}, 1)`);
+          headGlow.addColorStop(0.4, `rgba(${midRgb}, 0.7)`);
+          headGlow.addColorStop(1, `rgba(${tailRgb}, 0)`);
+          cx.fillStyle = headGlow;
+          cx.beginPath();
+          cx.arc(m.x, m.y, m.r * 3.5, 0, Math.PI * 2);
+          cx.fill();
+
+          // Stardust spark drop
+          if (frameCount % 2 === 0 && sparks.length < 90) {
+            sparks.push({
+              x: m.x - Math.cos(m.angle) * (Math.random() * 30),
+              y: m.y - Math.sin(m.angle) * (Math.random() * 30),
+              vx: (Math.random() - 0.5) * 0.8,
+              vy: (Math.random() - 0.5) * 0.8,
+              r: Math.random() * 1.1 + 0.5,
+              alpha: 0.8,
+              decay: Math.random() * 0.035 + 0.025,
+              rgb: midRgb
+            });
+          }
+
+          // Move meteor
+          m.x += Math.cos(m.angle) * m.speed;
+          m.y += Math.sin(m.angle) * m.speed;
+          m.life++;
+
+          if (m.y > innerHeight + 160 || m.x > innerWidth + 160 || m.life > m.maxLife) {
+            meteors.splice(i, 1);
+            i--;
+          }
+        }
+      }
+
+      function loop(time) {
+        if (!reduced) {
+          scheduleMeteors(time);
+          draw(time);
+        }
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+
+      /* ---------- counters ---------- */
+      function renderCounters({ views, downloads, online }) {
+        const put = (el, v) => { if (el) el.textContent = (Number.isFinite(v) && v >= 0) ? fmt(v) : '—'; };
+        put(els.views, views); put(els.downloads, downloads); put(els.online, online);
+        renderTelemetryStatus();
+      }
+      function renderTelemetryStatus() {
+        const time = state.syncedAt ? clockFmt(state.syncedAt) : '';
+        const m = state.telemetry;
+        if (els.firebaseStatus) {
+          els.firebaseStatus.textContent =
+            m === 'live' ? T('tm.live').replace('{t}', time) :
+              m === 'cached' ? T('tm.cached').replace('{t}', time) :
+                m === 'offline' ? T('tm.offline') : T('tm.pending');
+        }
+        const live = m === 'live';
+        if (els.statusPillText) els.statusPillText.textContent = T(live ? 'status.live' : 'status.offline');
+        if (els.statusPill) {
+          els.statusPill.classList.toggle('live', live);
+          els.statusPill.classList.toggle('offline', !live);
+        }
+      }
+      function setTelemetry(mode) { state.telemetry = mode; renderTelemetryStatus(); }
+      function telemetryFallback() { setTelemetry(Number.isFinite(state.local.views) || Number.isFinite(state.local.downloads) ? 'cached' : 'offline'); }
+      renderCounters(state.local);
+
+      // animated count-up for hero metrics (one time)
+      function countUp(el, target) {
+        if (!el) return;
+        if (reduced) { el.textContent = fmt(target); return; }
+        const dur = 1400, start = performance.now(), from = 0;
+        function step(now) { const p = Math.min(1, (now - start) / dur); const e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(Math.round(from + (target - from) * e)); if (p < 1) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+      }
+
+      /* ---------- render: features ---------- */
+      // Текст карточек берём из i18n по id; массив выше — русский фолбэк.
+      function featText(f, field) {
+        const k = 'feat.' + f.id + '.' + field;
+        const v = T(k);
+        return (v && v !== k) ? v : f[field === 't' ? 't' : 'd'];
+      }
+      function renderFeatures() {
+        $('#features-grid').innerHTML = FEATURES.map((f, i) => `
+        <article class="feature frostable reveal d${(i % 3) + 1}" data-tilt>
+          <div class="ic">${f.ic}</div>
+          <h3>${esc(featText(f, 't'))}</h3>
+          <p>${esc(featText(f, 'd'))}</p>
+        </article>`).join('');
+        if (window.__watchReveal) window.__watchReveal();
+      }
+      renderFeatures();
+
+      /* ---------- render: gallery ---------- */
+      const capOf = (g) => { const v = T(g.capKey); return (v && v !== g.capKey) ? v : g.cap; };
+      function renderGallery() {
+        $('#gallery-grid').innerHTML = GALLERY.map((g, i) => `
+      <figure class="shot reveal d${(i % 3) + 1}" data-idx="${i}">
+        <img src="${g.src}" srcset="${g.src.replace('.webp', '-640.webp')} 640w, ${g.src} 1280w"
+             sizes="(max-width:560px) 92vw, (max-width:1100px) 46vw, 31vw"
+             width="1280" height="720" alt="${esc(capOf(g))}" loading="lazy" decoding="async"
+             onerror="this.closest('.shot').classList.add('noimg'); this.style.display='none';">
+        <span class="zoom">⤢</span>
+      </figure>`).join('');
+        if (window.__watchReveal) window.__watchReveal();
+      }
+      renderGallery();
+
+      /* ---------- render: changelog ---------- */
+      const clAcc = $('#changelog-acc');
+      if (clAcc) {
+        clAcc.innerHTML = CHANGELOG.map((c) => `
+        <div class="acc-item ${c.open ? 'open' : ''}">
+          <button class="acc-btn" type="button" aria-expanded="${c.open ? 'true' : 'false'}"><span><b>${esc(c.v)}</b> · ${esc(c.t)}</span><span class="acc-toggle">+</span></button>
+          <div class="acc-content"${c.open ? ' style="max-height:600px"' : ''}><div class="inner">${c.items.map(i => '• ' + esc(i)).join('<br>')}</div></div>
+        </div>`).join('');
+      }
+
+      /* ---------- accordion logic (shared) ---------- */
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.acc-btn'); if (!btn) return;
+        const item = btn.closest('.acc-item'); const content = item.querySelector('.acc-content');
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+        content.style.maxHeight = open ? (content.scrollHeight + 20) + 'px' : '0px';
+      });
+
+      /* ---------- lightbox ---------- */
+      const lb = $('#lightbox'), lbImg = $('#lb-img'), lbCounter = $('#lb-counter');
+      let lbIdx = 0;
+      function openLB(i) { lbIdx = (i + GALLERY.length) % GALLERY.length; lbImg.src = GALLERY[lbIdx].src; lbImg.alt = GALLERY[lbIdx].cap; lbCounter.textContent = `${lbIdx + 1} / ${GALLERY.length} · ${GALLERY[lbIdx].cap}`; lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false'); }
+      function closeLB() { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); }
+      document.addEventListener('click', (e) => { const s = e.target.closest('.shot'); if (s && !s.classList.contains('noimg')) { openLB(Number(s.dataset.idx)); } });
+      $('#lb-close').addEventListener('click', closeLB);
+      $('#lb-prev').addEventListener('click', () => openLB(lbIdx - 1));
+      $('#lb-next').addEventListener('click', () => openLB(lbIdx + 1));
+      lb.addEventListener('click', (e) => { if (e.target === lb) closeLB(); });
+      document.addEventListener('keydown', (e) => { if (!lb.classList.contains('open')) return; if (e.key === 'Escape') closeLB(); if (e.key === 'ArrowLeft') openLB(lbIdx - 1); if (e.key === 'ArrowRight') openLB(lbIdx + 1); });
+
+      /* ---------- shader compare slider ---------- */
+      const compare = $('#compare'), compareAfter = $('#compare-after'), compareBar = $('#compare-bar');
+      let dragging = false;
+      function setCompare(pct) { pct = Math.max(0, Math.min(100, pct)); compareAfter.style.clipPath = `inset(0 ${100 - pct}% 0 0)`; compareBar.style.left = pct + '%'; }
+      function compareFromEvent(clientX) { const r = compare.getBoundingClientRect(); setCompare((clientX - r.left) / r.width * 100); }
+      compareBar.addEventListener('pointerdown', (e) => { dragging = true; compareBar.setPointerCapture(e.pointerId); });
+      compare.addEventListener('pointerdown', (e) => { dragging = true; compareFromEvent(e.clientX); });
+      document.addEventListener('pointermove', (e) => { if (dragging) compareFromEvent(e.clientX); });
+      document.addEventListener('pointerup', () => { dragging = false; });
+      setCompare(50);
+      // idle hint sweep once when visible
+      if (!reduced && 'IntersectionObserver' in window) {
+        const cio = new IntersectionObserver((ents) => { ents.forEach(en => { if (en.isIntersecting) { let p = 50, dir = 1, steps = 0; const id = setInterval(() => { p += dir * 1.5; if (p > 62) { dir = -1 } if (p < 38) { dir = 1 } setCompare(p); if (++steps > 40) { clearInterval(id); setCompare(50); } }, 16); cio.disconnect(); } }); }, { threshold: .5 });
+        cio.observe(compare);
+      }
+
+      /* ---------- modes (storm / secret / normal) ---------- */
+      function applyMode(mode) {
+        state.mode = mode; state.storm = mode === 'storm'; state.secret = mode === 'secret';
+        try { localStorage.setItem('astral_mode', mode); } catch (e) { }
+        starMode = mode;
+        if (els.mutation) els.mutation.textContent = mode === 'storm' ? 'Ω OMEGA' : mode === 'secret' ? 'HIDDEN' : 'STAGE I';
+        if (els.stability) {
+          els.stability.textContent = mode === 'storm' ? '0.4% CRITICAL' : mode === 'secret' ? '99.1% HIDDEN' : '98.4%';
+          els.stability.classList.toggle('danger', mode === 'storm');
+          els.stability.classList.toggle('good', mode !== 'storm');
+        }
+        els.body.classList.toggle('storm', mode === 'storm');
+        els.body.classList.toggle('secret', mode === 'secret');
+        if (state.soundOn && mode === 'storm') audio.storm();
+        if (state.soundOn && mode === 'secret') audio.secret();
+        updateTicker();
+      }
+
+      if (els.stabilityCard) {
+        els.stabilityCard.addEventListener('click', () => { applyMode('storm'); showToast('ДИАГНОСТИКА ЯДРА', 'Ядро переведено в режим аварийной диагностики.'); });
+        els.stabilityCard.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); els.stabilityCard.click(); } });
+      }
+      if (els.hudRadTrigger) {
+        els.hudRadTrigger.addEventListener('click', () => { if (state.soundOn) audio.noise({ dur: .18, gain: .02, filter: 1400 }); showToast('РАДИОФОН', 'Скан радиационного фона обновлён.'); });
+        els.hudRadTrigger.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); els.hudRadTrigger.click(); } });
+      }
+
+      // triple-click logo => secret, single => storm toggle
+      let tapCount = 0, tapTimer = null;
+      els.logo.addEventListener('click', () => {
+        tapCount++; clearTimeout(tapTimer);
+        tapTimer = setTimeout(() => {
+          if (tapCount >= 3) { applyMode('secret'); showToast('СЕКРЕТНЫЙ КАНАЛ', 'Тройной клик активировал скрытый эфир.'); }
+          else { applyMode(state.storm ? 'normal' : 'storm'); showToast(state.storm ? 'СИСТЕМА ВОССТАНОВЛЕНА' : 'АНОМАЛИЯ', state.storm ? 'Ядро стабилизировано.' : 'Надвигается пси-шторм. Видимость падает.'); }
+          tapCount = 0;
+        }, 340);
+      });
+
+      // glitch hero title periodically
+      if (!reduced) {
+        const ht = $('#hero-title');
+        setInterval(() => { if (Math.random() < .5) { ht.classList.add('glitching'); setTimeout(() => ht.classList.remove('glitching'), 260); } }, 6000);
+      }
+
+      if (window.FrostNotify) FrostNotify.mount('#bellMount');
+
+      /* ---------- лента станции: бейдж и виджет (D-07, D-21) ---------- */
+      let feedList = null;
+      function feedAgo(ts) {
+        const d = Date.now() - ts;
+        if (d < 60000) return I18N.t('fd.justNow');
+        if (d < 3600000) return I18N.t('fd.minAgo').replace('{n}', Math.max(1, Math.round(d / 60000)));
+        if (d < 86400000) return I18N.t('fd.hourAgo').replace('{n}', Math.round(d / 3600000));
+        return I18N.t('fd.dayAgo').replace('{n}', Math.round(d / 86400000));
+      }
+      function paintFeedWidget(list) {
+        if (list) feedList = list;
+        const box = $('#feedWidget'), sec = $('#station-feed');
+        if (!box || !sec) return;
+
+        /* Пустую ленту не показываем вовсе: раздел «что происходит» без событий
+           выглядит хуже, чем его отсутствие. */
+        if (!feedList || !feedList.length) { sec.hidden = true; return; }
+        sec.hidden = false;
+
+        box.innerHTML = feedList.slice(0, 4).map(e => {
+          const T = FrostFeed.TYPES[e.t] || { icon: '•', color: 'var(--muted)' };
+          const key = 'fd.ev_' + e.t;
+          let line = I18N.t(key); if (line === key) line = '{a}';
+          line = line.replace('{a}', '<b>' + esc(e.a) + '</b>').replace('{n}', esc(String(e.n || '')));
+          return `<div class="w-ev"><div class="w-ic" style="color:${T.color}" aria-hidden="true">${T.icon}</div>
+          <div class="w-tx"><p class="w-a">${line}</p>
+          <div class="w-m">${esc(e.nick)} · ${esc(feedAgo(e.ts))}</div></div></div>`;
+        }).join('');
+
+        // точка «есть новое» на ссылке в шапке
+        const n = FrostFeed.countNew(feedList);
+        $$('.nav-link[href="feed.html"]').forEach(a => {
+          a.classList.toggle('has-new', n > 0);
+          if (n > 0) a.setAttribute('title', I18N.t('fd.newBadge')); else a.removeAttribute('title');
+        });
+      }
+      document.addEventListener('i18n:changed', () => paintFeedWidget());
+
+      /* ---------- Firebase (optional, live stats) ---------- */
+      async function initFirebase() {
+        if (!fbConfigured) { telemetryFallback(); return; }
+        try {
+          const fbApp = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
+          const fbDb = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js');
+          const app = fbApp.getApps().length ? fbApp.getApps()[0] : fbApp.initializeApp(fbConfig);
+          const db = fbDb.getDatabase(app);
+          if (window.FrostAuth && fbConfig.appCheckKey) FrostAuth.appCheck(app, fbConfig.appCheckKey);
+          const viewsRef = fbDb.ref(db, 'counters/views');
+          const downloadsRef = fbDb.ref(db, 'counters/downloads');
+          const presenceRef = fbDb.ref(db, 'presence');
+          const connectedRef = fbDb.ref(db, '.info/connected');
+          const sk = 'frostborne_viewed_session_v3';
+          if (!sessionStorage.getItem(sk)) { await fbDb.runTransaction(viewsRef, c => (c || 0) + 1); sessionStorage.setItem(sk, '1'); }
+          const markLive = () => { state.telemetry = 'live'; state.syncedAt = Date.now(); localStorage.setItem('fb_synced_at', String(state.syncedAt)); };
+          fbDb.onValue(viewsRef, s => { const v = s.exists() ? Number(s.val()) || 0 : 0; state.local.views = v; localStorage.setItem('fb_views', String(v)); markLive(); renderCounters(state.local); });
+          fbDb.onValue(downloadsRef, s => {
+            const v = s.exists() ? Number(s.val()) || 0 : 0;
+            state.local.downloads = v;
+            localStorage.setItem('fb_downloads', String(v));
+            localStorage.setItem(ASTRAL_DL_KEY, String(v));
+            updateAstralDlDisplays(v);
+            markLive();
+            renderCounters(state.local);
+          });
+          fbDb.onValue(presenceRef, s => { const items = s.exists() ? s.val() : {}; const n = Object.keys(items).filter(k => Boolean(items[k])).length; state.local.online = n; localStorage.setItem('fb_online', String(n)); markLive(); renderCounters(state.local); });
+          let presenceTimer = null;
+          let presenceGeneration = 0;
+          fbDb.onValue(connectedRef, async s => {
+            const generation = ++presenceGeneration;
+            clearInterval(presenceTimer);
+            presenceTimer = null;
+            if (s.val() !== true) return;
+            const me = fbDb.ref(db, `presence/${state.presenceId}`);
+            try {
+              await fbDb.onDisconnect(me).remove();
+              if (generation !== presenceGeneration) return;
+              const heartbeat = () => fbDb.set(me, { active: true, lastSeen: Date.now() }).catch(error => console.warn('Presence update failed:', error));
+              heartbeat();
+              presenceTimer = setInterval(heartbeat, 15000);
+            } catch (error) { console.warn('Presence update failed:', error); }
+          });
+          state.firebase = { live: true, db, fbDb, refs: { viewsRef, downloadsRef, presenceRef, connectedRef } };
+          renderTelemetryStatus();
+
+          /* D-07 и D-21: лента. Главная её не показывает целиком — только
+             отмечает, что появилось новое, и рисует три последних события. */
+          if (window.FrostFeed) {
+            FrostFeed.attach(db, fbDb);
+            FrostFeed.subscribe(list => {
+              paintFeedWidget(list);
+              if (window.FrostNotify) FrostNotify.scanFeed(list);
+            }, 20);
+          }
+        } catch (err) { console.warn('Firebase offline:', err); telemetryFallback(); }
+      }
+
+
+
+      /* ---------- live HUD (temperature / radiation) ---------- */
+      setInterval(() => {
+        if (!els.temp) return;
+        if (!state.storm) { els.temp.textContent = `${(-34 - Math.random()).toFixed(1)} °C`; if (els.rad) els.rad.textContent = `${(0.12 + Math.random() * 0.04).toFixed(2)} mSv`; }
+        else { els.temp.textContent = `${(-95 - Math.random() * 35).toFixed(1)} °C`; if (els.rad) els.rad.textContent = `${(4.9 + Math.random() * 3.8).toFixed(2)} mSv`; }
+      }, 2200);
+
+      /* ---------- language switcher + re-translate dynamic content ---------- */
+      if (window.I18N) I18N.buildSwitcher('#langMount');
+      // Блоки, которые i18n не может перевести сам (шаблоны с подстановкой и живые статусы)
+      function renderFeatureSub() { const el = $('#features-sub'); if (el) el.textContent = T('f.sub').replace('{n}', FEATURES.length); }
+      /* D-03: сам ченджлог остаётся русским (перевод ×6 на каждый релиз того не стоит),
+         но нерусский читатель должен понимать, почему блок ниже не на его языке. */
+      function paintClLang() {
+        const el = document.getElementById('clLang'); if (!el) return;
+        const lang = (window.I18N && I18N.current) ? I18N.current() : 'ru';
+        el.hidden = (lang === 'ru');
+      }
+      paintClLang();
+      document.addEventListener('i18n:changed', () => { renderFeatureSub(); renderTelemetryStatus(); renderFeatures(); renderGallery(); paintClLang(); });
+      renderFeatureSub();
+
+      /* ---------- boot ---------- */
+      updateTicker();
+      if (state.mode && state.mode !== 'normal') applyMode(state.mode);
+
+      window.addEventListener('DOMContentLoaded', () => {
+        // count-up hero metrics once
+        if (Number.isFinite(state.local.views)) countUp(els.views, state.local.views);
+        if (Number.isFinite(state.local.downloads)) countUp(els.downloads, state.local.downloads);
+        if (Number.isFinite(state.local.online)) countUp(els.online, state.local.online);
+        // re-watch any reveal elements added by JS render
+        if (window.__watchReveal) window.__watchReveal();
+        setInterval(() => renderCounters(state.local), 5000);
+      });
+
+      /* ---------- Astral Download Counter System ---------- */
+      const ASTRAL_DL_KEY = 'astral_dl_count';
+      const ASTRAL_BASE_DL = 1428;
+      function getAstralDlCount() {
+        const v = localStorage.getItem(ASTRAL_DL_KEY);
+        const parsed = v ? parseInt(v, 10) : null;
+        if (Number.isSafeInteger(parsed) && parsed >= 0) return parsed;
+        localStorage.setItem(ASTRAL_DL_KEY, String(ASTRAL_BASE_DL));
+        return ASTRAL_BASE_DL;
+      }
+      function updateAstralDlDisplays(val) {
+        const formatted = fmt(val);
+        $$('.astral-dl-counter-val').forEach(el => {
+          el.textContent = formatted;
+        });
+      }
+      async function incrementAstralDl() {
+        if (state.firebase.live && state.firebase.fbDb && state.firebase.refs?.downloadsRef) {
+          try {
+            const result = await state.firebase.fbDb.runTransaction(state.firebase.refs.downloadsRef, c => (c || 0) + 1);
+            if (result.committed) {
+              if (window.FrostSFX) FrostSFX.play('click');
+              return result.snapshot.val();
+            }
+          } catch (err) {
+            console.warn('Firebase dl transaction error:', err);
+          }
+        }
+        const next = getAstralDlCount() + 1;
+        localStorage.setItem(ASTRAL_DL_KEY, String(next));
+        state.local.downloads = next;
+        localStorage.setItem('fb_downloads', String(next));
+        updateAstralDlDisplays(next);
+        if (window.FrostSFX) FrostSFX.play('click');
+        return next;
+      }
+      updateAstralDlDisplays(getAstralDlCount());
+      initFirebase();
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.download-link, .astral-dl-trigger, [href*="drive.google.com"]');
+        if (btn) {
+          incrementAstralDl();
+        }
+      });
+    })();
+  </script>
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+<script type="module" src="/community.js"></script><script type="module" src="/easter-egg.js?v=1"></script></body>
+
+</html>

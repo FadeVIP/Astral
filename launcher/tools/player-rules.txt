@@ -1,0 +1,34 @@
+    function playerNick() { return get(/databases/$(database)/documents/members/$(request.auth.uid)).data.nickname.lower(); }
+    function friendsWith(a,b) {
+      return (exists(/databases/$(database)/documents/playerFriends/$(a+'~'+b)) && get(/databases/$(database)/documents/playerFriends/$(a+'~'+b)).data.status == 'accepted')
+        || (exists(/databases/$(database)/documents/playerFriends/$(b+'~'+a)) && get(/databases/$(database)/documents/playerFriends/$(b+'~'+a)).data.status == 'accepted');
+    }
+    match /playerFriends/{id} {
+      allow get, list: if request.auth != null && resource.data.from == playerNick();
+      allow get, list: if request.auth != null && resource.data.to == playerNick();
+      allow create: if request.auth != null && request.resource.data.keys().hasOnly(['from','to','status'])
+        && request.resource.data.from == playerNick() && request.resource.data.to.matches('^[a-z0-9_]{3,16}$')
+        && request.resource.data.to != playerNick() && id == request.resource.data.from+'~'+request.resource.data.to
+        && request.resource.data.status == 'pending';
+      allow update: if request.auth != null && playerNick() == resource.data.to
+        && resource.data.status == 'pending' && request.resource.data.status == 'accepted'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+      allow delete: if request.auth != null && (resource.data.from == playerNick() || resource.data.to == playerNick());
+    }
+    match /playerPresence/{nickname} {
+      allow get: if request.auth != null && (playerNick() == nickname || friendsWith(playerNick(),nickname));
+      allow create, update: if request.auth != null && playerNick() == nickname
+        && request.resource.data.keys().hasOnly(['uid','pack','playing','updatedAt'])
+        && request.resource.data.uid == request.auth.uid && request.resource.data.pack is string
+        && request.resource.data.pack.size() <= 100 && request.resource.data.playing is bool
+        && request.resource.data.updatedAt == request.time;
+      allow list, delete: if false;
+    }
+    match /playerInbox/{uid}/messages/{id} {
+      allow get, list: if owner(uid) || launcherAdmin();
+      allow create: if launcherAdmin() && request.resource.data.keys().hasOnly(['text','createdAt'])
+        && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 1000
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+    match /accountWallets/{uid}/history/{id} { allow get, list: if owner(uid); }

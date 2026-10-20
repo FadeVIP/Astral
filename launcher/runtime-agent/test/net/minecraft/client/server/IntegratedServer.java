@@ -1,0 +1,1 @@
+package net.minecraft.client.server; public class IntegratedServer extends net.minecraft.server.MinecraftServer { public boolean m_7038_(){m_129985_(true);return true;} }

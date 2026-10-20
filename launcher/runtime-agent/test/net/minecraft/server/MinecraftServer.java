@@ -1,0 +1,1 @@
+package net.minecraft.server; public class MinecraftServer { public boolean auth=true; public void m_129985_(boolean value){auth=value;} }

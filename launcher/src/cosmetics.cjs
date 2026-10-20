@@ -1,0 +1,13 @@
+'use strict';
+const {encode,decode}=require('./catalog.cjs');
+const kinds=['cape','wings','hat','halo','aura'];
+const unpack=d=>d?decode({mapValue:{fields:d.fields}}):null;
+function id(v){if(typeof v!=='string'||!/^[-a-z0-9]{1,64}$/.test(v))throw Error('Неверный предмет.');return v;}
+class Cosmetics {
+ constructor(catalog){this.c=catalog;}
+ async session(){await this.c.auth.requireAccess();return this.c.auth.session;}
+ async list(){const s=await this.session();let items=[],next='';if(this.c.config?.publicData){const data=await require('./public-data.cjs').snapshot('cosmetics',this.c.fetcher);items=data.documents.map(d=>({id:d.name.split('/').pop(),...unpack(d)}));}else do{const r=await this.c.request('/cosmeticCatalog?pageSize=200'+(next?'&pageToken='+encodeURIComponent(next):''),{token:s.idToken});items.push(...(r.documents||[]).map(d=>({id:d.name.split('/').pop(),...unpack(d)})));next=r.nextPageToken||'';if(items.length>1000)throw Error('Каталог слишком большой.');}while(next);const owned=await this.c.request('/cosmeticOwners/'+s.uid+'/items?pageSize=1000',{token:s.idToken});const nick=this.c.auth.publicUser().nickname.toLowerCase(),equipped=unpack(await this.c.request('/accountCosmetics/'+nick,{token:s.idToken,missing:true}));return {items,owned:(owned.documents||[]).map(d=>d.name.split('/').pop()),equipped:equipped||{}};}
+ async buy(value){const key=id(value),s=await this.session(),root=this.c.base.replace('https://firestore.googleapis.com/v1/',''),item=unpack(await this.c.request('/cosmeticCatalog/'+key,{token:s.idToken,missing:true}));if(!item?.enabled)throw Error('Предмет недоступен.');const doc=await this.c.request('/accountWallets/'+s.uid,{token:s.idToken,missing:true}),balance=Number(unpack(doc)?.balance||0);if(!Number.isSafeInteger(item.price)||item.price<0||balance<item.price)throw Error('Недостаточно Acoin.');await this.c.request(':commit',{method:'POST',token:s.idToken,body:{writes:[{update:{name:root+'/accountWallets/'+s.uid,fields:encode({balance:balance-item.price,purchase:key}).mapValue.fields},currentDocument:doc?{updateTime:doc.updateTime}:{exists:false}},{update:{name:root+'/cosmeticOwners/'+s.uid+'/items/'+key,fields:encode({item:key}).mapValue.fields},currentDocument:{exists:false}}]}});return {balance:balance-item.price};}
+ async equip(input){const s=await this.session();if(!kinds.includes(input?.kind))throw Error('Неверная категория.');const key=input.id===''?'':id(input.id),nick=this.c.auth.publicUser().nickname.toLowerCase();await this.c.request('/accountCosmetics/'+nick+'?updateMask.fieldPaths=uid&updateMask.fieldPaths='+input.kind,{method:'PATCH',token:s.idToken,body:{fields:encode({uid:s.uid,[input.kind]:key}).mapValue.fields}});return true;}
+}
+module.exports={Cosmetics,id};

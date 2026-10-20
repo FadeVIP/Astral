@@ -1,0 +1,237 @@
+/* =====================================================================
+   FROSTBORNE DEADLANDS — extras.css
+   Переключатель языка · пасхалки · SOS-вышка · ретро-радар · fx-toast
+   Подключается ПОСЛЕ основного <style> страницы.
+   ===================================================================== */
+
+/* ---------- переключатель языка ---------- */
+.lang-switch{position:relative;display:inline-block}
+.lang-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border-radius:999px;
+  border:1px solid var(--line,rgba(124,206,255,.2));background:rgba(124,206,255,.06);
+  color:var(--ice,#7cceff);font-family:'Share Tech Mono',monospace;font-size:.74rem;letter-spacing:.06em;
+  cursor:pointer;transition:.2s;text-transform:uppercase}
+.lang-btn:hover{background:rgba(124,206,255,.13);transform:translateY(-1px)}
+.lang-btn svg{transition:transform .25s}
+.lang-switch.open .lang-btn svg{transform:rotate(180deg)}
+.lang-menu{position:absolute;top:calc(100% + 8px);right:0;min-width:170px;z-index:1200;
+  background:rgba(7,15,26,.97);border:1px solid var(--line,rgba(124,206,255,.18));border-radius:14px;
+  box-shadow:0 18px 50px rgba(0,0,0,.5);backdrop-filter:blur(14px);padding:6px;
+  opacity:0;visibility:hidden;transform:translateY(-8px);transition:.22s}
+.lang-switch.open .lang-menu{opacity:1;visibility:visible;transform:none}
+.lang-opt{display:flex;align-items:center;gap:10px;width:100%;padding:11px 13px;border-radius:10px;
+  background:transparent;border:none;color:var(--text,#c5d6e8);font-size:.88rem;cursor:pointer;
+  text-align:left;transition:.15s;font-family:inherit}
+.lang-opt span{font-weight:500}
+.lang-opt:hover{background:rgba(124,206,255,.08);color:#fff}
+.lang-opt.active{background:rgba(124,206,255,.14);color:var(--ice-bright,#a8e0ff)}
+.lang-opt.active::after{content:'✓';margin-left:auto;color:var(--ice,#7cceff)}
+@media(max-width:1080px){
+  .lang-menu{right:auto;left:0}
+}
+
+/* ---------- оверлей инея (Великое обледенение) ---------- */
+#frost-overlay{position:fixed;inset:0;z-index:3500;pointer-events:none;opacity:0;
+  transition:opacity 1.1s ease;mix-blend-mode:screen}
+#frost-overlay.show{opacity:1}
+#frost-overlay svg{position:absolute;inset:0;width:100%;height:100%}
+#frost-overlay .frost-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Oswald',sans-serif;font-weight:600;font-size:clamp(1.4rem,4vw,2.6rem);letter-spacing:.18em;
+  color:rgba(200,235,255,.9);text-shadow:0 0 30px rgba(124,206,255,.8);text-transform:uppercase;
+  white-space:nowrap;opacity:0;transition:opacity .8s .3s}
+#frost-overlay.show .frost-msg{opacity:1}
+
+/* ---------- ретро-радар (код Конами) ---------- */
+#radar-screen{position:fixed;inset:0;z-index:3400;pointer-events:none;display:grid;place-items:center;
+  background:radial-gradient(circle at center,rgba(2,18,12,.78),rgba(1,6,4,.94));
+  opacity:0;visibility:hidden;transition:.5s}
+#radar-screen.show{opacity:1;visibility:visible}
+#radar-screen .radar-ring{position:absolute;width:min(70vmin,460px);height:min(70vmin,460px);
+  border-radius:50%;border:1px solid rgba(52,211,153,.4);
+  box-shadow:inset 0 0 60px rgba(52,211,153,.15),0 0 40px rgba(52,211,153,.1)}
+#radar-screen .radar-ring::before,#radar-screen .radar-ring::after{content:'';position:absolute;
+  inset:25%;border-radius:50%;border:1px solid rgba(52,211,153,.3)}
+#radar-screen .radar-ring::after{inset:40%}
+#radar-screen .radar-sweep{position:absolute;width:min(35vmin,230px);height:min(35vmin,230px);
+  transform-origin:bottom right;
+  background:conic-gradient(from 0deg,rgba(52,211,153,.5),transparent 40%);
+  border-radius:100% 0 0 0;animation:radarSpin 2s linear infinite}
+@keyframes radarSpin{to{transform:rotate(360deg)}}
+#radar-screen .radar-label{position:absolute;bottom:18%;font-family:'Share Tech Mono',monospace;
+  color:#34d399;letter-spacing:.16em;text-transform:uppercase;font-size:clamp(.8rem,2.4vw,1.1rem);
+  text-shadow:0 0 16px rgba(52,211,153,.7)}
+#radar-screen .radar-sub{position:absolute;bottom:14%;font-family:'Share Tech Mono',monospace;
+  color:rgba(52,211,153,.6);letter-spacing:.2em;font-size:.7rem}
+body.radar-mode{filter:hue-rotate(8deg)}
+
+/* секретная тема (после кода Конами) */
+body.secret-theme{--ice:#d946ef;--ice-bright:#f472b6;--ice-glow:rgba(217,70,239,.35);--steel:#9333ea}
+body.secret-theme #snow{filter:hue-rotate(40deg)}
+
+/* ---------- SOS-вышка (скрытый элемент в углу) ---------- */
+#sos-tower{position:fixed;left:14px;bottom:14px;z-index:850;width:40px;height:52px;
+  background:transparent;border:none;cursor:pointer;color:rgba(192,132,252,.18);
+  transition:color .4s,transform .3s;padding:0}
+#sos-tower:hover{color:rgba(192,132,252,.75);transform:translateY(-2px)}
+#sos-tower:hover #sos-light{fill:#f43f5e !important}
+@media(max-width:600px){#sos-tower{left:8px;bottom:74px;width:32px;height:42px}}
+
+/* ---------- fx-toast (запасной, если на странице нет своего) ---------- */
+#fx-toast{position:fixed;bottom:24px;right:24px;z-index:3000;max-width:360px;
+  background:rgba(14,6,26,.97);border:1px solid var(--line,rgba(192,132,252,.22));
+  border-left:3px solid var(--ice,#c084fc);border-radius:14px;padding:16px 20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 25px rgba(168,85,247,.2);backdrop-filter:blur(12px);
+  transform:translateX(440px);transition:transform .45s cubic-bezier(.4,0,.2,1)}
+#fx-toast.show{transform:none}
+#fx-toast .fxt-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:.92rem;
+  text-transform:uppercase;letter-spacing:.04em;color:var(--ice,#c084fc);margin-bottom:5px}
+#fx-toast .fxt-body{font-size:.86rem;color:var(--text,#f5efff);line-height:1.5}
+@media(max-width:480px){#fx-toast{left:16px;right:16px;max-width:none;bottom:16px}}
+
+/* ---------- Хроники погибших ---------- */
+.chronicle-wrap{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;max-width:980px;margin:0 auto}
+@media(max-width:760px){.chronicle-wrap{grid-template-columns:1fr}}
+.chronicle-main{background:linear-gradient(180deg,rgba(20,10,12,.7),rgba(10,6,8,.92));
+  border:1px solid rgba(239,68,68,.22);border-radius:24px;padding:46px 30px;text-align:center;position:relative;overflow:hidden}
+.chronicle-main::before{content:"☠";position:absolute;inset:0;display:grid;place-items:center;
+  font-size:18rem;opacity:.03;pointer-events:none}
+.death-total{font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(3.4rem,9vw,5.6rem);line-height:1;
+  color:#ff6b6b;text-shadow:0 0 50px rgba(239,68,68,.4);letter-spacing:.02em}
+.death-total-label{font-family:'Share Tech Mono',monospace;font-size:.82rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted,#6b8299);margin-top:12px}
+.chronicle-side{display:flex;flex-direction:column;gap:14px}
+.chronicle-stat{background:var(--panel,rgba(10,20,33,.72));border:1px solid var(--line,rgba(124,206,255,.12));
+  border-radius:18px;padding:20px;backdrop-filter:blur(8px)}
+.cs-label{font-family:'Share Tech Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#6b8299)}
+.cs-value{font-family:'Oswald',sans-serif;font-weight:600;font-size:1.5rem;color:#fff;margin-top:6px;line-height:1}
+.cs-value span{color:var(--muted,#6b8299);font-size:1rem}
+
+/* death modal */
+.death-modal{position:fixed;inset:0;z-index:4000;background:rgba(2,5,9,.92);backdrop-filter:blur(10px);
+  display:none;align-items:center;justify-content:center;padding:20px}
+.death-modal.open{display:flex;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.death-card{width:min(460px,100%);background:linear-gradient(180deg,rgba(12,8,10,.98),rgba(6,4,6,.99));
+  border:1px solid rgba(239,68,68,.28);border-radius:24px;padding:32px;box-shadow:0 30px 80px rgba(0,0,0,.6);position:relative;max-height:92vh;overflow-y:auto}
+.death-close{position:absolute;top:18px;right:20px;width:40px;height:40px;border-radius:12px;
+  border:1px solid var(--line-2,rgba(255,255,255,.05));background:rgba(255,255,255,.04);color:#fff;font-size:1.2rem;cursor:pointer}
+.death-kicker{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#ff6b6b}
+.death-card h3{font-family:'Oswald',sans-serif;font-weight:600;font-size:1.6rem;text-transform:uppercase;color:#fff;margin:10px 0 6px;letter-spacing:.02em}
+.death-desc{color:var(--muted,#6b8299);font-size:.9rem;margin-bottom:22px}
+.death-field{margin-bottom:18px}
+.death-field label{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#6b8299);display:block;margin-bottom:8px}
+.death-field input{width:100%;padding:13px 15px;border-radius:12px;border:1px solid var(--line,rgba(124,206,255,.12));background:rgba(8,6,8,.8);color:#fff}
+.death-field input:focus{border-color:rgba(239,68,68,.4);outline:none;box-shadow:0 0 0 4px rgba(239,68,68,.08)}
+.death-causes{display:flex;flex-wrap:wrap;gap:8px}
+.death-causes button{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;padding:9px 12px;border-radius:10px;border:1px solid var(--line-2,rgba(255,255,255,.05));background:rgba(255,255,255,.03);color:var(--text,#c5d6e8);cursor:pointer;transition:.2s}
+.death-causes button:hover{border-color:rgba(239,68,68,.3)}
+.death-causes button.active{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:#ff9b9b}
+
+/* =====================================================================
+   Уважение к prefers-reduced-motion — глобально, для всех 4 страниц.
+   extras.css подключён везде, поэтому правило работает и на download.html,
+   aether.html и tech.html, где раньше настройка игнорировалась.
+   Ничего в коде не завязано на transitionend/animationend, так что
+   обнуление длительностей безопасно.
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    animation-delay:0ms !important;
+    transition-duration:.001ms !important;
+    transition-delay:0ms !important;
+  }
+  html{scroll-behavior:auto !important}
+  /* фоновые «живые» слои станции гасим совсем */
+  body::after,.scanlines,.snow-canvas,#snow{opacity:.12 !important}
+}
+
+
+/* ── колокол уведомлений (E-01) ─────────────────────────────────
+   Живёт в общем файле: он нужен и Эфиру, и ленте, и главной. */
+.nb{position:relative;display:inline-flex}
+.nb-btn{position:relative;display:grid;place-items:center;width:38px;height:38px;
+  border-radius:11px;border:1px solid rgba(124,206,255,.22);background:rgba(255,255,255,.04);
+  color:#c5d6e8;font-size:1rem;cursor:pointer;transition:.2s}
+.nb-btn:hover{color:#fff;border-color:rgba(124,206,255,.45);background:rgba(124,206,255,.1)}
+.nb-dot{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;padding:0 4px;
+  border-radius:999px;background:#ef4444;color:#fff;font-family:'Share Tech Mono',monospace;
+  font-size:.6rem;line-height:17px;text-align:center;box-shadow:0 0 8px rgba(239,68,68,.6)}
+.nb-dot[hidden]{display:none}
+.nb-panel{position:absolute;top:46px;right:0;z-index:120;width:min(330px,calc(100vw - 32px));
+  border:1px solid rgba(124,206,255,.22);border-radius:14px;background:#08111c;
+  box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden}
+.nb-panel[hidden]{display:none}
+.nb-head{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px 14px;border-bottom:1px solid rgba(124,206,255,.12);
+  font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.11em;
+  text-transform:uppercase;color:#6b8299}
+.nb-clear{background:none;border:none;color:#7cceff;font-family:inherit;font-size:.6rem;
+  letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:0}
+.nb-clear:hover{color:#a8e0ff}
+.nb-list{max-height:min(58vh,420px);overflow-y:auto}
+.nb-i{display:block;padding:11px 14px;border-bottom:1px solid rgba(124,206,255,.08);
+  text-decoration:none;color:inherit}
+a.nb-i:hover{background:rgba(124,206,255,.06)}
+.nb-i.un{box-shadow:inset 3px 0 0 #7cceff}
+.nb-t{color:#e8f5ff;font-size:.88rem;line-height:1.35}
+.nb-b{color:#6b8299;font-size:.82rem;line-height:1.4;margin-top:2px}
+.nb-m{margin-top:4px;font-family:'Share Tech Mono',monospace;font-size:.55rem;
+  letter-spacing:.06em;color:#4a5d70}
+.nb-empty,.nb-note{padding:16px 14px;color:#6b8299;font-size:.85rem;line-height:1.5}
+.nb-ask{display:block;width:calc(100% - 20px);margin:10px;padding:9px 12px;
+  font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.06em;
+  text-transform:uppercase;color:#a8e0ff;background:rgba(124,206,255,.08);
+  border:1px solid rgba(124,206,255,.3);border-radius:9px;cursor:pointer}
+.nb-ask:hover{background:rgba(124,206,255,.16)}
+
+
+/* ── поиск по узлу (I-18, I-19) ─────────────────────────────────── */
+.fs{position:fixed;inset:0;z-index:200;background:rgba(2,5,9,.72);backdrop-filter:blur(4px);
+  display:flex;align-items:flex-start;justify-content:center;padding:12vh 18px 18px}
+.fs[hidden]{display:none}
+.fs-win{width:min(620px,100%);border:1px solid rgba(124,206,255,.28);border-radius:16px;
+  background:#08111c;box-shadow:0 30px 80px rgba(0,0,0,.65);overflow:hidden}
+.fs-in{width:100%;border:none;border-bottom:1px solid rgba(124,206,255,.16);background:transparent;
+  color:#e8f5ff;font-family:inherit;font-size:1.02rem;padding:17px 19px}
+.fs-in:focus{outline:none}
+.fs-in::placeholder{color:#4a5d70}
+.fs-res{max-height:min(56vh,440px);overflow-y:auto}
+.fs-lbl{padding:11px 19px 5px;font-family:'Share Tech Mono',monospace;font-size:.56rem;
+  letter-spacing:.12em;text-transform:uppercase;color:#4a5d70}
+.fs-i{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;
+  padding:11px 19px;background:none;border:none;cursor:pointer;color:inherit;text-decoration:none;
+  font-family:inherit;font-size:.94rem}
+.fs-i:hover{background:rgba(124,206,255,.07)}
+.fs-ic{flex:none;color:#7cceff;font-size:.85rem;line-height:1.5}
+.fs-t{display:block;color:#e8f5ff}
+.fs-s{display:block;margin-top:2px;font-size:.82rem;color:#6b8299;line-height:1.4}
+.fs-empty{padding:22px 19px;color:#6b8299;font-size:.9rem}
+.fs-foot{padding:10px 19px;border-top:1px solid rgba(124,206,255,.12);
+  font-family:'Share Tech Mono',monospace;font-size:.55rem;letter-spacing:.09em;
+  text-transform:uppercase;color:#4a5d70}
+@media (max-width:560px){ .fs{padding:8vh 12px 12px} .fs-foot{display:none} }
+
+
+/* ── знаки станции (J-06) ───────────────────────────────────────── */
+.bdg-row{display:flex;flex-wrap:wrap;gap:7px}
+.bdg{display:inline-flex;align-items:center;gap:7px;padding:5px 11px 5px 8px;
+  border:1px solid var(--bc,#7cceff);border-radius:999px;
+  background:color-mix(in srgb, var(--bc,#7cceff) 10%, transparent);
+  font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.05em;
+  color:var(--bc,#7cceff);cursor:help}
+.bdg i{font-style:normal;font-size:.85rem;line-height:1}
+.bdg b{font-weight:400;color:#c5d6e8}
+.bdg-none{font-size:.85rem;color:#4a5d70}
+
+
+/* ── страховка от горизонтальной прокрутки ──────────────────────────
+   Один элемент шире экрана растягивает весь документ, и вместе с ним
+   уезжает всё, что прибито к краям: шапка, тикер, модалки. Дешевле
+   запретить это на уровне страницы, чем ловить каждого виновника. */
+html,body{max-width:100%;overflow-x:hidden}
+img,video,canvas,svg,table,pre{max-width:100%}
+@media (max-width:680px){
+  /* длинные ссылки и коды не должны распирать карточки */
+  .msg-text,.entry-b,.note,.a,.bp-n{overflow-wrap:anywhere}
+}

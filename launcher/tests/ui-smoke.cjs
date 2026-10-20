@@ -1,0 +1,53 @@
+'use strict';
+// PLAYWRIGHT_MODULE may point to the host's bundled Playwright installation.
+const { _electron: electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '..');
+(async () => {
+  await fs.mkdir(path.join(root, '.test-data'), { recursive: true });
+  const profile = await fs.mkdtemp(path.join(root, '.test-data', 'ui-profile-'));
+  await fs.mkdir(path.join(root, 'artifacts'), { recursive: true });
+  await fs.writeFile(path.join(profile, 'settings.json'), JSON.stringify({ directory: path.join(root, '.test-data', 'empty-game'), ramMB: 6144 }));
+  const env = { ...process.env, ASTRAL_TEST_PROFILE: profile };
+  delete env.ELECTRON_RUN_AS_NODE;
+  const app = await electron.launch({ executablePath: require('electron'), args: [root], env, timeout: 20000 });
+  app.process().stderr.on('data', chunk => process.stderr.write(chunk));
+  try {
+    const page = await app.firstWindow({ timeout: 15000 });
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.waitForFunction(() => document.getElementById('primaryText').textContent === 'Войти и играть', { timeout: 15000 }).catch(async error => { console.error(await page.locator('body').innerText()); throw error; });
+    assert.equal(await page.evaluate(() => typeof window.require), 'undefined');
+    assert.equal(await page.locator('#accountButton').isDisabled(), false);
+    await page.waitForFunction(() => document.getElementById('serverBadge').textContent !== 'Проверяем…', { timeout: 15000 });
+    await page.locator('#serverGuide').click();
+    assert.equal(await page.locator('#guideDialog').isVisible(),true);
+    assert.match(await page.locator('#guideDialog').innerText(), /\/flan menu/);
+    await page.screenshot({path:path.join(root,'artifacts','launcher-guide.png')});
+    await page.locator('#guideClose').click();
+    await page.locator('#primaryButton').click();
+    assert.equal(await page.locator('#authDialog').isVisible(), true);
+    await page.locator('#registerTab').click();
+    assert.equal(await page.locator('#nicknameInput').getAttribute('required'), '');
+    await page.screenshot({ path: path.join(root, 'artifacts', 'launcher-register.png') });
+    await page.locator('#authClose').click();
+    await page.screenshot({ path: path.join(root, 'artifacts', 'launcher-home.png') });
+    await page.locator('#settingsNav').click();
+    assert.equal(await page.locator('#settingsView').isVisible(), true);
+    await page.locator('#ramRange').fill('4');
+    await page.locator('#ramRange').dispatchEvent('change');
+    await page.waitForFunction(() => document.getElementById('ramLabel').textContent === '4 ГБ');
+    const saved = JSON.parse(await fs.readFile(path.join(profile, 'settings.json'), 'utf8'));
+    assert.equal(saved.ramMB, 4096);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    await page.screenshot({ path: path.join(root, 'artifacts', 'launcher-settings.png') });
+    await page.locator('#homeNav').click();
+    await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setSize(920, 700));
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    assert.equal(await page.locator('#primaryButton').isVisible(), true);
+    assert.deepEqual(errors, []);
+    console.log('PASS: Electron UI, isolated renderer, settings persistence, minimum window size');
+  } finally { await app.close(); }
+})().catch(error => { console.error(error); process.exitCode = 1; });
