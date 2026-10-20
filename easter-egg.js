@@ -42,10 +42,10 @@ if(hero){
   const enhanced=starThemeEnabled,burst=document.createElement('div');
   burst.className='astral-click-burst'+(enhanced?' astral-click-burst--nova':'');burst.setAttribute('aria-hidden','true');
   burst.style.left=e.clientX+'px';burst.style.top=e.clientY+'px';
-  const count=enhanced?16:8;
-  for(let i=0;i<count;i++){const a=(i/count)*Math.PI*2+(Math.random()-.5)*.25,r=(enhanced?65:30)+Math.random()*(enhanced?65:30),spark=document.createElement('span');spark.className='astral-click-star';spark.textContent=i%3===0?'✦':'✧';spark.style.setProperty('--dx',Math.cos(a)*r+'px');spark.style.setProperty('--dy',Math.sin(a)*r+'px');spark.style.setProperty('--turn',(Math.random()*160-80)+'deg');spark.style.fontSize=(enhanced?14+Math.random()*13:10+Math.random()*8)+'px';burst.append(spark);}
+  const count=enhanced?16:12;
+  for(let i=0;i<count;i++){const a=(i/count)*Math.PI*2+(Math.random()-.5)*.25,r=(enhanced?65:45)+Math.random()*(enhanced?65:45),spark=document.createElement('span');spark.className='astral-click-star';spark.textContent=i%3===0?'✦':'✧';spark.style.setProperty('--dx',Math.cos(a)*r+'px');spark.style.setProperty('--dy',Math.sin(a)*r+'px');spark.style.setProperty('--turn',(Math.random()*160-80)+'deg');spark.style.fontSize=(enhanced?14+Math.random()*13:16+Math.random()*9)+'px';burst.append(spark);}
   if(enhanced){const ring=document.createElement('i');ring.className='astral-nova-ring';burst.append(ring);const constellation=document.createElementNS('http://www.w3.org/2000/svg','svg');constellation.setAttribute('viewBox','0 0 160 160');constellation.classList.add('astral-click-constellation');constellation.innerHTML='<path d="M80 14 143 60 119 133 41 133 17 60Z M80 14 119 133 17 60 143 60 41 133Z"/><circle cx="80" cy="14" r="3"/><circle cx="143" cy="60" r="3"/><circle cx="119" cy="133" r="3"/><circle cx="41" cy="133" r="3"/><circle cx="17" cy="60" r="3"/>';burst.append(constellation);}
-  (dialog.open?dialog:document.body).append(burst);setTimeout(()=>{burst.remove();activeBursts--;},enhanced?1100:750);
+  (dialog.open?dialog:document.body).append(burst);setTimeout(()=>{burst.remove();activeBursts--;},enhanced?1100:1000);
  },{passive:true});
 
 }

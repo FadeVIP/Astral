@@ -12,8 +12,8 @@ app.whenReady().then(async()=>{try{
 
 
  await js("document.dispatchEvent(new PointerEvent('pointerdown',{button:0,clientX:150,clientY:180,bubbles:true}))");
- assert.equal(await js("document.querySelectorAll('.astral-click-star').length"),8);assert.equal(await js("document.querySelectorAll('.astral-nova-ring').length"),0);
- await new Promise(r=>setTimeout(r,800));assert.equal(await js("document.querySelectorAll('.astral-click-burst').length"),0);
+ assert.equal(await js("document.querySelectorAll('.astral-click-star').length"),12);assert.equal(await js("document.querySelectorAll('.astral-nova-ring').length"),0);
+ await new Promise(r=>setTimeout(r,1050));assert.equal(await js("document.querySelectorAll('.astral-click-burst').length"),0);
  await wait("!!document.querySelector('.astral-secret-star')");await js("document.querySelector('.astral-secret-star').click()");
  await js("document.dispatchEvent(new PointerEvent('pointerdown',{button:0,clientX:250,clientY:180,bubbles:true}))");
  assert.equal(await js("document.querySelectorAll('.astral-click-burst--nova .astral-click-star').length"),16);
