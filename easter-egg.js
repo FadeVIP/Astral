@@ -34,4 +34,18 @@ if(hero){
  document.addEventListener('pointermove',e=>{if(!starThemeEnabled||motion.matches||!finePointer.matches||document.hidden||dialog.open||sparks>=28||performance.now()-lastSpark<38)return;lastSpark=performance.now();const spark=document.createElement('span');spark.className='secret-cursor-spark';spark.setAttribute('aria-hidden','true');spark.textContent=sparks%3===0?'✦':'✧';spark.style.setProperty('--spark-size',(16+Math.random()*13)+'px');spark.style.setProperty('--spark-drift',(-18+Math.random()*36)+'px');spark.style.left=e.clientX+'px';spark.style.top=e.clientY+'px';document.body.append(spark);sparks++;setTimeout(()=>{spark.remove();sparks--;},1100);},{passive:true});
  const oldOpen=star.onclick;star.onclick=()=>{oldOpen();intro.classList.remove('secret-awakening');requestAnimationFrame(()=>intro.classList.add('secret-awakening'));};
 
+ // Click effects are decorative and never intercept navigation or form input.
+ let activeBursts=0,lastBurst=-Infinity;
+ document.addEventListener('pointerdown',e=>{
+  if(e.button!==0||motion.matches||document.hidden||activeBursts>=4||performance.now()-lastBurst<90)return;
+  lastBurst=performance.now();activeBursts++;
+  const enhanced=starThemeEnabled,burst=document.createElement('div');
+  burst.className='astral-click-burst'+(enhanced?' astral-click-burst--nova':'');burst.setAttribute('aria-hidden','true');
+  burst.style.left=e.clientX+'px';burst.style.top=e.clientY+'px';
+  const count=enhanced?16:8;
+  for(let i=0;i<count;i++){const a=(i/count)*Math.PI*2+(Math.random()-.5)*.25,r=(enhanced?65:30)+Math.random()*(enhanced?65:30),spark=document.createElement('span');spark.className='astral-click-star';spark.textContent=i%3===0?'✦':'✧';spark.style.setProperty('--dx',Math.cos(a)*r+'px');spark.style.setProperty('--dy',Math.sin(a)*r+'px');spark.style.setProperty('--turn',(Math.random()*160-80)+'deg');spark.style.fontSize=(enhanced?14+Math.random()*13:10+Math.random()*8)+'px';burst.append(spark);}
+  if(enhanced){const ring=document.createElement('i');ring.className='astral-nova-ring';burst.append(ring);const constellation=document.createElementNS('http://www.w3.org/2000/svg','svg');constellation.setAttribute('viewBox','0 0 160 160');constellation.classList.add('astral-click-constellation');constellation.innerHTML='<path d="M80 14 143 60 119 133 41 133 17 60Z M80 14 119 133 17 60 143 60 41 133Z"/><circle cx="80" cy="14" r="3"/><circle cx="143" cy="60" r="3"/><circle cx="119" cy="133" r="3"/><circle cx="41" cy="133" r="3"/><circle cx="17" cy="60" r="3"/>';burst.append(constellation);}
+  (dialog.open?dialog:document.body).append(burst);setTimeout(()=>{burst.remove();activeBursts--;},enhanced?1100:750);
+ },{passive:true});
+
 }
