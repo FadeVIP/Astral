@@ -20,5 +20,9 @@ app.whenReady().then(async()=>{try{
  await js("document.querySelector('.secret-again').click();document.querySelector('[name=nickname]').value='StarFinder';document.querySelector('form').requestSubmit()");await wait("document.querySelector('.secret-again').hidden===false");assert.equal(await js('Object.keys(window.store).length'),2);
  await js("document.querySelector('dialog').close();document.querySelector('.astral-secret-star').click()");assert.equal(await js("document.querySelector('form').hidden"),true);
  await window.setSize(390,740);assert(await js("document.querySelector('dialog').getBoundingClientRect().width<=innerWidth"));
- console.log('PASS intro before nickname, offline retry, multiple nicknames, duplicate retry, mobile layout');
+ assert.equal(await js("document.documentElement.classList.contains('secret-rose')"),true);
+ await window.reload();await wait("!!document.querySelector('.astral-secret-star')");assert.equal(await js("document.documentElement.classList.contains('secret-rose')"),true);
+ await js("document.querySelector('.astral-secret-star').click();document.querySelector('.secret-theme-toggle').click()");assert.equal(await js("document.documentElement.classList.contains('secret-rose')"),false);
+ await window.reload();await wait("!!document.querySelector('.astral-secret-star')");assert.equal(await js("document.documentElement.classList.contains('secret-rose')"),false);
+ console.log('PASS theme persistence and opt-out; intro before nickname, offline retry, multiple nicknames, duplicate retry, mobile layout');
  }catch(e){console.error(e);process.exitCode=1;}finally{window?.destroy();server?.close();app.quit();}});

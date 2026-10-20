@@ -1,6 +1,6 @@
 import {initCosmeticsAdmin} from '/cosmetics-admin.js?v=1';
 import {initAcoin} from '/acoin-admin.js?v=1';
-import {loadSecretWinner} from '/easter-egg-admin.js?v=20261020-2';
+import {loadSecretWinner} from '/easter-egg-admin.js?v=20261020-3';
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {getFirestore,doc,getDoc,runTransaction} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-lite.js';
