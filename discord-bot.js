@@ -168,7 +168,7 @@ client.on('shardReady',()=>connectionStage('gateway ready'));
 client.on('shardReconnecting',()=>connectionStage('gateway reconnecting'));
 client.on('shardDisconnect',event=>connectionStage('gateway disconnected '+event.code));
 client.on('shardError',error=>connectionStage('gateway error '+(error.code||error.name)));
-client.rest.on('response',request=>{if(request.path==='/gateway/bot')connectionStage('gateway configuration received');});
+client.rest.on('response',(request,response)=>{if(request.path==='/gateway/bot'){discordConnection.gatewayHttpStatus=response.status;discordConnection.retryAfter=response.headers.get('retry-after');connectionStage('gateway HTTP '+response.status);}});
 const packOnline=require('./pack-online.cjs').start(db,client);
 const packReports=require('./pack-reports.cjs').start(db,client);
 client.on('error', (err) => {
