@@ -1,7 +1,7 @@
 import {apiFor,decode} from '/account-api.js';
 import {initCosmeticsAdmin} from '/cosmetics-admin.js?v=1';
 import {initAcoin} from '/acoin-admin.js?v=1';
-import {loadSecretWinner} from '/easter-egg-admin.js?v=20261020-2';
+import {loadSecretWinner} from '/easter-egg-admin.js?v=20261020-8';
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {getFirestore,doc,getDoc,runTransaction} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-lite.js';
@@ -131,3 +131,4 @@ $('publish').onclick=async()=>{const b=$('publish');b.disabled=true;try{schema.a
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 // Refresh categories only across a status boundary and never while editing.
 setInterval(()=>{if(!config||eventView==='draft'||document.querySelector('#event-list input:focus'))return;if(config.events.map(e=>e.id+':'+eventPhase(e)).join('|')!==renderedEventPhases)renderEvents();},10000);
+
