@@ -1,6 +1,7 @@
+import {apiFor,decode} from '/account-api.js';
 import {initCosmeticsAdmin} from '/cosmetics-admin.js?v=1';
 import {initAcoin} from '/acoin-admin.js?v=1';
-import {loadSecretWinner} from '/easter-egg-admin.js?v=20261020-8';
+import {loadSecretWinner} from '/easter-egg-admin.js?v=20261020-2';
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {getFirestore,doc,getDoc,runTransaction} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-lite.js';
@@ -88,20 +89,22 @@ async function publishEvent(event,action,minutes,startAt=Date.now()){
 function download(value){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='published.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 $('login-form').onsubmit=async e=>{e.preventDefault();const button=e.currentTarget.querySelector('button');if(button.disabled)return;button.disabled=true;button.textContent='Входим…';message('Проверяем email и пароль…');try{await deadline(signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value),'Авторизация');$('password').value='';}catch(e){fail(e);}finally{button.disabled=false;button.textContent='Войти в студию';}};
 $('logout').onclick=()=>signOut(auth);
-let authCheck=0;
+const adminRequest=apiFor(auth);
+async function readAdminDoc(path){const row=await adminRequest(path);return {exists:()=>!!row,data:()=>decode(row)};}
+let authCheck=0,authRetry;
 async function loadAdmin(user){
- const check=++authCheck;userId=null;dirty=false;
+ clearTimeout(authRetry);const check=++authCheck;userId=null;dirty=false;
  $('editor').hidden=true;$('login').hidden=!!user;$('logout').hidden=!user;$('retry-login').hidden=true;
  $('account').hidden=!user;$('account').textContent=user?(user.email||'Гостевой вход'):'';
  if(!user){message('Войдите аккаунтом лаунчера, чтобы редактировать сезон.');return;}
  if(user.isAnonymous){$('login').hidden=false;message('На сайте сохранён гостевой вход. Войдите здесь через email и пароль вашего аккаунта лаунчера.');return;}
  let allowed=false;message('Вход выполнен. Проверяем права администратора…');
  try{
-  const[role,member]=await deadline(Promise.all([getDoc(doc(db,'launcherAdmins',user.uid)),getDoc(doc(db,'members',user.uid))]),'Проверка прав Firebase');
+  const[role,member]=await deadline(Promise.all([readAdminDoc('/launcherAdmins/'+user.uid),readAdminDoc('/members/'+user.uid)]),'Проверка прав Firebase');
   if(check!==authCheck)return;
   if(!role.data()?.enabled||member.data()?.status!=='active')throw Error('Для аккаунта '+(user.email||user.uid)+' нет активного доступа администратора. Войдите под аккаунтом администратора лаунчера.');
   allowed=true;initCosmeticsAdmin(auth);loadSecretWinner(db);initAcoin(auth);
-  message('Права подтверждены. Загружаем редактор…');const published=await deadline(getDoc(ref),'Настройки Firebase');
+  message('Права подтверждены. Загружаем редактор…');const published=await deadline(readAdminDoc('/minepassConfig/astral-local'),'Настройки Firebase');
   const base=published.exists()?JSON.parse(published.data().config):await readJSON('/assets/minepass/default.json');
   let catalogWarning=false;const nextCatalog=await readJSON('/assets/minepass/catalog.json').catch(()=>{catalogWarning=true;return {items:[],quests:[]};});
   if(check!==authCheck)return;
@@ -110,7 +113,7 @@ async function loadAdmin(user){
   schema.validate(baseline);lists();renderLoot();renderQuests();renderEvents();$('editor').hidden=false;
   $('revision').textContent=`Публикация №${revision}${dirty?' · Восстановлен черновик':''}`;
   message('Редактор готов. Изменения применятся после публикации.'+(draftWarning?' Старый черновик не удалось открыть; загружена опубликованная версия. Черновик сохранён в браузере.':'')+(catalogWarning?' Список предметов временно недоступен; можно вводить ID вручную.':''));
- }catch(e){if(check!==authCheck)return;userId=null;$('retry-login').hidden=false;if(!allowed)$('login').hidden=false;fail(e);}
+ }catch(e){if(check!==authCheck)return;userId=null;$('retry-login').hidden=false;$('login').hidden=!!auth.currentUser;fail(e);if(e.status===429||e.status>=500||e.name==='TypeError'||e.name==='TimeoutError')authRetry=setTimeout(()=>{if(check===authCheck)loadAdmin(auth.currentUser);},e.status===429?300000:60000);}
 }
 onAuthStateChanged(auth,loadAdmin,error=>{fail(error);$('login').hidden=false;});
 $('retry-login').onclick=()=>loadAdmin(auth.currentUser);
