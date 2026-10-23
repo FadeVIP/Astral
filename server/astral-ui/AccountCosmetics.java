@@ -27,7 +27,7 @@ import java.util.concurrent.*;
 /** Public cosmetics, rendered locally. Does not change inventory or gameplay. */
 @Mod.EventBusSubscriber(modid="astralatmosphere",value=Dist.CLIENT)
 public final class AccountCosmetics {
- private static final String BASE="https://firestore.googleapis.com/v1/projects/astral-524a1/databases/(default)/documents/";
+ private static final String BASE="https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicGameData/outfits/";
  private static final String[] KINDS={"cape","wings","hat","halo","aura"};
  private static final HttpClient HTTP=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
  private static final ExecutorService WORKER=Executors.newFixedThreadPool(2,r->{Thread t=new Thread(r,"Astral cosmetics");t.setDaemon(true);return t;});
@@ -61,13 +61,13 @@ public final class AccountCosmetics {
   for(String name:names){if(!name.matches("[a-z0-9_]{3,16}"))continue;Entry e=CACHE.get(name);if(e==null){if(CACHE.size()>=32)break;e=new Entry();CACHE.put(name,e);}if(!e.pending&&System.currentTimeMillis()>e.next){e.pending=true;e.next=System.currentTimeMillis()+60000;Entry target=e;int generation=epoch;WORKER.submit(()->fetch(name,target,generation));}}
  }
  private static JsonObject request(String route)throws Exception{
-  var response=HTTP.send(HttpRequest.newBuilder(URI.create(BASE+route)).timeout(Duration.ofSeconds(7)).GET().build(),HttpResponse.BodyHandlers.ofInputStream());
-  try(var stream=response.body()){if(response.statusCode()==404)return new JsonObject();if(response.statusCode()!=200)throw new IllegalStateException();byte[] bytes=stream.readNBytes(32001);if(bytes.length>32000)throw new IllegalStateException();return JsonParser.parseString(new String(bytes,StandardCharsets.UTF_8)).getAsJsonObject().getAsJsonObject("fields");}
+   var response=HTTP.send(HttpRequest.newBuilder(URI.create(BASE+route+".json")).timeout(Duration.ofSeconds(7)).GET().build(),HttpResponse.BodyHandlers.ofInputStream());
+  try(var stream=response.body()){if(response.statusCode()==404)return new JsonObject();if(response.statusCode()!=200)throw new IllegalStateException();byte[] bytes=stream.readNBytes(32001);if(bytes.length>32000)throw new IllegalStateException();var json=JsonParser.parseString(new String(bytes,StandardCharsets.UTF_8));return json.isJsonNull()?new JsonObject():json.getAsJsonObject().getAsJsonObject("fields");}
  }
  private static String str(JsonObject fields,String key){return fields.has(key)?fields.getAsJsonObject(key).get("stringValue").getAsString():"";}
  private static void fetch(String name,Entry entry,int generation){
   List<JsonObject> items=new ArrayList<>();boolean ok=false;
-  try{JsonObject equipped=request("accountCosmetics/"+name);for(String kind:KINDS){String id=str(equipped,kind);if(!id.matches("[-a-z0-9]{1,64}"))continue;JsonObject item=publicItem(id);if(kind.equals(str(item,"kind")))items.add(item);}ok=true;}catch(Exception ignored){}
+  try{JsonObject equipped=request(name);for(String kind:KINDS){String id=str(equipped,kind);if(!id.matches("[-a-z0-9]{1,64}"))continue;JsonObject item=publicItem(id);if(kind.equals(str(item,"kind")))items.add(item);}ok=true;}catch(Exception ignored){}
   final boolean success=ok;
   Minecraft.m_91087_().execute(()->{if(epoch!=generation||CACHE.get(name)!=entry)return;entry.pending=false;if(!success)return;try{List<Piece> pieces=new ArrayList<>();for(JsonObject item:items)pieces.add(build(item));entry.pieces=List.copyOf(pieces);}catch(Exception ignored){System.err.println("[Astral] Ignored invalid cosmetic definition");}});
  }

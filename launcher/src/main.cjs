@@ -123,7 +123,7 @@ async function startGame() {
     activeServerBridge=await packServer.prepare(installer,auth,undefined,message=>sendProgress({phase:'error',message}));
     sendProgress({ phase: 'prepare', message: 'Доступ подтверждён. Подготавливаем запуск…' });
     stopMinePass();
-    if(isOriginal(pack))stopMinePass=followMinePass(installer.gameDirectory,error=>console.warn(error.message));
+    // MinePass polls its public mirror in-game; no duplicate launcher polling.
     settings.lastPlayed={id:pack.id,at:new Date().toISOString()};await atomicJSON(settingsFile(),settings);
     await closeDirectPlay();
     if(require('./atmosphere.cjs').supported(pack)){
@@ -200,7 +200,7 @@ else {
     handle('lanExport',localAction(async()=>{const report=await playerTools.lanReport(installer),r=await dialog.showSaveDialog(window,{defaultPath:'Astral-LAN.json',filters:[{name:'LAN report',extensions:['json']}]});if(!r.canceled)await atomicJSON(r.filePath,report);return !r.canceled;}));
     handle('lanCompare',localAction(async()=>{const r=await dialog.showOpenDialog(window,{properties:['openFile'],filters:[{name:'LAN report',extensions:['json']}]});if(r.canceled)return null;const file=r.filePaths[0];if((await fsp.stat(file)).size>1000000)throw Error('Слишком большой отчёт.');return playerTools.compareLan(await playerTools.lanReport(installer),JSON.parse(await fsp.readFile(file,'utf8')));}));
     handle('accountSite',()=>shell.openExternal('https://astral-mine-mirror.onrender.com/account'));
-    handle('playerEvents',async()=>{const d=await catalog.request('/minepassConfig/astral-local',{missing:true});const raw=d?.fields?.config?.stringValue;return raw?(JSON.parse(raw).events||[]).filter(e=>e.runId&&e.endsAt>Date.now()):[];});
+    handle('playerEvents',async()=>{const response=await fetch('https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicGameData/minepass/astral-local.json',{signal:AbortSignal.timeout(10000)});if(!response.ok)throw Error('События временно недоступны.');const d=await response.json();const raw=d?.fields?.config?.stringValue;return raw?(JSON.parse(raw).events||[]).filter(e=>e.runId&&e.endsAt>Date.now()):[];});
     handle('rollbackUpdate',localAction(async()=>{await playerTools.backup(installer);return require('./content-update.cjs').rollbackContent(installer);}));
     handle('resumeUpdates',localAction(async()=>{await repairSelected({resume:true});return true;}));
     handle('updateHistory',()=>readJSON(path.join(installer.instance,'.update-history.json'),[]));

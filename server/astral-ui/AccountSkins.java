@@ -21,7 +21,7 @@ import java.util.concurrent.*;
 /** Public appearance only. No account credentials are passed to the game. */
 @Mod.EventBusSubscriber(modid="astralatmosphere",value=Dist.CLIENT)
 public final class AccountSkins {
- private static final String ENDPOINT="https://firestore.googleapis.com/v1/projects/astral-524a1/databases/(default)/documents/accountSkins/";
+ private static final String ENDPOINT="https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicGameData/skins/";
  private static final ExecutorService WORKER=Executors.newSingleThreadExecutor(r->{Thread t=new Thread(r,"Astral skins");t.setDaemon(true);return t;});
  private static final HttpClient HTTP=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).followRedirects(HttpClient.Redirect.NEVER).build();
  private static final Map<String,Entry> CACHE=new LinkedHashMap<>();
@@ -48,10 +48,10 @@ public final class AccountSkins {
  private static void fetch(String name,Entry entry,int generation){
   String png=null,shape="default";boolean removed=false;
   try{
-   var response=HTTP.send(HttpRequest.newBuilder(URI.create(ENDPOINT+name)).timeout(Duration.ofSeconds(12)).GET().build(),HttpResponse.BodyHandlers.ofInputStream());
+   var response=HTTP.send(HttpRequest.newBuilder(URI.create(ENDPOINT+name+".json")).timeout(Duration.ofSeconds(12)).GET().build(),HttpResponse.BodyHandlers.ofInputStream());
    try(var stream=response.body()){
     removed=response.statusCode()==404;
-    if(response.statusCode()==200){byte[] bytes=stream.readNBytes(120001);if(bytes.length>120000)throw new IllegalArgumentException();var fields=JsonParser.parseString(new String(bytes,java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject().getAsJsonObject("fields");png=fields.getAsJsonObject("png").get("stringValue").getAsString();shape=fields.getAsJsonObject("model").get("stringValue").getAsString().equals("slim")?"slim":"default";}
+    if(response.statusCode()==200){byte[] bytes=stream.readNBytes(120001);if(bytes.length>120000)throw new IllegalArgumentException();var json=JsonParser.parseString(new String(bytes,java.nio.charset.StandardCharsets.UTF_8));removed=json.isJsonNull();if(!removed){var fields=json.getAsJsonObject().getAsJsonObject("fields");png=fields.getAsJsonObject("png").get("stringValue").getAsString();shape=fields.getAsJsonObject("model").get("stringValue").getAsString().equals("slim")?"slim":"default";}}
    }
   }catch(Exception ignored){/* Keep the last appearance on a transient connection failure. */}
   final String data=png,kind=shape;final boolean reset=removed;

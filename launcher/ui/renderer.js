@@ -76,11 +76,11 @@ function render() {
   $('ramLabel').textContent = state.settings.ramMB / 1024 + ' ГБ';
   $('ramOutput').textContent = state.settings.ramMB / 1024 + ' ГБ';
   $('releaseLabel').textContent = 'ASTRAL · ' + state.pack.version.toUpperCase();
-  $('primaryText').textContent = busy ? 'Подготовка…' : state.gameOpen ? 'Игра запущена' : !state.user ? 'Войти и играть' : state.user.status === 'pending' ? 'Завершить вход' : state.installed ? 'Играть' : 'Установить';
+  $('primaryText').textContent = busy ? 'Подготовка…' : state.gameOpen ? 'Игра запущена' : !state.user ? 'Войти и играть' : state.user.status === 'unavailable' ? 'Ожидаем профиль…' : state.user.status === 'pending' ? 'Завершить вход' : state.installed ? 'Играть' : 'Установить';
   $('primaryIcon').textContent = '';
   $('primaryIcon').dataset.icon = state.installed ? 'play' : 'download';
   $('primaryIcon').setAttribute('aria-hidden', 'true');
-  $('primaryButton').disabled = busy || state.gameOpen;
+  $('primaryButton').disabled = busy || state.gameOpen || state.user?.status === 'unavailable';
   $('cancelButton').hidden = !busy || !state.canCancel;
   $('ramRange').disabled = busy || state.gameOpen;
   $('chooseFolder').disabled = busy || state.gameOpen;
@@ -89,7 +89,7 @@ function render() {
   $('repairButton').disabled = busy || state.gameOpen || !state.installed;
   $('uninstallPack').disabled = busy || state.gameOpen || !state.installed;
   $('accountName').textContent = state.user?.nickname || 'Аккаунт Astral';
-  $('accountStatus').textContent = !state.user ? 'Войдите, чтобы играть' : state.user.status === 'active' ? 'Участник Astral' : 'Доступ не подтверждён';
+  $('accountStatus').textContent = !state.user ? 'Войдите, чтобы играть' : state.user.status === 'active' ? 'Участник Astral' : state.user.status === 'unavailable' ? 'Вход сохранён · профиль недоступен' : 'Доступ не подтверждён';
   $('accountButton').textContent = state.user?.status === 'active' ? 'Мой аккаунт ↗' : 'Вход / Регистрация ↗';
   $('rememberInput').disabled = !state.canRemember;
   if (!state.canRemember) $('rememberInput').checked = false;
@@ -178,7 +178,7 @@ function openAuth() {
   if(signed)document.querySelector('.auth-tabs').hidden=true;
   if (signed) {
     $('authTitle').textContent = 'Твой аккаунт';
-    $('signedInDetails').textContent = `${state.user.nickname} · ${state.user.email} · ${state.user.status === 'active' ? 'Доступ открыт' : 'Доступ приостановлен'}`;
+    $('signedInDetails').textContent = `${state.user.nickname} · ${state.user.email} · ${state.user.status === 'active' ? 'Доступ открыт' : state.user.status === 'unavailable' ? 'Вход подтверждён. Ждём восстановления базы; повторять вход не нужно.' : 'Доступ приостановлен'}`;
   } else if (state?.user?.email) $('emailInput').value = state.user.email;
   $('authDialog').showModal();
 }

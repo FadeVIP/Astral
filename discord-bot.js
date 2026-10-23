@@ -111,6 +111,8 @@ try {
 }
 
 const publicData=require('./public-data.cjs').start(admin,db);
+publicData.game=require('./public-game-data.cjs').start(admin,db);
+require('./social-directory.cjs').start(admin,db);
 
 // 2. HTTP Health-check сервер (для Render, Railway, Glitch, Koyeb и внешних пинг-сервисов)
 const PORT = process.env.PORT || 3000;

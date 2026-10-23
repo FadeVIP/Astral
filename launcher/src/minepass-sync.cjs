@@ -2,7 +2,7 @@
 const path=require('node:path');
 const {readJSON,atomicJSON}=require('./install.cjs');
 async function syncMinePass(directory,fetcher=fetch){
- const url='https://firestore.googleapis.com/v1/projects/astral-524a1/databases/(default)/documents/minepassConfig/astral-local';
+ const url='https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicGameData/minepass/astral-local.json';
  const response=await fetcher(url,{signal:AbortSignal.timeout(8000)});
  if(response.status===404)return false;
  if(!response.ok)throw Error('MinePass: настройки временно недоступны');

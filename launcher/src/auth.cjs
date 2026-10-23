@@ -58,8 +58,8 @@ class AuthService {
   authURL(method) { return `https://identitytoolkit.googleapis.com/v1/accounts:${method}?key=${this.config.apiKey}`; }
   documentName(uid) { return `projects/${this.config.projectId}/databases/(default)/documents/members/${encodeURIComponent(uid)}`; }
   publicUser() {
-    if (!this.session) return null;
-    return { uid: this.session.uid, email: this.session.email, nickname: this.member?.nickname || this.session.nickname || 'Игрок', status: this.member?.status || 'pending' };
+    if (!this.session?.uid || !this.session?.email) return null;
+    return { uid: this.session.uid, email: this.session.email, nickname: this.member?.nickname || this.session.nickname || 'Игрок', status: this.member?.status || (this.restorePending?'unavailable':'pending') };
   }
   async persist() {
     if (this.remember && this.session) await this.storage.save({ refreshToken: this.session.refreshToken });
@@ -87,20 +87,25 @@ class AuthService {
     const result = await this.request(this.authURL('signInWithPassword'), { body: { email: email.trim(), password, returnSecureToken: true } });
     this.acceptSession(result); this.remember = remember === true;
     await this.persist();
-    await this.ensureMember(nickname || this.session.nickname);
+    try { await this.ensureMember(nickname || this.session.nickname); } catch(error) { this.deferProfile(error); throw error; }
     return this.publicUser();
+  }
+  deferProfile(error) {
+    this.restorePending=error.httpStatus===429||error.httpStatus>=500||error.code==='NETWORK';
+    this.restoreAt=Date.now()+(error.httpStatus===429?300000:60000);
   }
   async restore() {
     this.restorePending=false;
-    const saved = await this.storage.load();
-    if (!saved?.refreshToken) return;
-    this.session = { refreshToken: saved.refreshToken, expiresAt: 0 };
-    this.remember = true;
-    try { await this.refresh(true); await this.ensureMember(); }
+    if (!this.session?.uid) {
+      const saved = await this.storage.load();
+      if (!saved?.refreshToken) return;
+      this.session = { refreshToken: saved.refreshToken, expiresAt: 0 };
+      this.remember = true;
+    }
+    try { await this.refresh(); await this.ensureMember(); }
     catch (error) {
-      this.session = null; this.member = null;
       const invalid=['INVALID_REFRESH_TOKEN','TOKEN_EXPIRED','USER_NOT_FOUND','USER_DISABLED'].includes(error.code);
-      if(invalid)await this.storage.clear();
+      if(invalid){this.session=null;this.member=null;await this.storage.clear();}
       this.restorePending=!invalid&&(error.httpStatus===429||error.httpStatus>=500||error.code==='NETWORK');
       this.restoreAt=Date.now()+(error.httpStatus===429?300000:60000);
       throw error;

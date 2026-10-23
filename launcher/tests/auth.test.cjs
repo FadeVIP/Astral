@@ -78,7 +78,8 @@ test('saved login recovers after quota cooldown without entering password',async
  const {auth,store}=fixture();await auth.login({email:'one@example.invalid',password:'ExampleOnly123!',remember:true});
  const original=auth.fetcher;let limited=true;
  const recovered=new AuthService(config,store,async(url,options)=>limited&&url.includes('firestore.googleapis.com')?Response.json({error:{status:'RESOURCE_EXHAUSTED'}},{status:429}):original(url,options));
- await assert.rejects(recovered.restore(),/429/);assert.equal(recovered.publicUser(),null);assert.equal(recovered.restorePending,true);
+ await assert.rejects(recovered.restore(),/429/);assert.equal(recovered.publicUser().status,'unavailable');assert.equal(recovered.restorePending,true);
  limited=false;const now=Date.now();t.mock.method(Date,'now',()=>now+300001);
  await recovered.restore();assert.equal(recovered.publicUser().nickname,'PlayerOne');assert.equal(recovered.restorePending,false);
 });
+

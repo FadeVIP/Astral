@@ -16,7 +16,7 @@ class DirectPlay{
    try{let body='';for await(const chunk of req){body+=chunk;if(body.length>4096)throw Error('Request too large');}const input=JSON.parse(body||'{}');
     // Local progress must not wait for Firebase or the operation it describes.
     if(req.url==='/progress'){res.end(JSON.stringify({busy:this.busy,message:this.status,hosting:!!this.gamePort&&!this.busy}));return;}
-    if((await this.social.access()).uid!==this.identity)throw Error('Аккаунт изменился. Перезапустите игру.');this.lastSeen=Date.now();
+    if((await this.social.access(req.url!=='/state')).uid!==this.identity)throw Error('Аккаунт изменился. Перезапустите игру.');this.lastSeen=Date.now();
     if(req.url==='/state'){if(!input.world&&this.gamePort)await this.stopHosting();res.end(JSON.stringify(await this.state(input)));return;}
     if(this.busy)throw Error('Дождитесь завершения операции.');this.busy=true;
     try{let value;switch(req.url){case '/host':value=await this.host(input.port);break;case '/stop':value=await this.stopHosting();break;case '/request':value=await this.request(input.nickname);break;case '/approve':value=await this.approve(input.id,input.accept);break;case '/join':value=await this.join(input.id);break;default:throw Error('Unknown operation');}res.end(JSON.stringify(value||{}));}finally{this.busy=false;}
