@@ -25,13 +25,14 @@ async function sendMessage(id,text){await request(':commit','POST',{writes:[{upd
 $('ticket-form').onsubmit=e=>{e.preventDefault();run(async()=>{const subject=$('ticket-subject').value.trim(),text=$('ticket-text').value.trim();if(!subject||!text)throw Error('Заполните тему и сообщение.');const id=crypto.randomUUID();await request('/supportTickets/'+id+'?currentDocument.exists=false','PATCH',{fields:encode({uid:state.user.uid,nickname:state.user.nickname,subject,status:'open'}).mapValue.fields});await sendMessage(id,text);$('ticket-form').reset();await tickets();message('Обращение отправлено. Ответ появится здесь.');});};
 let profileTimer,profileGeneration=0;
 const retry=document.createElement('button');retry.type='button';retry.className='secondary';retry.textContent='Повторить загрузку профиля';retry.hidden=true;$('account-status').after(retry);
+const switchAccount=document.createElement('button');switchAccount.type='button';switchAccount.className='secondary';switchAccount.textContent='Выйти из аккаунта';switchAccount.hidden=true;retry.after(switchAccount);switchAccount.onclick=()=>run(()=>signOut(auth));
 async function loadProfile(user,generation){
  try{const member=decode(await request('/members/'+user.uid));if(generation!==profileGeneration)return;
  if(!member||member.status!=='active')throw Error('Профиль отсутствует или доступ приостановлен. Обратитесь к администратору.');
- state.user={uid:user.uid,...member};$('account-name').textContent=member.nickname;$('account-content').hidden=false;retry.hidden=true;message('Добро пожаловать, '+member.nickname+'.');
+ state.user={uid:user.uid,...member};$('account-name').textContent=member.nickname;$('account-content').hidden=false;retry.hidden=true;switchAccount.hidden=true;message('Добро пожаловать, '+member.nickname+'.');
  await Promise.allSettled([refreshExtras(),replies(),tickets(),(async()=>{const skin=await extrasCall('accountSkin');if(generation!==profileGeneration)return;$('skinModel').value=skin?.model||'classic';skinPreview(skin?.png);await extrasCall('cosmeticList');})()]);
  }catch(e){if(generation!==profileGeneration)return;message('Вход подтверждён. '+e.message);retry.hidden=false;if(e.status===429||e.status>=500||e.name==='TypeError'||e.name==='TimeoutError')profileTimer=setTimeout(()=>loadProfile(user,generation),e.status===429?300000:60000);}
 }
 retry.onclick=()=>{clearTimeout(profileTimer);if(auth.currentUser)loadProfile(auth.currentUser,++profileGeneration);};
-onAuthStateChanged(auth,user=>{clearTimeout(profileTimer);const generation=++profileGeneration;state.user=null;$('account-content').hidden=true;$('account-login').hidden=!!user;retry.hidden=true;if(!user){message('Один аккаунт для сайта, лаунчера и твоего образа.');return;}message('Вход подтверждён. Загружаем профиль…');loadProfile(user,generation);});
+onAuthStateChanged(auth,user=>{clearTimeout(profileTimer);const generation=++profileGeneration;state.user=null;$('account-content').hidden=true;$('account-login').hidden=!!user;retry.hidden=true;switchAccount.hidden=!user;if(!user){message('Один аккаунт для сайта, лаунчера и твоего образа.');return;}message('Вход подтверждён. Загружаем профиль…');loadProfile(user,generation);});
 $('account-login-button').disabled=false;await import('/cosmetics-shop.js');
