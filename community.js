@@ -1,6 +1,6 @@
 const root=document.getElementById('astral-community');
 if(root){
- const endpoint='https://firestore.googleapis.com/v1/projects/astral-524a1/databases/(default)/documents/minepassConfig/astral-local';
+ const endpoint='https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicGameData/minepass/astral-local.json';
  const db='https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app';
  const online=root.querySelector('[data-online]'),list=root.querySelector('[data-events]');let events=[];
  function render(){list.replaceChildren();const now=Date.now(),rows=events.filter(e=>e.runId&&e.endsAt>now).sort((a,b)=>a.startsAt-b.startsAt);if(!rows.length){list.textContent='Новых событий пока нет. Здесь появятся ближайшие приключения.';return;}for(const e of rows){const card=document.createElement('article');card.className='community-event';const active=now>=e.startsAt;card.dataset.active=String(active);const badge=document.createElement('small');badge.textContent=active?'● ИДЁТ СЕЙЧАС':'◷ СКОРО';const title=document.createElement('h3');title.textContent=e.title;const time=document.createElement('p');time.textContent=(active?'До ':'Начало: ')+new Date(active?e.endsAt:e.startsAt).toLocaleString('ru-RU');const reward=document.createElement('p');reward.textContent=`Цель: ${e.goal} · Награда: ${e.points} очков и ${e.coins<0?e.points:e.coins} монет`;card.append(badge,title,time,reward);list.append(card);}}
