@@ -115,22 +115,23 @@ async function startGame() {
   gamePreparing = true;
   try {
     if (!await installer.installed()) throw new Error('Сначала установите сборку.');
-    const user = await auth.requireAccess();
+    const user = await auth.gameUser();
     const checks=await playerTools.readiness(installer,settings.ramMB);if(checks.some(c=>!c.ok&&['Память','Свободное место'].includes(c.name)))throw Error(checks.filter(c=>!c.ok).map(c=>c.name+': '+c.detail).join(' '));
-    await repairSelected();
+    if(!user.guest)await repairSelected();
     if(pack.id==='astral')await removePinnedServer(installer.gameDirectory,message=>console.warn(message));
     closeServerBridge();
-    activeServerBridge=await packServer.prepare(installer,auth,undefined,message=>sendProgress({phase:'error',message}));
-    sendProgress({ phase: 'prepare', message: 'Доступ подтверждён. Подготавливаем запуск…' });
+    activeServerBridge=user.guest?null:await packServer.prepare(installer,auth,undefined,message=>sendProgress({phase:'error',message}));
+    sendProgress({ phase: 'prepare', message: user.guest?'Запускаем с локальным ником без аккаунта…':'Доступ подтверждён. Подготавливаем запуск…' });
     stopMinePass();
     // MinePass polls its public mirror in-game; no duplicate launcher polling.
     settings.lastPlayed={id:pack.id,at:new Date().toISOString()};await atomicJSON(settingsFile(),settings);
     await closeDirectPlay();
-    if(require('./atmosphere.cjs').supported(pack)){
+    if(!user.guest&&require('./atmosphere.cjs').supported(pack)){
       directPlay=new (require('./direct-play.cjs').DirectPlay)(new (require('./social.cjs').Social)(catalog),path.join(app.getPath('userData'),'direct-play'));
       const bridge=await directPlay.start();
       await atomicJSON(path.join(installer.gameDirectory,'config','astral-atmosphere','friends-bridge.json'),bridge);
     }
+    if(user.guest)await fsp.rm(path.join(installer.gameDirectory,'config','astral-atmosphere','friends-bridge.json'),{force:true});
     gameProcess = await launchGame(installer, user.nickname, settings.ramMB, sendProgress, code => {
       gameProcess = null;stopMinePass();closeServerBridge();closeDirectPlay().catch(()=>{});
       sendProgress({ phase: code ? 'error' : 'ready', message: code ? 'Minecraft завершился с ошибкой. Откройте logs/latest-launch.log в папке Astral.' : 'Игра закрыта. До следующего приключения!' });
@@ -147,6 +148,8 @@ else {
     settings = {
       directory: typeof saved.directory === 'string' && path.isAbsolute(saved.directory) ? saved.directory : path.join(app.getPath('home'), 'Games', 'Astral'),
       ramMB: Number.isInteger(saved.ramMB) ? Math.min(maxGB * 1024, Math.max(4096, saved.ramMB)) : Math.min(maxGB, 6) * 1024,
+      guestNickname:typeof saved.guestNickname==='string'?saved.guestNickname:'',
+      guestMode:saved.guestMode===true,
       updateChannel:saved.updateChannel==='preview'?'preview':'stable',
       theme: ['light','dark','star'].includes(saved.theme) ? saved.theme : 'star',
       lanLocalProfiles: saved.lanLocalProfiles && typeof saved.lanLocalProfiles==='object' && !Array.isArray(saved.lanLocalProfiles) ? saved.lanLocalProfiles : {},
@@ -171,7 +174,8 @@ else {
     if(launcherUpdater.state.status==='error')authNotice='Обновления недоступны. Открыта установленная версия.';
     startupScreen.emit({message:'Открываем библиотеку миров…',percent:100});
     auth = new AuthService(builtin.firebase, secureTokenStorage(path.join(app.getPath('userData'), 'session.bin'), safeStorage));
-    await auth.restore().catch(error => { authNotice = error.message; });
+    if(settings.guestMode){try{auth.setGuest(settings.guestNickname);}catch{settings.guestMode=false;}}
+    if(!settings.guestMode)await auth.restore().catch(error => { authNotice = error.message; });
     catalog = new CatalogService(builtin.firebase,auth,app.getPath('userData'),auth.fetcher);
     accountExtras=new (require('./account-extras.cjs').AccountExtras)(catalog);
     analyzer = new PackAnalyzer(path.join(app.getPath('userData'),'catalog-analysis'),sendProgress,builtin);
@@ -209,7 +213,7 @@ else {
     handle('cosmeticList',()=>cosmetics.list());
     const social=new (require('./social.cjs').Social)(catalog);
     handle('friends',()=>social.friends());handle('friendInvite',nick=>social.invite(nick));handle('friendChange',input=>social.change(input));handle('inbox',()=>social.inbox());
-    setInterval(()=>{if(auth.publicUser())social.presence(pack,!!gameProcess).catch(()=>{});},30000).unref();
+    setInterval(()=>{if(auth.publicUser()?.status==='active')social.presence(pack,!!gameProcess).catch(()=>{});},30000).unref();
 
     const outfitFile=()=>path.join(app.getPath('userData'),'outfits',require('node:crypto').createHash('sha256').update(auth.session.uid).digest('hex')+'.json');
     handle('outfitList',async()=>{await auth.requireAccess();return readJSON(outfitFile(),[]);});
@@ -367,7 +371,7 @@ else {
       if (authBusy) throw new Error('Дождитесь завершения входа.');
       if (gameProcess) throw new Error('Закройте Minecraft перед установкой.');
       operation = new AbortController();
-      try { await auth.requireAccess(); operation.signal.throwIfAborted(); await installer.install(settings.ramMB, operation.signal); await repairSelected({ signal: operation.signal }); sendProgress({ phase: 'ready', message: 'Сборка установлена и проверена. Можно играть.' }); return await getState(); }
+      try { await auth.gameUser(); operation.signal.throwIfAborted(); await installer.install(settings.ramMB, operation.signal); await repairSelected({ signal: operation.signal }); sendProgress({ phase: 'ready', message: 'Сборка установлена и проверена. Можно играть.' }); return await getState(); }
       finally { operation = null; }
     });
     handle('repair', async () => {
@@ -396,10 +400,11 @@ else {
       if (authBusy) throw new Error('Дождитесь завершения предыдущего запроса.');
       if (gameProcess) throw new Error('Сначала закройте Minecraft.');
       authBusy = true;
-      try { await fn(...args); authNotice = ''; await catalog.checkAdmin(); return await getState(); }
+      try { await fn(...args); settings.guestMode=!!auth.guest;if(auth.guest)settings.guestNickname=auth.guest.nickname;await atomicJSON(settingsFile(),settings); authNotice = ''; await catalog.checkAdmin(); return await getState(); }
       finally { authBusy = false; }
     };
     handle('register', authAction(credentials => auth.register(credentials)));
+    handle('guest', authAction(async input=>{const nickname=String(input?.nickname||'').trim();if(!/^[A-Za-z0-9_]{3,16}$/.test(nickname))throw Error('Ник: 3–16 латинских букв, цифр или _.');await auth.logout();auth.setGuest(nickname);}));
     handle('login', authAction(credentials => auth.login(credentials)));
     handle('completeProfile', authAction(async input=>{if(!auth.session)throw Error('Сначала войдите в аккаунт.');await auth.refresh(true);await auth.ensureMember(input?.nickname);return auth.publicUser();}));
     handle('logout', authAction(() => auth.logout()));

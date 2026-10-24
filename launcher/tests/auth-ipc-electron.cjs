@@ -11,10 +11,15 @@ const root = path.resolve(process.env.ASTRAL_SMOKE_APP || path.join(__dirname, '
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'Astral auth regression '));
 app.setPath('userData', profile);
 fs.writeFileSync(path.join(profile, 'settings.json'), JSON.stringify({ directory: path.join(profile, 'game'), ramMB: 4096 }));
-let memberExists = false, signupCount = 0, offline = false;
+let memberExists = false, signupCount = 0, offline = false,guestPhase=false,networkCalls=0,launchedNick,gameClose;
+const installerModule=require(path.join(root,'src/install.cjs')),originalInstalled=installerModule.Installer.prototype.installed;
+installerModule.Installer.prototype.installed=async function(){return guestPhase?true:originalInstalled.call(this);};
+require(path.join(root,'src/game.cjs')).launchGame=async(i,n,r,p,closed)=>{launchedNick=n;gameClose=closed;return {};};
+require(path.join(root,'src/player-tools.cjs')).readiness=async()=>[];
 const authModule = require(path.join(root, 'src/auth.cjs'));
 const RealAuthService = authModule.AuthService;
 const fakeFirebase = async url => {
+  networkCalls++;
   if (offline) throw Error('Simulated offline');
   if(url.includes('securetoken.googleapis.com'))return Response.json({user_id:'test-uid',id_token:'test-token',refresh_token:'test-refresh',expires_in:'3600'});
   if(url.includes('accounts:lookup'))return Response.json({users:[{localId:'test-uid',email:'test@example.invalid'}]});
@@ -68,6 +73,19 @@ app.on('browser-window-created', (_, win) => {
       await call('logout'); offline = true;
       const failed = await call('login', credentials);
       assert.equal(failed.ok, false); assert.match(failed.error, /интернет/);
+      guestPhase=true;const beforeGuest=networkCalls;
+      assert.equal((await call('guest',{nickname:'Bad name'})).ok,false);
+      const guest=await call('guest',{nickname:'LocalPlayer'});assert.equal(guest.ok,true);assert.equal(guest.value.user.guest,true);assert.equal(guest.value.admin,false);
+      const guestSettings=JSON.parse(fs.readFileSync(path.join(profile,'settings.json')));assert.equal(guestSettings.guestMode,true);assert.equal(guestSettings.guestNickname,'LocalPlayer');
+      await win.webContents.executeJavaScript("(async()=>{state=(await window.astral.state()).value;setAuthMode('guest')})()");
+      assert.equal(await win.webContents.executeJavaScript("document.getElementById('emailInput').disabled && document.getElementById('passwordInput').disabled && !document.getElementById('nicknameInput').disabled"),true);
+      await win.webContents.executeJavaScript("document.getElementById('authDialog').showModal()");
+      await fs.promises.mkdir(path.resolve(__dirname,'../artifacts'),{recursive:true});
+      fs.writeFileSync(path.resolve(__dirname,'../artifacts/guest-mode.png'),(await win.webContents.capturePage()).toPNG());
+      await win.webContents.executeJavaScript("document.getElementById('authDialog').close()");
+      assert.equal((await call('accountWallet')).ok,false);
+      const launched=await call('launch');assert.equal(launched.ok,true,launched.error);assert.equal(launchedNick,'LocalPlayer');assert.equal(networkCalls,beforeGuest);
+      gameClose(0);guestPhase=false;await call('logout');
       offline = false;
       assert.equal((await call('login', credentials)).ok, true);
       await call('logout');

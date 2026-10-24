@@ -125,8 +125,10 @@
     <button id="authClose" class="auth-close" type="button" aria-label="Закрыть">×</button>
     <span class="eyebrow">ТВОЙ ПРОПУСК В ASTRAL</span>
     <h2 id="authTitle">С возвращением</h2>
-    <p class="auth-description">Войди в аккаунт Astral, чтобы установить сборку и играть.</p>
+    <p class="auth-description">Войди в аккаунт или выбери гостевой режим с игровым ником.</p>
     <div class="auth-tabs"><button id="loginTab" type="button" class="active">Вход</button><button id="registerTab" type="button">Регистрация</button></div>
+    <button id="guestTab" class="secondary" type="button">Играть без аккаунта</button>
+    <p id="guestHint" hidden>Гостевой режим: одиночная игра и обычная LAN. Друзья Astral, Acoin и личная косметика требуют аккаунт. Установленная сборка запускается без проверки обновлений. Ник не подтверждает владение аккаунтом.</p>
     <form id="authForm">
       <label id="nicknameField" hidden>Ник Minecraft <small id="nicknameHint">3–16 символов: A–Z, 0–9, _</small><input id="nicknameInput" name="nickname" type="text" autocomplete="nickname" minlength="3" maxlength="16" pattern="[A-Za-z0-9_]{3,16}" placeholder="StarWalker" spellcheck="false" disabled></label>
       <label>Email<input id="emailInput" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com"></label>

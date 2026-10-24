@@ -72,6 +72,7 @@ contextBridge.exposeInMainWorld('astral', Object.freeze({
   serverStatus: () => ipcRenderer.invoke('astral:serverStatus'),
   copyAddress: () => ipcRenderer.invoke('astral:copyAddress'),
   register: credentials => ipcRenderer.invoke('astral:register', credentials),
+  guest: input => ipcRenderer.invoke('astral:guest', input),
   login: credentials => ipcRenderer.invoke('astral:login', credentials),
   completeProfile: input => ipcRenderer.invoke('astral:completeProfile', input),
   logout: () => ipcRenderer.invoke('astral:logout'),

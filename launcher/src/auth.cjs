@@ -64,7 +64,15 @@ class AuthService {
   }
   authURL(method) { return `https://identitytoolkit.googleapis.com/v1/accounts:${method}?key=${this.config.apiKey}`; }
   documentName(uid) { return `projects/${this.config.projectId}/databases/(default)/documents/members/${encodeURIComponent(uid)}`; }
+  setGuest(nickname) {
+    nickname=String(nickname||'').trim();
+    if(!/^[A-Za-z0-9_]{3,16}$/.test(nickname))throw Error('Ник: 3–16 латинских букв, цифр или _.');
+    this.guest={nickname,status:'guest',guest:true};this.session=null;this.member=null;this.restorePending=false;
+    return this.publicUser();
+  }
+  async gameUser() { return this.guest ? {...this.guest} : this.requireAccess(); }
   publicUser() {
+    if(this.guest)return {...this.guest};
     if (!this.session?.uid || !this.session?.email) return null;
     return { uid: this.session.uid, email: this.session.email, nickname: this.member?.nickname || this.session.nickname || 'Игрок', status: this.member?.status || (this.restorePending?'unavailable':'pending') };
   }
@@ -86,6 +94,7 @@ class AuthService {
     return this.publicUser();
   }
   acceptSession(data, nickname) {
+    this.guest=null;
     this.member = null;
     this.session = { uid: data.localId, email: data.email, nickname: nickname || data.displayName || 'Игрок', idToken: data.idToken, refreshToken: data.refreshToken, expiresAt: Date.now() + Number(data.expiresIn || 3600) * 1000 };
   }
@@ -159,6 +168,7 @@ class AuthService {
     return this.getMember();
   }
   async requireAccess() {
+    if(this.guest)throw Error('Эта функция доступна после входа в аккаунт Astral.');
     await this.refresh(true);
     const member = await this.getMember();
     if (member.status !== 'active') throw new Error('Доступ к игре приостановлен. Обратитесь к администратору Astral.');
@@ -168,7 +178,7 @@ class AuthService {
     if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) throw new Error('Сначала введите корректный email.');
     await this.request(this.authURL('sendOobCode'), { body: { requestType: 'PASSWORD_RESET', email: email.trim() } });
   }
-  async logout() { this.restorePending=false;this.session = null; this.member = null; this.remember = false; await this.storage.clear(); }
+  async logout() { this.guest=null;this.restorePending=false;this.session = null; this.member = null; this.remember = false; await this.storage.clear(); }
 }
 function secureTokenStorage(file, safeStorage) {
   return {

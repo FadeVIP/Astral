@@ -76,7 +76,7 @@ function render() {
   $('ramLabel').textContent = state.settings.ramMB / 1024 + ' ГБ';
   $('ramOutput').textContent = state.settings.ramMB / 1024 + ' ГБ';
   $('releaseLabel').textContent = 'ASTRAL · ' + state.pack.version.toUpperCase();
-  $('primaryText').textContent = busy ? 'Подготовка…' : state.gameOpen ? 'Игра запущена' : !state.user ? 'Войти и играть' : state.user.status === 'unavailable' ? 'Ожидаем профиль…' : state.user.status === 'pending' ? 'Завершить вход' : state.installed ? 'Играть' : 'Установить';
+  $('primaryText').textContent = busy ? 'Подготовка…' : state.gameOpen ? 'Игра запущена' : !state.user ? 'Выбрать вход' : state.user.status === 'unavailable' ? 'Ожидаем профиль…' : state.user.status === 'pending' ? 'Завершить вход' : state.installed ? 'Играть' : 'Установить';
   $('primaryIcon').textContent = '';
   $('primaryIcon').dataset.icon = state.installed ? 'play' : 'download';
   $('primaryIcon').setAttribute('aria-hidden', 'true');
@@ -89,7 +89,7 @@ function render() {
   $('repairButton').disabled = busy || state.gameOpen || !state.installed;
   $('uninstallPack').disabled = busy || state.gameOpen || !state.installed;
   $('accountName').textContent = state.user?.nickname || 'Аккаунт Astral';
-  $('accountStatus').textContent = !state.user ? 'Войдите, чтобы играть' : state.user.status === 'active' ? 'Участник Astral' : state.user.status === 'unavailable' ? 'Вход сохранён · профиль недоступен' : 'Доступ не подтверждён';
+  $('accountStatus').textContent = !state.user ? 'Войдите, чтобы играть' : state.user.guest ? 'Гость · локальный ник' : state.user.status === 'active' ? 'Участник Astral' : state.user.status === 'unavailable' ? 'Вход сохранён · профиль недоступен' : 'Доступ не подтверждён';
   $('accountButton').textContent = state.user?.status === 'active' ? 'Мой аккаунт ↗' : 'Вход / Регистрация ↗';
   $('rememberInput').disabled = !state.canRemember;
   if (!state.canRemember) $('rememberInput').checked = false;
@@ -154,13 +154,15 @@ function setAuthMode(mode) {
   authMode = mode;
   $('authTitle').textContent = mode === 'register' ? 'Начни свою историю' : 'С возвращением';
   $('authSubmit').textContent = mode === 'register' ? 'Создать аккаунт Astral →' : 'Войти в Astral →';
-  const completion=mode==='completeProfile',needsNickname=mode==='register'||completion;
+  const guest=mode==='guest',completion=mode==='completeProfile',needsNickname=mode==='register'||completion||guest;
+  $('guestHint').hidden=!guest;
+  if(guest){$('authTitle').textContent='Играть без аккаунта';$('authSubmit').textContent='Продолжить с этим ником →';$('nicknameInput').value=state.settings.guestNickname||'';}
   $('nicknameField').hidden=!needsNickname;
   $('nicknameInput').disabled=!needsNickname;
   $('nicknameInput').required=needsNickname;
   $('nicknameHint').textContent='3–16 символов: A–Z, 0–9, _';
-  for(const id of ['emailInput','passwordInput','rememberInput']) {$(id).closest('label').hidden=completion;$(id).disabled=completion;}
-  $('resetPassword').hidden=completion;
+  for(const id of ['emailInput','passwordInput','rememberInput']) {$(id).closest('label').hidden=completion||guest;$(id).disabled=completion||guest;}
+  $('resetPassword').hidden=completion||guest;
   document.querySelector('.auth-tabs').hidden=completion;
   if(completion){$('authTitle').textContent='Заверши игровой профиль';$('authSubmit').textContent='Сохранить ник и продолжить';}
   $('passwordInput').minLength = mode === 'register' ? 8 : 1;
@@ -170,7 +172,7 @@ function setAuthMode(mode) {
   $('authError').hidden = true;
 }
 function openAuth() {
-  const signed = state?.user?.status === 'active' || (state?.user && !['pending', 'active'].includes(state.user.status));
+  const signed = !state?.user?.guest && (state?.user?.status === 'active' || (state?.user && !['pending', 'active'].includes(state.user.status)));
   $('authForm').hidden = !!signed;
   $('signedInPanel').hidden = !signed;
   document.querySelector('.auth-tabs').hidden = !!signed;
@@ -178,15 +180,16 @@ function openAuth() {
   if(signed)document.querySelector('.auth-tabs').hidden=true;
   if (signed) {
     $('authTitle').textContent = 'Твой аккаунт';
-    $('signedInDetails').textContent = `${state.user.nickname} · ${state.user.email} · ${state.user.status === 'active' ? 'Доступ открыт' : state.user.status === 'unavailable' ? 'Вход подтверждён. Ждём восстановления базы; повторять вход не нужно.' : 'Доступ приостановлен'}`;
+    $('signedInDetails').textContent = `${state.user.nickname} · ${state.user.guest?'Гостевой режим':state.user.email} · ${state.user.guest?'Без аккаунта':state.user.status === 'active' ? 'Доступ открыт' : state.user.status === 'unavailable' ? 'Вход подтверждён. Ждём восстановления базы; повторять вход не нужно.' : 'Доступ приостановлен'}`;
   } else if (state?.user?.email) $('emailInput').value = state.user.email;
   $('authDialog').showModal();
 }
 function authBusyUI(value) {
   authWorking = value;
   renderLauncherUpdate();
-  for (const id of ['authSubmit', 'loginTab', 'registerTab', 'authClose', 'resetPassword', 'logoutButton']) $(id).disabled = value;
+  for (const id of ['guestTab', 'authSubmit', 'loginTab', 'registerTab', 'authClose', 'resetPassword', 'logoutButton']) $(id).disabled = value;
 }
+$('guestTab').onclick=()=>{$('authForm').hidden=false;$('signedInPanel').hidden=true;setAuthMode('guest');};
 $('loginTab').onclick = () => setAuthMode('login');
 $('registerTab').onclick = () => setAuthMode('register');
 $('authClose').onclick = () => $('authDialog').close();
@@ -198,10 +201,10 @@ $('authForm').onsubmit = async event => {
   $('authError').hidden = true;
   authBusyUI(true);
   try {
-    const credentials=authMode==='completeProfile'?{nickname:$('nicknameInput').value}:{email:$('emailInput').value,password:$('passwordInput').value,remember:$('rememberInput').checked,...(authMode==='register'?{nickname:$('nicknameInput').value}:{})};
+    const credentials=['completeProfile','guest'].includes(authMode)?{nickname:$('nicknameInput').value}:{email:$('emailInput').value,password:$('passwordInput').value,remember:$('rememberInput').checked,...(authMode==='register'?{nickname:$('nicknameInput').value}:{})};
     state = await call(authMode, credentials);
     $('passwordInput').value = '';
-    render(); $('authDialog').close(); notice('Вход выполнен. Добро пожаловать в Astral!');
+    render(); $('authDialog').close(); notice(authMode==='guest'?'Гостевой режим включён. Можно запускать игру.':'Вход выполнен. Добро пожаловать в Astral!');
   } catch (error) {
     $('passwordInput').value = '';
     $('authError').textContent = error.message; $('authError').hidden = false;
