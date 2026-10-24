@@ -81,14 +81,18 @@ const FIREBASE_DATABASE_URL = process.env.FIREBASE_DATABASE_URL || 'https://astr
 
 // 1. Инициализация Firebase Admin
 let db = null;
+const sqlOwnsMirrors=require('./data-backend.json').backend==='postgresql';
 try {
   let credential = null;
+  let serviceAccountData = null;
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     const parsed = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    serviceAccountData = parsed;
     credential = admin.credential.cert(parsed);
   } else {
     try {
       const serviceAccount = require('./serviceAccountKey.json');
+      serviceAccountData = serviceAccount;
       credential = admin.credential.cert(serviceAccount);
     } catch (e) {
       console.warn('[Firebase] Файл serviceAccountKey.json не найден в папке бота.');
@@ -100,8 +104,10 @@ try {
       credential: credential,
       databaseURL: FIREBASE_DATABASE_URL
     });
-    db = admin.database();
-    console.log('✦ [Firebase] Успешно подключено к Realtime Database');
+    db = sqlOwnsMirrors
+      ? require('./server/data-api/realtime-remote.cjs').remoteRealtime(require('./data-backend.json').realtimeApiUrl,serviceAccountData)
+      : admin.database();
+    console.log(sqlOwnsMirrors?'✦ [SQL] Подключён сервис данных':'✦ [Firebase] Успешно подключено к Realtime Database');
   } else {
     console.warn('⚠️ [Firebase] Сервисный ключ не загружен! Бот не сможет читать/писать в базу данных.');
     console.warn('   Поместите файл serviceAccountKey.json рядом с discord-bot.js или задайте переменную FIREBASE_SERVICE_ACCOUNT.');
@@ -110,9 +116,12 @@ try {
   console.error('[Firebase Error] Ошибка инициализации:', e.message);
 }
 
-const publicData=require('./public-data.cjs').start(admin,db);
-publicData.game=require('./public-game-data.cjs').start(admin,db);
-require('./social-directory.cjs').start(admin,db);
+// Only one backend publishes the shared projections after a migration.
+const publicData=sqlOwnsMirrors?{backend:'postgresql',sources:{},game:{}}:require('./public-data.cjs').start(admin,db);
+if(!sqlOwnsMirrors){
+  publicData.game=require('./public-game-data.cjs').start(admin,db);
+  require('./social-directory.cjs').start(admin,db);
+}
 
 // 2. HTTP Health-check сервер (для Render, Railway, Glitch, Koyeb и внешних пинг-сервисов)
 const PORT = process.env.PORT || 3000;
@@ -273,7 +282,7 @@ function startKeepAliveSystem() {
     }
 
     // 5. Firebase Realtime Database ping (поддержание постоянного сокета)
-    if (db && heartbeatCount % 3 === 0) {
+    if (db && !sqlOwnsMirrors && heartbeatCount % 3 === 0) {
       try {
         db.ref('.info/connected').once('value').catch(() => {});
       } catch (e) {}
@@ -311,6 +320,8 @@ function startFirebaseListeners() {
   // -------------------------------------------------------------
   // А. САЙТ -> DISCORD (ОБЩИЙ ЧАТ)
   // -------------------------------------------------------------
+  // Filter on the server: old messages were already discarded below, but an
+  // unbounded listener downloaded the entire history on every bot restart.
   const chatRef = db.ref('chat').orderByChild('ts').startAt(botStartTime - 5000);
 
   // MinePass -> Discord. Серверный мост пишет только подтверждённые события
