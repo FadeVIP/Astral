@@ -311,12 +311,12 @@ function startFirebaseListeners() {
   // -------------------------------------------------------------
   // А. САЙТ -> DISCORD (ОБЩИЙ ЧАТ)
   // -------------------------------------------------------------
-  const chatRef = db.ref('chat');
+  const chatRef = db.ref('chat').orderByChild('ts').startAt(botStartTime - 5000);
 
   // MinePass -> Discord. Серверный мост пишет только подтверждённые события
   // в minepass/announcements; бот не принимает прогресс от клиента Minecraft.
   if (DISCORD_MINEPASS_CHANNEL_ID) {
-    const achievementsRef = db.ref('minepass/announcements');
+    const achievementsRef = db.ref('minepass/announcements').orderByChild('ts').startAt(botStartTime - 5000);
     achievementsRef.on('child_added', async (snapshot) => {
       try {
         const event = snapshot.val();

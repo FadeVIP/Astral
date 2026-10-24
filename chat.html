@@ -6516,7 +6516,7 @@
         });
 
         // Listen for deleted messages
-        onChildRemoved(chatRef, (snap) => {
+        onChildRemoved(chatQuery, (snap) => {
           removeMessageFromCache(snap.key);
           const row = document.getElementById('msg-' + snap.key);
           if (row) row.remove();
