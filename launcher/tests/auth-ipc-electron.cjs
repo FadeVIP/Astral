@@ -80,6 +80,7 @@ app.on('browser-window-created', (_, win) => {
       await win.webContents.executeJavaScript("(async()=>{state=(await window.astral.state()).value;setAuthMode('guest')})()");
       assert.equal(await win.webContents.executeJavaScript("document.getElementById('emailInput').disabled && document.getElementById('passwordInput').disabled && !document.getElementById('nicknameInput').disabled"),true);
       await win.webContents.executeJavaScript("document.getElementById('authDialog').showModal()");
+      await new Promise(resolve=>setTimeout(resolve,200));
       await fs.promises.mkdir(path.resolve(__dirname,'../artifacts'),{recursive:true});
       fs.writeFileSync(path.resolve(__dirname,'../artifacts/guest-mode.png'),(await win.webContents.capturePage()).toPNG());
       await win.webContents.executeJavaScript("document.getElementById('authDialog').close()");
