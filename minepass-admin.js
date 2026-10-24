@@ -4,7 +4,7 @@ import {initAcoin} from '/acoin-admin.js?v=1';
 import {loadSecretWinner} from '/easter-egg-admin.js?v=20261020-8';
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-import {getFirestore,doc,getDoc,runTransaction} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-lite.js';
+import {getFirestore,doc,getDoc,runTransaction} from '/sql-documents.js?v=20261024-1';
 const $=id=>document.getElementById(id),schema=window.MinePassSchema,app=initializeApp(window.__FROSTBORNE_FIREBASE_CONFIG__),auth=getAuth(app),db=getFirestore(app),ref=doc(db,'minepassConfig','astral-local');
 let config,baseline,revision=0,dirty=false,catalog={items:[],quests:[]},userId;
 const rarity={common:'Обычный',rare:'Редкий',epic:'Легендарный'},colors={blue:'#4b90ff',purple:'#8847ff',pink:'#d86bdb',red:'#eb4b4b',gold:'#ffd700'};

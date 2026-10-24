@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid="astralatmosphere",value=Dist.CLIENT)
 public final class PackPresence {
     static final String KEY="AIzaSyCmI7epHT8ZnK-AlGzRPbLSy3b73bdt1-Y";
-    static final String DB="https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app";
+    static final String DB="https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/realtime";
     static final Path AUTH=Path.of(".astral-presence-session.json"),SETTINGS=Path.of("config/astral-minepass/presence.json");
     static final ExecutorService WORKER=Executors.newSingleThreadExecutor(r->{var t=new Thread(r,"Astral online counter");t.setDaemon(true);return t;});
     static Future<?> pending;static long next,expires;static String token,uid;static boolean wasOnline;
@@ -41,10 +41,10 @@ public final class PackPresence {
         }expires=System.currentTimeMillis()+3300000;
     }
     static void send(boolean online)throws Exception{
-        request(DB+"/packPresence/"+uid+".json?auth="+URLEncoder.encode(token,StandardCharsets.UTF_8),online?"PUT":"DELETE",online?"{\"seen\":{\".sv\":\"timestamp\"},\"pack\":\"astral-1.20.1\"}":null,"application/json");
+        request(DB+"/packPresence/"+uid+".json",online?"PUT":"DELETE",online?"{\"seen\":{\".sv\":\"timestamp\"},\"pack\":\"astral-1.20.1\"}":null,"application/json");
     }
     static JsonObject request(String url,String method,String body,String type)throws Exception{
-        var c=(HttpURLConnection)URI.create(url).toURL().openConnection();c.setRequestMethod(method);c.setConnectTimeout(5000);c.setReadTimeout(6000);c.setInstanceFollowRedirects(false);
+        var c=(HttpURLConnection)URI.create(url).toURL().openConnection();c.setRequestMethod(method);c.setConnectTimeout(5000);c.setReadTimeout(6000);c.setInstanceFollowRedirects(false);if(url.startsWith(DB+"/"))c.setRequestProperty("Authorization","Bearer "+token);
         try{if(body!=null){c.setDoOutput(true);c.setRequestProperty("Content-Type",type);try(var out=c.getOutputStream()){out.write(body.getBytes(StandardCharsets.UTF_8));}}
             if(c.getResponseCode()/100!=2)throw new java.io.IOException("Presence HTTP "+c.getResponseCode());
             try(var in=c.getInputStream()){var json=JsonParser.parseString(new String(in.readNBytes(20000),StandardCharsets.UTF_8));return json.isJsonObject()?json.getAsJsonObject():new JsonObject();}

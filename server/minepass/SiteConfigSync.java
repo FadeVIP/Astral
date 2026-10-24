@@ -9,7 +9,7 @@ import java.util.function.LongSupplier;
 
 /** Public configuration only: no login, tokens, player data or world files leave the game. */
 final class SiteConfigSync implements AutoCloseable {
-    static final String ENDPOINT="https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicGameData/minepass/astral-local.json";
+    static final String ENDPOINT="https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/realtime/publicGameData/minepass/astral-local.json";
     static final int LIMIT=700000;
     interface Fetcher {String fetch()throws Exception;}
     private final Fetcher fetcher;

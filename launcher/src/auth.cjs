@@ -39,6 +39,13 @@ class AuthService {
     this.remember = false;
   }
   async request(url, { method = 'POST', body, token, form = false } = {}) {
+    // Keep Firebase Auth endpoints unchanged. SQL is opt-in until cutover.
+    const documentBase = `https://firestore.googleapis.com/v1/projects/${this.config.projectId}/databases/(default)/documents`;
+    if (this.config.dataApiUrl && (url === documentBase || url.startsWith(documentBase + '/') || url.startsWith(documentBase + ':'))) {
+      const endpoint = new URL(this.config.dataApiUrl);
+      if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash) throw new Error('Неверный адрес сервиса данных.');
+      url = this.config.dataApiUrl.replace(/\/$/,'') + url.slice(documentBase.length);
+    }
     let response;
     try {
       response = await this.fetcher(url, { method, redirect: 'error', signal: AbortSignal.timeout(20000), headers: {

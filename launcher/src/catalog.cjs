@@ -88,7 +88,13 @@ class CatalogService {
     this.base = `https://firestore.googleapis.com/v1/projects/${config.projectId}/databases/(default)/documents`;
   }
   async request(suffix, { method = 'GET', body, token, missing = false } = {}) {
-    const response = await this.fetcher(this.base + suffix, { method, redirect: 'error', signal: AbortSignal.timeout(15000),
+    let transport = this.base;
+    if (this.config.dataApiUrl) {
+      const endpoint = new URL(this.config.dataApiUrl);
+      if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash) throw new Error('Неверный адрес сервиса данных.');
+      transport = this.config.dataApiUrl.replace(/\/$/,'');
+    }
+    const response = await this.fetcher(transport + suffix, { method, redirect: 'error', signal: AbortSignal.timeout(15000),
       headers: { ...(token ? { Authorization: 'Bearer ' + token } : {}), ...(body ? { 'Content-Type':'application/json' } : {}) },
       ...(body ? { body: JSON.stringify(body) } : {}) });
     if (missing && response.status === 404) return null;

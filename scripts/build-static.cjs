@@ -4,7 +4,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, '.render-site');
 const files = [
-  'public-data.js', 'admin.html', 'bosses.html', 'chat.html', 'codex.html', 'download.html',
+  'public-data.js', 'sql-documents.js', 'realtime-api.js', 'admin.html', 'bosses.html', 'chat.html', 'codex.html', 'download.html',
   'grimoires.html', 'guide.html', 'index.html', 'quests.html', 'starcatcher.html',
   'community.css', 'easter-egg.css', 'extras.css', 'guide.css', 'minepass-admin.css', 'pack-catalog.css',
   'acoin-admin.js', 'account.html', 'account.js', 'account.css', 'account-api.js', 'account-boot.js', 'cosmetics.html', 'cosmetics-gallery.js', 'cosmetics-shop.js', 'cosmetics-shop.css', 'cosmetics-admin.js', 'assets/cosmetics/art.js', 'assets/cosmetics/LICENSE.txt', 'admin-boot.js', 'chapters_data.js', 'community.js', 'easter-egg-admin.js',

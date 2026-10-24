@@ -1,4 +1,6 @@
 window.__FROSTBORNE_FIREBASE_CONFIG__ = {
+  dataApiUrl: 'https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/documents',
+  realtimeApiUrl: 'https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/realtime',
   apiKey: 'AIzaSyCmI7epHT8ZnK-AlGzRPbLSy3b73bdt1-Y',
   authDomain: 'astral-524a1.firebaseapp.com',
   databaseURL: 'https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app',

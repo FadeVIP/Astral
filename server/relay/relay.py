@@ -8,6 +8,7 @@ import re
 import ssl
 import time
 import urllib.request
+import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 
 
@@ -34,7 +35,11 @@ def verify(header, config):
     uid = account['localId']
     if account.get('disabled') or not re.fullmatch('[A-Za-z0-9_-]{1,128}', uid):
         raise ValueError('account')
-    base = 'https://firestore.googleapis.com/v1/projects/'+config['projectId']+'/databases/(default)/documents/'
+    base = config.get('dataApiUrl') or 'https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/documents/'
+    parsed = urllib.parse.urlsplit(base)
+    if parsed.scheme != 'https' or parsed.username or parsed.password or parsed.query or parsed.fragment:
+        raise ValueError('data API configuration')
+    base = base.rstrip('/')+'/'
     member = fetch(base+'members/'+uid, token)['fields']
     if member['status']['stringValue'] != 'active':
         raise ValueError('member')
@@ -44,7 +49,7 @@ def verify(header, config):
     expires = int(row['expires']['integerValue'])/1000
     if expires <= time.time() or not hmac.compare_digest(row['token']['stringValue'], grant):
         raise ValueError('expired')
-    # Firestore permits only the two participants to read an approval. The host
+    # The document API permits only the two participants to read an approval. The host
     # still enforces its in-memory admission grant before any game bytes pass.
     return request_id+':'+grant, role, expires
 

@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('node:fs/promises'),path=require('node:path');
-const ROOT='https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicLauncherData/';
+const ROOT='https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/realtime/publicLauncherData/';
 async function snapshot(kind,fetcher=fetch){
  if(!['packs','appearance','cosmetics'].includes(kind))throw Error('Unknown public catalog');
  try{const r=await fetcher(ROOT+kind+'.json',{signal:AbortSignal.timeout(6000),redirect:'error'});if(!r.ok)throw Error('Public catalog unavailable');const value=await r.json();if(value?.count===0&&!value.documents)value.documents=[];if(value?.version!==1||!Array.isArray(value.documents)||value.documents.length>2000)throw Error('Invalid public catalog');return value;}

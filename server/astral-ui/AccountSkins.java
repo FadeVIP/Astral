@@ -21,7 +21,7 @@ import java.util.concurrent.*;
 /** Public appearance only. No account credentials are passed to the game. */
 @Mod.EventBusSubscriber(modid="astralatmosphere",value=Dist.CLIENT)
 public final class AccountSkins {
- private static final String ENDPOINT="https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicGameData/skins/";
+ private static final String ENDPOINT="https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/realtime/publicGameData/skins/";
  private static final ExecutorService WORKER=Executors.newSingleThreadExecutor(r->{Thread t=new Thread(r,"Astral skins");t.setDaemon(true);return t;});
  private static final HttpClient HTTP=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).followRedirects(HttpClient.Redirect.NEVER).build();
  private static final Map<String,Entry> CACHE=new LinkedHashMap<>();

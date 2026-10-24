@@ -7,11 +7,12 @@
   "driveFileId": "1U6Gd1t-4-zENAcQmPO2J6TfpU9sj1309",
   "archiveBytes": 1133123513,
   "sha256": "697d4cf8053bf3c05b413e95798f57d57127192a2751bdf869e556a72424797e",
-  "website": "https://astral-delta-gules.vercel.app/",
+  "website": "https://astral-mine-mirror.onrender.com/",
   "firebase": {
     "projectId": "astral-524a1",
     "apiKey": "AIzaSyCmI7epHT8ZnK-AlGzRPbLSy3b73bdt1-Y",
-    "publicData": true
+    "publicData": true,
+    "dataApiUrl": "https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/documents"
   },
   "java": {
     "version": "17.0.20.1+1",

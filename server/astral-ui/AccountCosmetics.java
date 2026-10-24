@@ -27,7 +27,7 @@ import java.util.concurrent.*;
 /** Public cosmetics, rendered locally. Does not change inventory or gameplay. */
 @Mod.EventBusSubscriber(modid="astralatmosphere",value=Dist.CLIENT)
 public final class AccountCosmetics {
- private static final String BASE="https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicGameData/outfits/";
+ private static final String BASE="https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/realtime/publicGameData/outfits/";
  private static final String[] KINDS={"cape","wings","hat","halo","aura"};
  private static final HttpClient HTTP=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
  private static final ExecutorService WORKER=Executors.newFixedThreadPool(2,r->{Thread t=new Thread(r,"Astral cosmetics");t.setDaemon(true);return t;});
@@ -36,7 +36,7 @@ public final class AccountCosmetics {
  private static JsonObject publicItems;private static long publicItemsNext;
  private static synchronized JsonObject publicItem(String id)throws Exception{
   if(publicItems==null||System.currentTimeMillis()>publicItemsNext){
-   var response=HTTP.send(HttpRequest.newBuilder(URI.create("https://astral-524a1-default-rtdb.europe-west1.firebasedatabase.app/publicLauncherData/cosmetics.json")).timeout(Duration.ofSeconds(7)).GET().build(),HttpResponse.BodyHandlers.ofInputStream());
+   var response=HTTP.send(HttpRequest.newBuilder(URI.create("https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/realtime/publicLauncherData/cosmetics.json")).timeout(Duration.ofSeconds(7)).GET().build(),HttpResponse.BodyHandlers.ofInputStream());
    try(var stream=response.body()){
     if(response.statusCode()!=200)throw new IllegalStateException();byte[] bytes=stream.readNBytes(2000001);if(bytes.length>2000000)throw new IllegalStateException();
     var data=JsonParser.parseString(new String(bytes,StandardCharsets.UTF_8)).getAsJsonObject();if(!data.has("version")||data.get("version").getAsInt()!=1)throw new IllegalStateException();

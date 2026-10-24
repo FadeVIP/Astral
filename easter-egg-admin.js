@@ -1,4 +1,4 @@
-import {doc,getDoc,collection,getDocs,query,orderBy,limit,startAfter} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-lite.js';
+import {doc,getDoc,collection,getDocs,query,orderBy,limit,startAfter} from '/sql-documents.js?v=20261024-1';
 export function loadSecretWinner(db){
  if(document.getElementById('secret-winner'))return;
  const panel=document.createElement('article');panel.id='secret-winner';panel.className='card';panel.innerHTML='<h2>✦ Тайная звезда — исследователи</h2><p>Все находки, новые сверху. Награды выдаются вручную.</p><p data-result role="status"></p><div data-findings></div><button type="button" data-refresh>Обновить список</button> <button type="button" data-more hidden>Показать ещё</button>';document.getElementById('editor').prepend(panel);

@@ -1,0 +1,21 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),http=require('node:http');
+const {PGlite}=require('@electric-sql/pglite');
+const {DocumentStore,ROOT}=require('../store.cjs');const {createHandler}=require('../http.cjs');
+test('HTTP gateway authenticates and never exposes another account',async t=>{
+ const db=await PGlite.create();t.after(()=>db.close());const store=new DocumentStore(db);await store.initialize();
+ const field=v=>({stringValue:v}),stamp=new Date().toISOString();
+ await store.importSnapshot({project:'astral-524a1',documents:[['members/alice',{nickname:field('Alice'),status:field('active')}],['accountWallets/alice',{balance:{integerValue:'123'}}],['accountWallets/bob',{balance:{integerValue:'987'}}]].map(([p,fields])=>({name:ROOT+p,fields,createTime:stamp,updateTime:stamp}))},'a'.repeat(64));
+ const token='a'.repeat(110),handler=createHandler({store,verifyToken:async v=>{if(v!==token)throw Error('invalid');return {uid:'alice',email:'alice@example.test',firebase:{sign_in_provider:'password'}};},origins:['https://astral-mine-mirror.onrender.com']});
+ const server=http.createServer((req,res)=>handler(req,res).then(handled=>{if(!handled){res.writeHead(404);res.end();}}));await new Promise(r=>server.listen(0,'127.0.0.1',r));t.after(()=>new Promise(r=>server.close(r)));
+ const base='http://127.0.0.1:'+server.address().port+'/api/v1/documents',headers={Authorization:'Bearer '+token};
+ assert.equal((await fetch(base+'/members/alice',{headers})).status,503);
+ await db.query(`UPDATE astral_control SET value='"sql"' WHERE key='authority'`);
+ assert.equal((await fetch(base+'/accountWallets/alice')).status,403);
+ assert.equal((await fetch(base+'/accountWallets/alice',{headers:{Authorization:'Bearer '+'x'.repeat(110)}})).status,401);
+ assert.equal((await fetch(base+'/accountWallets/bob',{headers})).status,403);
+ assert.equal((await (await fetch(base+'/accountWallets/alice',{headers})).json()).fields.balance.integerValue,'123');
+ const list=await (await fetch(base+'/accountWallets',{headers})).json();assert.equal(list.documents.length,1);
+ assert.equal((await fetch(base+'/accountWallets/alice',{headers:{...headers,Origin:'https://attacker.test'}})).status,403);
+ assert.equal((await fetch(base+'/accountWallets/alice',{method:'PATCH',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({fields:{balance:{integerValue:'999999'}}})})).status,403);
+});
