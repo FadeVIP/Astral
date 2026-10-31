@@ -56,7 +56,20 @@ class RealtimeStore{
   if(parts.length>=2){rows=(await tx.query('SELECT data FROM astral_realtime WHERE namespace=$1 AND node_key=$2',parts.slice(0,2))).rows;return at(rows[0]?.data??null,parts.slice(2));}
   rows=(await tx.query('SELECT namespace,node_key,data FROM astral_realtime'+(parts.length?' WHERE namespace=$1':'')+' ORDER BY namespace,node_key',parts)).rows;
   let result=null;
-  for(const r of rows){const keys=r.node_key===''?[r.namespace]:[r.namespace,r.node_key];result=assign(result,parts.length?keys.slice(1):keys,r.data);}
+  // These rows form a new result. Cloning the growing history for every row
+  // makes chat reads quadratic and blocks unrelated logins on the same process.
+  for(const r of rows){
+   const keys=r.node_key===''?[r.namespace]:[r.namespace,r.node_key];
+   const relative=parts.length?keys.slice(1):keys;
+   if(!relative.length){result=r.data;continue;}
+   if(!result||typeof result!=='object')result={};
+   let target=result;
+   for(const key of relative.slice(0,-1)){
+    if(!Object.hasOwn(target,key)||!target[key]||typeof target[key]!=='object')Object.defineProperty(target,key,{value:{},enumerable:true,writable:true,configurable:true});
+    target=target[key];
+   }
+   Object.defineProperty(target,relative.at(-1),{value:r.data,enumerable:true,writable:true,configurable:true});
+  }
   return result;
  }
  async replace(path,value,tx){

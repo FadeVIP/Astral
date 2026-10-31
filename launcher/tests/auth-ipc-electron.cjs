@@ -72,7 +72,7 @@ app.on('browser-window-created', (_, win) => {
       assert.equal(completed.ok,true);assert.equal(completed.value.user.nickname,'TestPlayer');assert.equal(signupCount,1);
       await call('logout'); offline = true;
       const failed = await call('login', credentials);
-      assert.equal(failed.ok, false); assert.match(failed.error, /интернет/);
+      assert.equal(failed.ok, false); assert.match(failed.error, /Firebase Auth/);
       guestPhase=true;const beforeGuest=networkCalls;
       assert.equal((await call('guest',{nickname:'Bad name'})).ok,false);
       const guest=await call('guest',{nickname:'LocalPlayer'});assert.equal(guest.ok,true);assert.equal(guest.value.user.guest,true);assert.equal(guest.value.admin,false);
