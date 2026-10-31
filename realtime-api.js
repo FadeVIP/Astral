@@ -1,3 +1,4 @@
+import './data-route.js';
 import {getAuth,signInAnonymously} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 const databases=new WeakMap();
 const clone=v=>structuredClone(v),same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
@@ -26,7 +27,7 @@ async function request(r,method='GET',value,etag,expected){
  if(etag)headers['If-None-Match']=etag;
  if(expected)headers['If-Match']=expected;
  const search=new URLSearchParams(Object.entries(r.options||{}).map(([k,v])=>[k,JSON.stringify(v)]));
- const response=await fetch(r.db.base+'/'+r.path.split('/').map(encodeURIComponent).join('/')+'.json'+(search.size?'?'+search:''),{method,headers,signal:AbortSignal.timeout(18000),...(value!==undefined?{body:JSON.stringify(value)}:{})});
+ const response=await globalThis.astralDataFetch(r.db.base+'/'+r.path.split('/').map(encodeURIComponent).join('/')+'.json'+(search.size?'?'+search:''),{method,headers,signal:AbortSignal.timeout(18000),...(value!==undefined?{body:JSON.stringify(value)}:{})});
  if(response.status===304)return {unchanged:true};
  if(!response.ok){const e=Error('Сервис данных недоступен ('+response.status+').');e.code=response.status===403?'PERMISSION_DENIED':'UNAVAILABLE';e.status=response.status;throw e;}
  return {value:await response.json(),etag:response.headers.get('etag')};

@@ -173,7 +173,7 @@ else {
     finally{updatingLauncher=false;}
     if(launcherUpdater.state.status==='error')authNotice='Обновления недоступны. Открыта установленная версия.';
     startupScreen.emit({message:'Открываем библиотеку миров…',percent:100});
-    auth = new AuthService(builtin.firebase, secureTokenStorage(path.join(app.getPath('userData'), 'session.bin'), safeStorage));
+    auth = new AuthService(builtin.firebase, secureTokenStorage(path.join(app.getPath('userData'), 'session.bin'), safeStorage), require('./data-route.cjs').createRouter(fetch));
     if(settings.guestMode){try{auth.setGuest(settings.guestNickname);}catch{settings.guestMode=false;}}
     if(!settings.guestMode)await auth.restore().catch(error => { authNotice = error.message; });
     catalog = new CatalogService(builtin.firebase,auth,app.getPath('userData'),auth.fetcher);

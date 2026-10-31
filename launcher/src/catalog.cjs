@@ -98,7 +98,7 @@ class CatalogService {
       headers: { ...(token ? { Authorization: 'Bearer ' + token } : {}), ...(body ? { 'Content-Type':'application/json' } : {}) },
       ...(body ? { body: JSON.stringify(body) } : {}) });
     if (missing && response.status === 404) return null;
-    if(response.status===429){const error=new Error('Firebase временно ограничил запросы (429). Повторите через несколько минут.');error.code='RESOURCE_EXHAUSTED';throw error;}
+    if(response.status===429){const error=new Error('Сервис данных временно ограничил запросы (429). Повторите через несколько минут.');error.code='RESOURCE_EXHAUSTED';throw error;}
     if (!response.ok) throw Error(response.status === 403 ? 'Нет доступа к запрошенным данным аккаунта. Обновите вход и повторите.' : 'Сервис недоступен. Проверьте интернет и повторите.');
     return response.json();
   }

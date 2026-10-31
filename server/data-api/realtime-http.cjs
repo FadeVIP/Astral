@@ -14,7 +14,7 @@ function createRealtimeHandler({store,documents,verifyToken,verifyService=()=>fa
    res.setHeader('Access-Control-Expose-Headers','ETag');
    if(req.method==='OPTIONS'){res.setHeader('Access-Control-Allow-Methods','GET,PUT,POST,PATCH,DELETE,OPTIONS');res.setHeader('Access-Control-Allow-Headers','Authorization,Content-Type,If-Match,If-None-Match');send(204);return true;}
    const now=Date.now();if(now-cleanup>60000){for(const [k,v]of rates)if(v.until<now)rates.delete(k);cleanup=now;}
-   const ip=clientAddress(req,trustLoopbackProxy),r=rates.get(ip)||{until:now+60000,n:0};if(rates.size>=10000&&!rates.has(ip)||++r.n>1800)throw new DataError(429,'Try later');rates.set(ip,r);
+
    if((await store.db.query("SELECT value FROM astral_control WHERE key='authority'")).rows[0]?.value!=='sql')throw new DataError(503,'Migration is not active');
    if(!url.pathname.endsWith('.json'))throw new DataError(400,'JSON endpoint required');
    let path=decodeURIComponent(url.pathname.slice(prefix.length,-5));pathParts(path);
@@ -22,6 +22,7 @@ function createRealtimeHandler({store,documents,verifyToken,verifyService=()=>fa
    if(serviceHeader&&!service)throw new DataError(401,'Invalid service identity');
    const token=serviceHeader?null:req.headers.authorization?.replace(/^Bearer /,'')||url.searchParams.get('auth');let user=null;
    if(token){try{user=await verifyToken(token);}catch{throw new DataError(401,'Sign in again');}}
+      const ip=user?'uid:'+user.uid:clientAddress(req,trustLoopbackProxy),r=rates.get(ip)||{until:now+60000,n:0};if(rates.size>=10000&&!rates.has(ip)||++r.n>1800)throw new DataError(429,'Try later');rates.set(ip,r);
    const c=await actor(user,documents,p=>store.get(p));
    if(req.method==='GET'){
     if(!service&&!await canReadRealtime(path,c,p=>store.get(p)))throw new DataError(403,'Permission denied');

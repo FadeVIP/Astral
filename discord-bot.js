@@ -126,7 +126,9 @@ if(!sqlOwnsMirrors){
 // 2. HTTP Health-check сервер (для Render, Railway, Glitch, Koyeb и внешних пинг-сервисов)
 const PORT = process.env.PORT || 3000;
 
-const httpServer = http.createServer((req, res) => {
+const dataProxy = require('./server/data-api/edge-proxy.cjs').createProxy();
+const httpServer = http.createServer(async (req, res) => {
+  if (await dataProxy(req,res)) return;
   const reqUrl = req.url || '/';
   if (reqUrl === '/health' || reqUrl === '/ping') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });

@@ -36,7 +36,7 @@ test('Launch access is denied while signed out, blocked, or unable to reach Fire
   await auth.login({ email: 'one@example.invalid', password: 'ExampleOnly123!' });
   await assert.rejects(auth.requireAccess(), /приостановлен/);
   auth.fetcher = async () => { throw new Error('offline'); };
-  await assert.rejects(auth.requireAccess(), /интернет/);
+  await assert.rejects(auth.requireAccess(), e=>e.code==='NETWORK'&&e.service==='firebase-auth');
 });
 test('Every launch refreshes server identity and reads current member status', async () => {
   const { auth, requests, store } = fixture();

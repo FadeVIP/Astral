@@ -4,6 +4,7 @@ test('browser realtime sends ownership and auth headers, registers server discon
  const calls=[];
  const source=fs.readFileSync(path.resolve(__dirname,'../../../realtime-api.js'),'utf8').replace(/^import .*;\r?\n/gm,'').replaceAll('export ','');
  const context=vm.createContext({URL,URLSearchParams,AbortSignal,structuredClone,crypto,queueMicrotask,setTimeout,clearTimeout,setInterval:()=>1,document:{hidden:false},getAuth:()=>({currentUser:{uid:'alice',getIdToken:async()=>'private-token'}}),__FROSTBORNE_FIREBASE_CONFIG__:{realtimeApiUrl:'https://sql.example/api/v1/realtime'},fetch:async(url,options)=>{calls.push({url,options});return {ok:true,status:200,headers:{get:()=>null},json:async()=>options.method==='POST'?{name:'message-1'}:{ok:true}};}});
+ context.astralDataFetch=context.fetch;
  vm.runInContext(source+';globalThis.api={getDatabase,ref,push,set,onDisconnect};',context);
  const a=context.api,db=a.getDatabase({}),message=await a.push(a.ref(db,'chat'),{text:'hello',author:'Alice'});
  assert.equal(message.key,'message-1');assert.equal(JSON.parse(calls[0].options.body).uid,'alice');

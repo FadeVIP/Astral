@@ -2,7 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),vm=requir
 test('website quota cooldown stops reads and writes without clearing authentication',async()=>{
  let calls=0;const auth={currentUser:{getIdToken:async()=>'token'}};
  const source=fs.readFileSync(require('node:path').resolve(__dirname,'../../account-api.js'),'utf8').replace(/^import .*;\r?\n/,'').replaceAll('export ','');
- const ctx=vm.createContext({AbortSignal,fetch:async()=>{calls++;return Response.json({}, {status:429});}});vm.runInContext(source+';globalThis.make=apiFor;',ctx);
+ const ctx=vm.createContext({AbortSignal,URL,fetch:async()=>{calls++;return Response.json({}, {status:429});}});ctx.astralDataFetch=ctx.fetch;vm.runInContext(source+';globalThis.make=apiFor;',ctx);
  const request=ctx.make(auth);await assert.rejects(request('/members/test'),e=>e.status===429);await assert.rejects(request('/members/test'),e=>e.status===429);await assert.rejects(request('/accountWallets/test','PATCH',{}),e=>e.status===429);assert.equal(calls,1);assert.ok(auth.currentUser);
 });
 test('website retains signed-in state while profile is unavailable and retries without a password',async()=>{

@@ -17,7 +17,7 @@ function authError(code) {
     INVALID_REFRESH_TOKEN: 'Сессия истекла. Войдите снова.',
     TOKEN_EXPIRED: 'Сессия истекла. Войдите снова.',
     USER_NOT_FOUND: 'Аккаунт больше не существует. Войдите снова.',
-    PERMISSION_DENIED: 'Нет доступа к профилю Firestore. Обратитесь к администратору.',
+    PERMISSION_DENIED: 'Нет доступа к профилю Astral. Обратитесь к администратору.',
     WEAK_PASSWORD: 'Используйте более надёжный пароль: минимум 8 символов.'
   };
   return errors[code.split(' : ')[0]] || 'Не удалось выполнить запрос к Firebase. Попробуйте ещё раз.';
@@ -39,24 +39,27 @@ class AuthService {
     this.remember = false;
   }
   async request(url, { method = 'POST', body, token, form = false } = {}) {
-    // Keep Firebase Auth endpoints unchanged. SQL is opt-in until cutover.
+    // Firebase Auth verifies identity; SQL serves account data.
     const documentBase = `https://firestore.googleapis.com/v1/projects/${this.config.projectId}/databases/(default)/documents`;
     if (this.config.dataApiUrl && (url === documentBase || url.startsWith(documentBase + '/') || url.startsWith(documentBase + ':'))) {
       const endpoint = new URL(this.config.dataApiUrl);
       if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash) throw new Error('Неверный адрес сервиса данных.');
       url = this.config.dataApiUrl.replace(/\/$/,'') + url.slice(documentBase.length);
     }
+    const isAuth=['identitytoolkit.googleapis.com','securetoken.googleapis.com'].includes(new URL(url).hostname);
     let response;
     try {
       response = await this.fetcher(url, { method, redirect: 'error', signal: AbortSignal.timeout(20000), headers: {
         ...(body ? { 'Content-Type': form ? 'application/x-www-form-urlencoded' : 'application/json' } : {}),
         ...(token ? { Authorization: 'Bearer ' + token } : {})
       }, ...(body ? { body: form ? new URLSearchParams(body).toString() : JSON.stringify(body) } : {}) });
-    } catch (error) { if(error.code==='RESOURCE_EXHAUSTED')throw error;const failure=new Error('Не удалось подключиться к Firebase. Проверьте интернет.');failure.code='NETWORK';throw failure; }
+    } catch (error) { if(error.code==='RESOURCE_EXHAUSTED')throw error;const failure=new Error(isAuth?'Не удалось связаться с Firebase Auth — сервисом входа Google. Проверьте доступ к Google и повторите.':'Не удалось загрузить профиль с сервера Astral. Вход сохранён; повторите позже или используйте гостевой режим.');failure.code='NETWORK';failure.service=isAuth?'firebase-auth':'astral-data';throw failure; }
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
       const code = data.error?.status || data.error?.message || 'UNKNOWN';
-      const error = new Error(authError(response.status===429?'RESOURCE_EXHAUSTED':data.error?.message || code));
+      const message=isAuth?authError(response.status===429?'RESOURCE_EXHAUSTED':data.error?.message || code):response.status===429?'Сервер Astral временно ограничил запросы (429). Повторите через несколько минут.':response.status===401?'Сессия входа истекла. Войдите снова.':response.status===403?'Нет доступа к профилю Astral. Обратитесь к администратору.':'Не удалось загрузить данные Astral ('+response.status+'). Повторите позже.';
+      const error = new Error(message);
+      error.service=isAuth?'firebase-auth':'astral-data';
       error.code = code; error.httpStatus = response.status;
       throw error;
     }

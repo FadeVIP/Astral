@@ -46,7 +46,7 @@ function clientAddress(req,trustLoopbackProxy=false) {
  return peer;
 }
 function createHandler({store,verifyToken,verifyService=()=>false,origins=[],prefix=PREFIX,trustLoopbackProxy=false}) {
- const limit=limiter(240,60000);
+ const limit=limiter(240,60000), ingress=limiter(2400,60000);
  return async function handle(req,res) {
   let url;try{url=new URL(req.url,'http://localhost');}catch{return false;}
   if(!url.pathname.startsWith(prefix))return false;
@@ -56,10 +56,11 @@ function createHandler({store,verifyToken,verifyService=()=>false,origins=[],pre
    if(origin){if(!origins.includes(origin))fail(403,'Origin denied');res.setHeader('Access-Control-Allow-Origin',origin);res.setHeader('Vary','Origin');}
    if(req.method==='OPTIONS'){res.setHeader('Access-Control-Allow-Methods','GET,POST,PATCH,DELETE,OPTIONS');res.setHeader('Access-Control-Allow-Headers','Authorization,Content-Type');send(204,null);return true;}
    // Only the configured local reverse proxy may supply the actual peer IP.
-   limit(clientAddress(req,trustLoopbackProxy));
+   ingress(clientAddress(req,trustLoopbackProxy));
    if((await store.db.query("SELECT value FROM astral_control WHERE key='authority'")).rows[0]?.value!=='sql')fail(503,'Migration is not active');
    let user=null;const header=req.headers.authorization,service=header?.startsWith('Astral-Service ')&&verifyService(header.slice(15));
    if(header&&!service){if(!/^Bearer [A-Za-z0-9_.-]{100,8192}$/.test(header))fail(401,'Invalid token');try{user=await verifyToken(header.slice(7));}catch{fail(401,'Sign in again');}}
+   limit(user?'uid:'+user.uid:clientAddress(req,trustLoopbackProxy));
    const suffix=decodeURIComponent(url.pathname.slice(prefix.length));
    if(req.method==='POST'&&suffix===':commit') {
     if(!user)fail(401,'Sign in required');const data=await body(req);if(Object.keys(data).some(k=>k!=='writes'))fail(400,'Unsupported commit');
