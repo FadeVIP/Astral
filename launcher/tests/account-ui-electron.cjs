@@ -1,7 +1,8 @@
 const {app,BrowserWindow}=require('electron'),fs=require('node:fs'),path=require('node:path'),os=require('node:os'),assert=require('node:assert/strict');
 app.disableHardwareAcceleration();const root=path.resolve(__dirname,'..'),profile=fs.mkdtempSync(path.join(os.tmpdir(),'astral-account-ui-'));app.setPath('userData',profile);
 const authModule=require('../src/auth.cjs');authModule.AuthService=class extends authModule.AuthService{async restore(){this.session={uid:'ui-test',email:'test@example.invalid',idToken:'fake'};this.member={nickname:'StarWalker',status:'active'};}async requireAccess(){return this.publicUser();}};
-const cat=require('../src/catalog.cjs');cat.CatalogService=class extends cat.CatalogService{async restore(){}async refresh(){return [];}async checkAdmin(){return false;}async request(route){if(route.includes('accountWallets'))return {fields:{balance:{integerValue:'200'}}};if(route.includes('accountSkins'))return null;if(route.startsWith('/cosmeticCatalog'))return {documents:require('../../assets/cosmetics/catalog.json').items.map(({id,...item})=>({name:'catalog/'+id,fields:cat.encode(item).mapValue.fields}))};if(route.includes('cosmeticOwners'))return {documents:[]};if(route.includes('accountCosmetics'))return null;return null;}};
+let skinUnavailable=true;
+const cat=require('../src/catalog.cjs');cat.CatalogService=class extends cat.CatalogService{constructor(...args){super(...args);this.config={...this.config,publicData:false};}async restore(){}async refresh(){return [];}async checkAdmin(){return false;}async request(route){if(route.includes('accountWallets'))return {fields:{balance:{integerValue:'200'}}};if(route.includes('accountSkins')){if(skinUnavailable)throw Error('Test skin connection unavailable');return null;}if(route.startsWith('/cosmeticCatalog'))return {documents:require('../../assets/cosmetics/catalog.json').items.map(({id,...item})=>({name:'catalog/'+id,fields:cat.encode(item).mapValue.fields}))};if(route.includes('cosmeticOwners'))return {documents:[]};if(route.includes('accountCosmetics'))return null;return null;}};
 const update=require('../src/launcher-update.cjs');let releaseStartup,checking=false;
 update.LauncherUpdater=class extends update.LauncherUpdater{constructor(options){super({...options,supported:true});}async startup(){checking=true;this.set({status:'downloading',percent:43,version:'0.4.18',message:'Скачиваем обновление…'});await new Promise(resolve=>releaseStartup=resolve);this.set({status:'current',message:'Установлена актуальная версия'});return false;}};
 const timeout=setTimeout(()=>{console.error('ACCOUNT_UI_TIMEOUT');app.exit(1)},30000);
@@ -14,6 +15,9 @@ app.on('browser-window-created',(_,win)=>{win.show=()=>{};win.webContents.setBac
   await new Promise(r=>setTimeout(r,300));
   assert.equal(await win.webContents.executeJavaScript("document.querySelector('.cosmetics-dialog').open"),true);
   assert.equal(await win.webContents.executeJavaScript("document.querySelectorAll('.cosmetic-card').length"),120);
+  assert.match(await win.webContents.executeJavaScript("document.getElementById('cos-message').textContent"),/Скин пока не загрузился/);
+  skinUnavailable=false;await win.webContents.executeJavaScript("document.getElementById('cos-refresh').click()");await new Promise(r=>setTimeout(r,300));
+  assert.equal(await win.webContents.executeJavaScript("document.getElementById('cos-message').textContent"),'Гардероб обновлён.');
   await win.webContents.executeJavaScript("document.getElementById('cos-kind').value='wings';document.getElementById('cos-kind').dispatchEvent(new Event('input'));document.querySelector('.cosmetic-card').click()");
   assert.equal(await win.webContents.executeJavaScript("document.querySelectorAll('.cosmetic-card').length"),24);
   await new Promise(r=>setTimeout(r,500));

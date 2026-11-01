@@ -15,8 +15,8 @@
     async function choose() {
       if (selected && until > Date.now()) return selected;
       if (!pending) pending = (async () => {
-        if (await probe(PRIMARY, 2500)) selected = PRIMARY;
-        else if (await probe(BACKUP, 15000)) selected = BACKUP;
+        if (await probe(PRIMARY, 1500)) selected = PRIMARY;
+        else if (await probe(BACKUP, 5000)) selected = BACKUP;
         else throw Error('Сервер профиля Astral недоступен по основному и резервному адресу. Попробуйте позже или используйте гостевой режим.');
         until = Date.now() + 60000;
         return selected;
@@ -24,16 +24,29 @@
       return pending;
     }
     return async function routedFetch(url, options = {}) {
-      const u = new URL(url);
+      let u;
+      try { u = new URL(url); } catch { return fetcher(url, options); }
       if (u.origin !== PRIMARY || !u.pathname.startsWith('/api/v1/')) return fetcher(url, options);
-      // The caller's timeout starts with the operation, not the route probes.
+      // Respect the caller's deadline, including route selection.
       const origin = await choose();
       if (options.signal?.aborted) throw options.signal.reason;
+      const readOnly=['GET','HEAD'].includes((options.method||'GET').toUpperCase());
+      const attempt=target=>fetcher(target+u.pathname+u.search,{...options,redirect:'error',signal:options.signal?AbortSignal.any([options.signal,AbortSignal.timeout(6000)]):AbortSignal.timeout(6000)});
+      let first;
       try {
-        const r = await fetcher(origin + u.pathname + u.search, options);
-        if (r.status >= 500) until = 0;
-        return r;
-      } catch (error) { until = 0; throw error; }
+        first = await (readOnly?attempt(origin):fetcher(origin+u.pathname+u.search,{...options,redirect:'error'}));
+        if(first.status<500)return first;
+        until=0;
+        if(!readOnly)return first;
+      } catch(error) { until=0;if(!readOnly||options.signal?.aborted)throw error; }
+      // GET/HEAD have no side effects. A failed mutation is never resent.
+      const alternate=origin===PRIMARY?BACKUP:PRIMARY;
+      if(options.signal?.aborted)throw options.signal.reason;
+      try {
+        const response=await attempt(alternate);
+        if(response.status<500){selected=alternate;until=Date.now()+60000;}
+        return response;
+      }catch(error){if(first)return first;throw error;}
     };
   }
   if (typeof module !== 'undefined' && module.exports) module.exports = {createRouter};

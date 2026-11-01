@@ -48,7 +48,7 @@ public final class AccountSkins {
  private static void fetch(String name,Entry entry,int generation){
   String png=null,shape="default";boolean removed=false;
   try{
-   var response=HTTP.send(HttpRequest.newBuilder(URI.create(ENDPOINT+name+".json")).timeout(Duration.ofSeconds(12)).GET().build(),HttpResponse.BodyHandlers.ofInputStream());
+   var response=PublicDataHttp.get(ENDPOINT+name+".json",8);
    try(var stream=response.body()){
     removed=response.statusCode()==404;
     if(response.statusCode()==200){byte[] bytes=stream.readNBytes(120001);if(bytes.length>120000)throw new IllegalArgumentException();var json=JsonParser.parseString(new String(bytes,java.nio.charset.StandardCharsets.UTF_8));removed=json.isJsonNull();if(!removed){var fields=json.getAsJsonObject().getAsJsonObject("fields");png=fields.getAsJsonObject("png").get("stringValue").getAsString();shape=fields.getAsJsonObject("model").get("stringValue").getAsString().equals("slim")?"slim":"default";}}

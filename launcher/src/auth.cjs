@@ -29,7 +29,7 @@ class AuthService {
     const cooldown=new Map();
     this.fetcher=async(url,options)=>{
       const host=new URL(url).hostname;
-      if((cooldown.get(host)||0)>Date.now()){const error=new Error(authError('RESOURCE_EXHAUSTED'));error.code='RESOURCE_EXHAUSTED';error.httpStatus=429;throw error;}
+      if((cooldown.get(host)||0)>Date.now()){const error=new Error(['identitytoolkit.googleapis.com','securetoken.googleapis.com'].includes(host)?authError('RESOURCE_EXHAUSTED'):'Сервер Astral временно ограничил запросы (429). Повторите через несколько минут.');error.code='RESOURCE_EXHAUSTED';error.httpStatus=429;throw error;}
       const response=await fetcher(url,options);
       if(response.status===429)cooldown.set(host,Date.now()+300000);
       return response;
@@ -73,7 +73,7 @@ class AuthService {
     this.guest={nickname,status:'guest',guest:true};this.session=null;this.member=null;this.restorePending=false;
     return this.publicUser();
   }
-  async gameUser() { return this.guest ? {...this.guest} : this.requireAccess(); }
+  async gameUser() { return this.guest ? {...this.guest} : this.requireAccess({forceRefresh:true}); }
   publicUser() {
     if(this.guest)return {...this.guest};
     if (!this.session?.uid || !this.session?.email) return null;
@@ -131,22 +131,30 @@ class AuthService {
     }
   }
   async refresh(force = false) {
+    const session=this.session;
+    if (!session) throw new Error('Войдите в аккаунт Astral, чтобы играть.');
+    if (!force && session.expiresAt > Date.now() + 60000) return;
+    if(this.refreshFlight?.session===session)return this.refreshFlight.promise;
+    const flight={session};
+    flight.promise=this.refreshSession(session).finally(()=>{if(this.refreshFlight===flight)this.refreshFlight=null;});
+    this.refreshFlight=flight;
+    return flight.promise;
+  }
+  async refreshSession(session) {
     if (!this.session) throw new Error('Войдите в аккаунт Astral, чтобы играть.');
-    if (!force && this.session.expiresAt > Date.now() + 60000) return;
-    const result = await this.request(`https://securetoken.googleapis.com/v1/token?key=${this.config.apiKey}`, { form: true, body: { grant_type: 'refresh_token', refresh_token: this.session.refreshToken } });
-    this.session.idToken = result.id_token;
-    this.session.refreshToken = result.refresh_token;
-    this.session.uid = result.user_id;
-    this.session.expiresAt = Date.now() + Number(result.expires_in || 3600) * 1000;
+    const result = await this.request(`https://securetoken.googleapis.com/v1/token?key=${this.config.apiKey}`, { form: true, body: { grant_type: 'refresh_token', refresh_token: session.refreshToken } });
     const lookup = await this.request(this.authURL('lookup'), { body: { idToken: result.id_token } });
+    if(this.session!==session)throw new Error('Аккаунт изменён во время обновления входа. Повторите действие.');
     const account = lookup.users?.[0];
     if (!account?.email || account.disabled) { await this.logout(); throw new Error('Аккаунт недоступен. Войдите снова.'); }
-    this.session.email = account.email;
-    this.session.nickname = account.displayName || 'Игрок';
+    Object.assign(session,{idToken:result.id_token,refreshToken:result.refresh_token,uid:result.user_id,expiresAt:Date.now()+Number(result.expires_in||3600)*1000,email:account.email,nickname:account.displayName||'Игрок'});
     await this.persist();
   }
   async getMember() {
-    const doc = await this.request('https://firestore.googleapis.com/v1/' + this.documentName(this.session.uid), { method: 'GET', token: this.session.idToken });
+    const session=this.session;
+    if(!session)throw Error('Войдите в аккаунт Astral.');
+    const doc = await this.request('https://firestore.googleapis.com/v1/' + this.documentName(session.uid), { method: 'GET', token: session.idToken });
+    if(this.session!==session)throw Error('Аккаунт изменён. Повторите действие.');
     this.member = { nickname: doc.fields?.nickname?.stringValue, status: doc.fields?.status?.stringValue };
     return this.member;
   }
@@ -170,9 +178,9 @@ class AuthService {
     }
     return this.getMember();
   }
-  async requireAccess() {
+  async requireAccess({forceRefresh=false}={}) {
     if(this.guest)throw Error('Эта функция доступна после входа в аккаунт Astral.');
-    await this.refresh(true);
+    await this.refresh(forceRefresh);
     const member = await this.getMember();
     if (member.status !== 'active') throw new Error('Доступ к игре приостановлен. Обратитесь к администратору Astral.');
     return this.publicUser();

@@ -1,0 +1,17 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'../..'),version=require('../package.json').version;
+const verify=require('../src/pack-update.cjs').verifyManifest,pack=require('../pack.json');
+const publicKey=fs.readFileSync(path.join(root,'launcher/assets/pack-update-public.pem'));
+const manifest=verify(JSON.parse(fs.readFileSync(path.join(root,'launcher/assets/pack-manifest.json'))),publicKey,pack);
+const name='astral-atmosphere-0.1.0.jar',bytes=fs.readFileSync(path.join(root,'server/astral-ui/dist',name));
+const entry=manifest.files.find(f=>f.path==='mods/'+name);if(!entry)throw Error('Atmosphere manifest entry missing');
+const sha256=crypto.createHash('sha256').update(bytes).digest('hex');
+Object.assign(entry,{bytes:bytes.length,sha256,source:'release',policy:'managed',url:`https://github.com/FadeVIP/astral-launcher-downloads/releases/download/v${version}/${name}`});
+manifest.revision=Math.max(manifest.revision+1,2026110101);manifest.title='Astral · стабильная загрузка гардероба и скинов';
+const payload=Buffer.from(JSON.stringify(manifest));
+const signature=crypto.sign(null,payload,fs.readFileSync(path.join(root,'server/minepass/dist/pack-update-private.pem'))).toString('base64');
+const envelope={payload:payload.toString('base64'),signature};verify(envelope,publicKey,pack);
+for(const dir of ['launcher/assets/client-mods','launcher/dist'])fs.writeFileSync(path.join(root,dir,name),bytes);
+for(const file of ['launcher/assets/pack-manifest.json','launcher/dist/astral-pack-manifest.json'])fs.writeFileSync(path.join(root,file),JSON.stringify(envelope,null,2));
+console.log(JSON.stringify({version,revision:manifest.revision,sha256,bytes:bytes.length}));

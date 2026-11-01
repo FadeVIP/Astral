@@ -36,13 +36,13 @@ test('Launch access is denied while signed out, blocked, or unable to reach Fire
   await auth.login({ email: 'one@example.invalid', password: 'ExampleOnly123!' });
   await assert.rejects(auth.requireAccess(), /приостановлен/);
   auth.fetcher = async () => { throw new Error('offline'); };
-  await assert.rejects(auth.requireAccess(), e=>e.code==='NETWORK'&&e.service==='firebase-auth');
+  await assert.rejects(auth.gameUser(), e=>e.code==='NETWORK'&&e.service==='firebase-auth');
 });
 test('Every launch refreshes server identity and reads current member status', async () => {
   const { auth, requests, store } = fixture();
   await auth.login({ email: 'one@example.invalid', password: 'ExampleOnly123!', remember: true });
   requests.length = 0;
-  assert.equal((await auth.requireAccess()).nickname, 'PlayerOne');
+  assert.equal((await auth.gameUser()).nickname, 'PlayerOne');
   assert.ok(requests.some(r => r.url.includes('securetoken.')));
   assert.ok(requests.some(r => r.url.includes('accounts:lookup')));
   assert.ok(requests.some(r => r.url.endsWith('/members/uid-one')));

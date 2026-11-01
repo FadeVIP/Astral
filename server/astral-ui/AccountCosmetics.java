@@ -36,7 +36,7 @@ public final class AccountCosmetics {
  private static JsonObject publicItems;private static long publicItemsNext;
  private static synchronized JsonObject publicItem(String id)throws Exception{
   if(publicItems==null||System.currentTimeMillis()>publicItemsNext){
-   var response=HTTP.send(HttpRequest.newBuilder(URI.create("https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/realtime/publicLauncherData/cosmetics.json")).timeout(Duration.ofSeconds(7)).GET().build(),HttpResponse.BodyHandlers.ofInputStream());
+   var response=PublicDataHttp.get("https://829504-vds-korolevikh2001vlad.gmhost.pp.ua/api/v1/realtime/publicLauncherData/cosmetics.json",8);
    try(var stream=response.body()){
     if(response.statusCode()!=200)throw new IllegalStateException();byte[] bytes=stream.readNBytes(2000001);if(bytes.length>2000000)throw new IllegalStateException();
     var data=JsonParser.parseString(new String(bytes,StandardCharsets.UTF_8)).getAsJsonObject();if(!data.has("version")||data.get("version").getAsInt()!=1)throw new IllegalStateException();
@@ -61,7 +61,7 @@ public final class AccountCosmetics {
   for(String name:names){if(!name.matches("[a-z0-9_]{3,16}"))continue;Entry e=CACHE.get(name);if(e==null){if(CACHE.size()>=32)break;e=new Entry();CACHE.put(name,e);}if(!e.pending&&System.currentTimeMillis()>e.next){e.pending=true;e.next=System.currentTimeMillis()+60000;Entry target=e;int generation=epoch;WORKER.submit(()->fetch(name,target,generation));}}
  }
  private static JsonObject request(String route)throws Exception{
-   var response=HTTP.send(HttpRequest.newBuilder(URI.create(BASE+route+".json")).timeout(Duration.ofSeconds(7)).GET().build(),HttpResponse.BodyHandlers.ofInputStream());
+   var response=PublicDataHttp.get(BASE+route+".json",8);
   try(var stream=response.body()){if(response.statusCode()==404)return new JsonObject();if(response.statusCode()!=200)throw new IllegalStateException();byte[] bytes=stream.readNBytes(32001);if(bytes.length>32000)throw new IllegalStateException();var json=JsonParser.parseString(new String(bytes,StandardCharsets.UTF_8));return json.isJsonNull()?new JsonObject():json.getAsJsonObject().getAsJsonObject("fields");}
  }
  private static String str(JsonObject fields,String key){return fields.has(key)?fields.getAsJsonObject(key).get("stringValue").getAsString():"";}
