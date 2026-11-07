@@ -16,6 +16,6 @@ test('guest identity never grants account access or needs network',async()=>{
 });
 test('successful account login replaces guest identity',()=>{
  const auth=new AuthService({},{});
- auth.setGuest('Guest');auth.acceptSession({localId:'uid',email:'test@example.invalid',displayName:'Account',expiresIn:3600});
+ auth.setGuest('Guest');auth.acceptSession({localId:'uid',email:'test@example.invalid',displayName:'Account',idToken:'test-token',refreshToken:'test-refresh',expiresIn:3600});
  assert.equal(auth.publicUser().nickname,'Account');assert.equal(auth.guest,null);
 });

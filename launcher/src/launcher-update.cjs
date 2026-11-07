@@ -73,7 +73,7 @@ class LauncherUpdater {
       if (!await this.validFile(destination, release)) {
         this.set({ status: 'downloading', version: release.version, percent: 0, message: 'Скачиваем лаунчер ' + release.version });
         await download({ url: release.url, destination, expectedBytes: release.bytes, sha256: release.sha256, format: 'exe', fetcher: this.fetcher,
-          onProgress: p => this.set({ status: 'downloading', version: release.version, percent: Math.floor(p.received / release.bytes * 100), message: 'Скачиваем лаунчер ' + release.version }) });
+          onProgress: p => this.set({ status: 'downloading', version: release.version, percent: Math.floor(p.received / release.bytes * 100), message: p.message || 'Скачиваем лаунчер ' + release.version }) });
       }
       this.pending = { release, destination };
       return this.set({ status: 'ready', version: release.version, message: `Версия ${release.version} готова. Обновить после выхода из игры.` });

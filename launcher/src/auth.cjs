@@ -1,6 +1,7 @@
 'use strict';
 const fs = require('node:fs/promises');
 const path = require('node:path');
+function incompleteResponse(isAuth=true){return Object.assign(new Error(isAuth?'Сервис входа Google вернул неполный ответ. Повторите попытку; сохранённый вход не удалён.':'Сервер Astral вернул неполный ответ. Повторите попытку; сохранённый вход не удалён.'),{code:'NETWORK',service:isAuth?'firebase-auth':'astral-data'});}
 
 function authError(code) {
   const errors = {
@@ -54,7 +55,9 @@ class AuthService {
         ...(token ? { Authorization: 'Bearer ' + token } : {})
       }, ...(body ? { body: form ? new URLSearchParams(body).toString() : JSON.stringify(body) } : {}) });
     } catch (error) { if(error.code==='RESOURCE_EXHAUSTED')throw error;const failure=new Error(isAuth?'Не удалось связаться с Firebase Auth — сервисом входа Google. Проверьте доступ к Google и повторите.':'Не удалось загрузить профиль с сервера Astral. Вход сохранён; повторите позже или используйте гостевой режим.');failure.code='NETWORK';failure.service=isAuth?'firebase-auth':'astral-data';throw failure; }
-    const data = await response.json().catch(() => ({}));
+    let data;
+    try{data=await response.json();}catch{if(response.ok)throw incompleteResponse(isAuth);data={};}
+    if(response.ok&&(!data||typeof data!=='object'||Array.isArray(data)))throw incompleteResponse(isAuth);
     if (!response.ok) {
       const code = data.error?.status || data.error?.message || 'UNKNOWN';
       const message=isAuth?authError(response.status===429?'RESOURCE_EXHAUSTED':data.error?.message || code):response.status===429?'Сервер Astral временно ограничил запросы (429). Повторите через несколько минут.':response.status===401?'Сессия входа истекла. Войдите снова.':response.status===403?'Нет доступа к профилю Astral. Обратитесь к администратору.':'Не удалось загрузить данные Astral ('+response.status+'). Повторите позже.';
@@ -97,6 +100,7 @@ class AuthService {
     return this.publicUser();
   }
   acceptSession(data, nickname) {
+    if(!data||!['localId','email','idToken','refreshToken'].every(key=>typeof data[key]==='string'&&data[key].length))throw incompleteResponse();
     this.guest=null;
     this.member = null;
     this.session = { uid: data.localId, email: data.email, nickname: nickname || data.displayName || 'Игрок', idToken: data.idToken, refreshToken: data.refreshToken, expiresAt: Date.now() + Number(data.expiresIn || 3600) * 1000 };
@@ -143,9 +147,11 @@ class AuthService {
   async refreshSession(session) {
     if (!this.session) throw new Error('Войдите в аккаунт Astral, чтобы играть.');
     const result = await this.request(`https://securetoken.googleapis.com/v1/token?key=${this.config.apiKey}`, { form: true, body: { grant_type: 'refresh_token', refresh_token: session.refreshToken } });
+    if(!['id_token','refresh_token','user_id'].every(key=>typeof result[key]==='string'&&result[key].length))throw incompleteResponse();
     const lookup = await this.request(this.authURL('lookup'), { body: { idToken: result.id_token } });
     if(this.session!==session)throw new Error('Аккаунт изменён во время обновления входа. Повторите действие.');
     const account = lookup.users?.[0];
+    if(!account?.email)throw incompleteResponse();
     if (!account?.email || account.disabled) { await this.logout(); throw new Error('Аккаунт недоступен. Войдите снова.'); }
     Object.assign(session,{idToken:result.id_token,refreshToken:result.refresh_token,uid:result.user_id,expiresAt:Date.now()+Number(result.expires_in||3600)*1000,email:account.email,nickname:account.displayName||'Игрок'});
     await this.persist();

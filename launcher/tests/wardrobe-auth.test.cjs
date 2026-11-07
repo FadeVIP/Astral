@@ -6,6 +6,17 @@ const {AccountExtras}=require('../src/account-extras.cjs');
 const {Cosmetics}=require('../src/cosmetics.cjs');
 const config={projectId:'test',apiKey:'test',dataApiUrl:'https://sql.test/api/v1/documents'};
 const storage={save:async()=>{},clear:async()=>{}};
+test('broken successful login response does not replace an existing session',async()=>{
+ const auth=new AuthService(config,storage,async()=>Response.json({}));
+ auth.acceptSession({localId:'me',email:'me@example.invalid',idToken:'old',refreshToken:'refresh'});
+ const before=auth.session;
+ await assert.rejects(auth.login({email:'me@example.invalid',password:'password'}),e=>e.code==='NETWORK');
+ assert.equal(auth.session,before);
+});
+test('response body failure is a recoverable network error, not an empty account',async()=>{
+ const auth=new AuthService(config,storage,async()=>({ok:true,status:200,json:async()=>{throw new TypeError('terminated');}}));
+ await assert.rejects(auth.request(auth.authURL('signInWithPassword'),{body:{}}),e=>e.code==='NETWORK'&&e.service==='firebase-auth');
+});
 test('skin, cosmetics and wallet use a valid session even if Google is temporarily unavailable',async()=>{
  let google=0;
  const fetcher=async url=>{
