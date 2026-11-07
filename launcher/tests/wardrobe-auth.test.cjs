@@ -6,6 +6,13 @@ const {AccountExtras}=require('../src/account-extras.cjs');
 const {Cosmetics}=require('../src/cosmetics.cjs');
 const config={projectId:'test',apiKey:'test',dataApiUrl:'https://sql.test/api/v1/documents'};
 const storage={save:async()=>{},clear:async()=>{}};
+test('slow Firebase login can finish after the old twenty-second deadline',async()=>{
+ const auth=new AuthService(config,storage,async(url,options)=>{
+  if(url.includes('signInWithPassword')){await require('node:timers/promises').setTimeout(21000,undefined,{signal:options.signal});return Response.json({localId:'slow',email:'slow@example.invalid',idToken:'token',refreshToken:'refresh'});}
+  return Response.json({fields:{nickname:{stringValue:'SlowPlayer'},status:{stringValue:'active'}}});
+ });
+ assert.equal((await auth.login({email:'slow@example.invalid',password:'password',remember:false})).status,'active');
+});
 test('broken successful login response does not replace an existing session',async()=>{
  const auth=new AuthService(config,storage,async()=>Response.json({}));
  auth.acceptSession({localId:'me',email:'me@example.invalid',idToken:'old',refreshToken:'refresh'});

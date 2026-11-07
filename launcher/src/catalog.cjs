@@ -94,7 +94,7 @@ class CatalogService {
       if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password || endpoint.search || endpoint.hash) throw new Error('Неверный адрес сервиса данных.');
       transport = this.config.dataApiUrl.replace(/\/$/,'');
     }
-    const response = await this.fetcher(transport + suffix, { method, redirect: 'error', signal: AbortSignal.timeout(22000),
+    const response = await this.fetcher(transport + suffix, { method, redirect: 'error', signal: AbortSignal.timeout(150000),
       headers: { ...(token ? { Authorization: 'Bearer ' + token } : {}), ...(body ? { 'Content-Type':'application/json' } : {}) },
       ...(body ? { body: JSON.stringify(body) } : {}) });
     if (missing && response.status === 404) return null;

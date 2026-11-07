@@ -16,6 +16,7 @@ public class PublicDataHttpTest {
  public static void main(String[] args)throws Exception{
   List<String> calls=new ArrayList<>();
   PublicDataHttp.Transport transport=request->{
+   if(request.timeout().orElseThrow().toSeconds()<60)throw new AssertionError("Appearance timeout too short for a slow connection");
    String url=request.uri().toString();calls.add(url);
    if(!request.headers().map().isEmpty())throw new AssertionError("Unexpected credentials");
    if(url.startsWith(PublicDataHttp.PRIMARY))throw new IOException("Direct route blocked");

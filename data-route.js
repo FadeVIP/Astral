@@ -6,18 +6,18 @@
     let selected = '', until = 0, pending;
     async function probe(origin, timeout) {
       try {
-        const r = await fetcher(origin + '/api/v1/realtime/publicLauncherData/packs.json', {signal: AbortSignal.timeout(timeout), redirect: 'error'});
+        const r = await fetcher(origin + '/health', {signal: AbortSignal.timeout(timeout), redirect: 'error'});
         if (!r.ok) return false;
         const value = await r.json();
-        return value?.version === 1 && (Array.isArray(value.documents) || value.count === 0);
+        return value?.ok === true || value?.status === 'ok';
       } catch { return false; }
     }
     async function choose() {
       if (selected && until > Date.now()) return selected;
       if (!pending) pending = (async () => {
-        if (await probe(PRIMARY, 1500)) selected = PRIMARY;
+        if (await probe(PRIMARY, 3000)) selected = PRIMARY;
         else if (await probe(BACKUP, 5000)) selected = BACKUP;
-        else throw Error('Сервер профиля Astral недоступен по основному и резервному адресу. Попробуйте позже или используйте гостевой режим.');
+        else selected = selected || PRIMARY; // A short probe is only a hint, never proof that a slow connection is offline.
         until = Date.now() + 60000;
         return selected;
       })().finally(() => { pending = null; });
@@ -31,7 +31,7 @@
       const origin = await choose();
       if (options.signal?.aborted) throw options.signal.reason;
       const readOnly=['GET','HEAD'].includes((options.method||'GET').toUpperCase());
-      const attempt=target=>fetcher(target+u.pathname+u.search,{...options,redirect:'error',signal:options.signal?AbortSignal.any([options.signal,AbortSignal.timeout(6000)]):AbortSignal.timeout(6000)});
+      const attempt=target=>fetcher(target+u.pathname+u.search,{...options,redirect:'error',signal:options.signal?AbortSignal.any([options.signal,AbortSignal.timeout(60000)]):AbortSignal.timeout(60000)});
       let first;
       try {
         first = await (readOnly?attempt(origin):fetcher(origin+u.pathname+u.search,{...options,redirect:'error'}));

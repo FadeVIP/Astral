@@ -10,7 +10,7 @@ import java.time.Duration;
 final class PublicDataHttp {
  static final String PRIMARY="https://829504-vds-korolevikh2001vlad.gmhost.pp.ua";
  static final String BACKUP="https://astral-tib9.onrender.com";
- private static final HttpClient HTTP=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(4)).followRedirects(HttpClient.Redirect.NEVER).build();
+ private static final HttpClient HTTP=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(20)).followRedirects(HttpClient.Redirect.NEVER).build();
  private static volatile long backupUntil;
  interface Transport { HttpResponse<InputStream> send(HttpRequest request)throws IOException,InterruptedException; }
  static HttpResponse<InputStream> get(String address,int seconds)throws IOException,InterruptedException {
@@ -23,11 +23,11 @@ final class PublicDataHttp {
   boolean backup=System.currentTimeMillis()<backupUntil;
   String first=backup?BACKUP:PRIMARY,second=backup?PRIMARY:BACKUP;
   try{
-   var response=transport.send(HttpRequest.newBuilder(URI.create(first+suffix)).timeout(Duration.ofSeconds(3)).GET().build());
+   var response=transport.send(HttpRequest.newBuilder(URI.create(first+suffix)).timeout(Duration.ofSeconds(Math.max(60,seconds))).GET().build());
    if(response.statusCode()<500)return response;
    response.body().close();
   }catch(IOException failure){/* Read-only retry on the other known endpoint. */}
-  var response=transport.send(HttpRequest.newBuilder(URI.create(second+suffix)).timeout(Duration.ofSeconds(Math.max(4,seconds))).GET().build());
+  var response=transport.send(HttpRequest.newBuilder(URI.create(second+suffix)).timeout(Duration.ofSeconds(Math.max(60,seconds))).GET().build());
   if(response.statusCode()<500)backupUntil=second.equals(BACKUP)?System.currentTimeMillis()+60000:0;
   return response;
  }

@@ -50,7 +50,7 @@ class AuthService {
     const isAuth=['identitytoolkit.googleapis.com','securetoken.googleapis.com'].includes(new URL(url).hostname);
     let response;
     try {
-      response = await this.fetcher(url, { method, redirect: 'error', signal: AbortSignal.timeout(20000), headers: {
+      response = await this.fetcher(url, { method, redirect: 'error', signal: AbortSignal.timeout(isAuth ? 60000 : 150000), headers: {
         ...(body ? { 'Content-Type': form ? 'application/x-www-form-urlencoded' : 'application/json' } : {}),
         ...(token ? { Authorization: 'Bearer ' + token } : {})
       }, ...(body ? { body: form ? new URLSearchParams(body).toString() : JSON.stringify(body) } : {}) });
